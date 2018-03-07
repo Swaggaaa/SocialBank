@@ -1,9 +1,9 @@
 package me.integrate.socialbank
 
-import android.support.v7.app.AppCompatActivity
+import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : ActionBarActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
