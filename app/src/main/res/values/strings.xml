@@ -6,4 +6,5 @@
     <string name="forgot">Forgot</string>
     <string name="register">Register</string>
     <string name="hello">Hello world!</string>
+    <string name="log_in">Log in</string>
 </resources>
