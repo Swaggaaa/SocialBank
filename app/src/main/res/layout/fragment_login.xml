@@ -23,6 +23,8 @@
         android:layout_width="match_parent"
         android:layout_height="55dp"
         android:layout_marginTop="8dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginStart="20dp"
         android:ems="10"
         android:hint="@string/email"
         android:inputType="textEmailAddress"
@@ -35,6 +37,8 @@
         android:layout_width="match_parent"
         android:layout_height="55dp"
         android:layout_marginTop="16dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginStart="20dp"
         android:ems="10"
         android:hint="@string/password"
         android:inputType="textPassword"
@@ -45,12 +49,11 @@
         android:id="@+id/log_in_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="65dp"
         android:layout_marginEnd="20dp"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="65dp"
-        android:background="@color/colorButton"
+        android:background="@android:color/holo_blue_dark"
         android:text="@string/login"
-        android:textColor="@color/colorTextButton"
         app:layout_constraintTop_toBottomOf="@+id/password"
         tools:enabled="false"
         tools:layout_editor_absoluteX="148dp" />
@@ -67,6 +70,16 @@
         android:textColor="@color/colorTextForgot"
         app:layout_constraintTop_toBottomOf="@+id/password"
         tools:layout_editor_absoluteX="267dp" />
+
+    <Button
+        android:id="@+id/register_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="32dp"
+        android:text="Need an account?"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/log_in_button" />
 
 
 </android.support.constraint.ConstraintLayout>
