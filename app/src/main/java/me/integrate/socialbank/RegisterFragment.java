@@ -12,12 +12,16 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
+
+import java.util.HashMap;
 
 public class RegisterFragment extends Fragment {
     private GoogleSignInClient mGoogleSignInClient;
@@ -26,6 +30,7 @@ public class RegisterFragment extends Fragment {
     private EditText email;
     private Button SignUpGoogle;
     private static final int RC_SIGN_IN = 9001;
+    private static final String URL = "/register";
 
     Intent i;
     @Override
@@ -50,6 +55,20 @@ public class RegisterFragment extends Fragment {
             public void onClick(View v) {
                 Intent signInIntent = mGoogleSignInClient.getSignInIntent();
                 startActivityForResult(signInIntent, RC_SIGN_IN);
+            }
+        });
+        getView().findViewById(R.id.buttonRegister).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //ampliar con todos los campos que falten
+                if (name.getText().toString().length() != 0 && lastName.getText().toString().length()!= 0 && email.getText().toString().length()!=0){
+
+                    HashMap<String, String> params = new HashMap<>();
+                    params.put("name", name.getText().toString());
+                    params.put("lastName", lastName.getText().toString());
+                    params.put("email", email.getText().toString());
+                    postCredentials(params);
+                }
             }
         });
     }
@@ -84,7 +103,7 @@ public class RegisterFragment extends Fragment {
             // Signed in successfully, show authenticated UI.
             if (account.getEmail().length() != 0) email.setText(account.getEmail());
             if (account.getDisplayName().length() != 0) name.setText(account.getGivenName());
-            if (account.getFamilyName().length()!= 0) lastName.setText(account.getFamilyName());
+            if (account.getFamilyName().length() != 0) lastName.setText(account.getFamilyName());
             //Todas las funciones que hacer cuando Google nos devuelve el mail
         } catch (ApiException e) {
             // The ApiException status code indicates the detailed failure reason.
@@ -93,4 +112,25 @@ public class RegisterFragment extends Fragment {
             //Excepción a lanzar
         }
     }
+    private void postCredentials(HashMap<String, String> params) {
+        APICommunicator apiCommunicator = new APICommunicator();
+        Response.Listener responseListener = new Response.Listener() {
+            @Override
+            public void onResponse(Object response) {
+                Toast.makeText(getActivity().getApplicationContext(), "OK!", Toast.LENGTH_LONG).show();
+
+            }
+        };
+        Response.ErrorListener errorListener = new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getActivity().getApplicationContext(), "Something went wrong", Toast.LENGTH_LONG).show();
+            }
+        };
+
+
+        apiCommunicator.postRequest(getActivity().getApplicationContext(), URL, responseListener, errorListener, params);
+    }
+
+
 }
