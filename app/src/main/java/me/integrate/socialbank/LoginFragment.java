@@ -43,7 +43,7 @@ public class LoginFragment extends Fragment {
             public void onClick(View view) {
                 if (user.getText().toString().length() != 0 && password.getText().toString().length() != 0) {
                     Toast.makeText(getActivity().getApplicationContext(), "Button Pressed!", Toast.LENGTH_LONG).show();
-                    postCredentials("user", "password");
+                    postCredentials(user.getText().toString(), password.getText().toString());
                 }
                 //Log in treatment code here
             }
