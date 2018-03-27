@@ -5,7 +5,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,9 +28,9 @@ public class LoginFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_login, container, false);
-        user = (EditText)rootView.findViewById(R.id.email);
-        password = (EditText)rootView.findViewById(R.id.password);
-        LogIn = (Button)rootView.findViewById(R.id.log_in_button);
+        user = (EditText) rootView.findViewById(R.id.email);
+        password = (EditText) rootView.findViewById(R.id.password);
+        LogIn = (Button) rootView.findViewById(R.id.log_in_button);
         return rootView;
     }
 
@@ -68,8 +67,11 @@ public class LoginFragment extends Fragment {
             @Override
             public void afterTextChanged(Editable s) {
                 boolean b = user.getText().toString().length() != 0 && password.getText().toString().length() != 0;
-                if (b){enableButton(true);}
-                else {enableButton(false);}
+                if (b) {
+                    enableButton(true);
+                } else {
+                    enableButton(false);
+                }
             }
         });
         password.addTextChangedListener(new TextWatcher() {
@@ -86,16 +88,14 @@ public class LoginFragment extends Fragment {
             @Override
             public void afterTextChanged(Editable s) {
                 boolean b = user.getText().toString().length() != 0 && password.getText().toString().length() != 0;
-                if (b){enableButton(true);}
-                else {enableButton(false);}
+                enableButton(b);
             }
         });
     }
 
     //Se extrae en función externa por si se quiere modificar el estilo
     private void enableButton(Boolean enable) {
-        if (enable) LogIn.setEnabled(true);
-        else LogIn.setEnabled(false);
+        LogIn.setEnabled(enable);
     }
 
     //función para llamar a la API
