@@ -40,11 +40,11 @@ public class LoginFragment extends Fragment {
         getView().findViewById(R.id.log_in_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // disable button
                 if (user.getText().toString().length() != 0 && password.getText().toString().length() != 0) {
                     Toast.makeText(getActivity().getApplicationContext(), "Button Pressed!", Toast.LENGTH_LONG).show();
                     postCredentials(user.getText().toString(), password.getText().toString());
                 }
-                //Log in treatment code here
             }
         });
         getView().findViewById(R.id.register_button).setOnClickListener(new View.OnClickListener() {
@@ -67,11 +67,7 @@ public class LoginFragment extends Fragment {
             @Override
             public void afterTextChanged(Editable s) {
                 boolean b = user.getText().toString().length() != 0 && password.getText().toString().length() != 0;
-                if (b) {
-                    enableButton(true);
-                } else {
-                    enableButton(false);
-                }
+                enableButton(b);
             }
         });
         password.addTextChangedListener(new TextWatcher() {
@@ -101,11 +97,13 @@ public class LoginFragment extends Fragment {
     //función para llamar a la API
     private void postCredentials(String user, String password) {
         APICommunicator apiCommunicator = new APICommunicator();
-        Response.Listener responseListener = new Response.Listener() {
+        Response.Listener responseListener = new Response.Listener<CustomRequest.CustomResponse>() {
             @Override
-            public void onResponse(Object response) {
+            public void onResponse(CustomRequest.CustomResponse response) {
+                //TODO: save token
+                String token = response.headers.get("Authorization");
                 Toast.makeText(getActivity().getApplicationContext(), "OK!", Toast.LENGTH_LONG).show();
-
+                //TODO: redirect to new Activity, destroy this one
             }
         };
         Response.ErrorListener errorListener = new Response.ErrorListener() {
@@ -115,7 +113,7 @@ public class LoginFragment extends Fragment {
             }
         };
         HashMap<String, String> params = new HashMap<>();
-        params.put("user", user);
+        params.put("email", user);
         params.put("password", password);
 
         apiCommunicator.postRequest(getActivity().getApplicationContext(), URL, responseListener, errorListener, params);
