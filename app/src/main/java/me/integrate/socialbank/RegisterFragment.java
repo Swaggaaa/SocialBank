@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +20,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 
@@ -27,8 +30,11 @@ public class RegisterFragment extends Fragment {
     private GoogleSignInClient mGoogleSignInClient;
     private EditText name;
     private EditText lastName;
+    private EditText birthday;
     private EditText email;
+    private EditText password;
     private Button SignUpGoogle;
+    private Button SignUpButton;
     private static final int RC_SIGN_IN = 9001;
     private static final String URL = "/register";
 
@@ -40,8 +46,12 @@ public class RegisterFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_register, container, false);
         name = (EditText) rootView.findViewById(R.id.editTextFirstName);
         lastName = (EditText)rootView.findViewById(R.id.editTextLastName);
+        birthday = (EditText) rootView.findViewById(R.id.editTextBirthday);
         email = (EditText) rootView.findViewById(R.id.editTextEmail);
+        password = (EditText) rootView.findViewById(R.id.editTextPassword);
+        SignUpButton = (Button) rootView.findViewById(R.id.buttonRegister);
         SignUpGoogle = (Button) rootView.findViewById(R.id.googleSignInButton);
+        enableButton();
         initGoogleLogin();
         return rootView;
 
@@ -71,6 +81,56 @@ public class RegisterFragment extends Fragment {
                 }
             }
         });
+        name.addTextChangedListener(new TextWatcher() {
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            @Override
+            public void afterTextChanged(Editable s) {
+                enableButton();
+            }
+        });
+        lastName.addTextChangedListener(new TextWatcher() {
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            @Override
+            public void afterTextChanged(Editable s) {
+                enableButton();
+            }
+        });
+        birthday.addTextChangedListener(new TextWatcher() {
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            @Override
+            public void afterTextChanged(Editable s) {
+                enableButton();
+            }
+        });
+        email.addTextChangedListener(new TextWatcher() {
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            @Override
+            public void afterTextChanged(Editable s) {
+                enableButton();
+            }
+        });
+        password.addTextChangedListener(new TextWatcher() {
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            @Override
+            public void afterTextChanged(Editable s) {
+                enableButton();
+            }
+        });
+
+    }
+
+    private boolean areFilled() { return name.getText().toString().length() != 0 && lastName.getText().toString().length() != 0
+            && birthday.getText().toString().length() != 0 && email.getText().toString().length() != 0
+            && password.getText().toString().length() != 0;
+    }
+
+    private void enableButton() {
+        SignUpButton.setEnabled( areFilled() );
     }
 
     private void initGoogleLogin() {
