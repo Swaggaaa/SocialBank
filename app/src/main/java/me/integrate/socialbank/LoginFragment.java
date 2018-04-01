@@ -31,6 +31,7 @@ public class LoginFragment extends Fragment {
         user = (EditText) rootView.findViewById(R.id.email);
         password = (EditText) rootView.findViewById(R.id.password);
         LogIn = (Button) rootView.findViewById(R.id.log_in_button);
+        enableButton();
         return rootView;
     }
 
@@ -54,44 +55,30 @@ public class LoginFragment extends Fragment {
             }
         });
         user.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
             @Override
             public void afterTextChanged(Editable s) {
-                boolean b = user.getText().toString().length() != 0 && password.getText().toString().length() != 0;
-                enableButton(b);
+                enableButton();
             }
         });
         password.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
             @Override
             public void afterTextChanged(Editable s) {
-                boolean b = user.getText().toString().length() != 0 && password.getText().toString().length() != 0;
-                enableButton(b);
+                enableButton();
             }
         });
     }
 
+    private boolean areFilled() {
+        return user.getText().toString().length() != 0 && password.getText().toString().length() != 0;
+    }
+
     //Se extrae en función externa por si se quiere modificar el estilo
-    private void enableButton(Boolean enable) {
-        LogIn.setEnabled(enable);
+    private void enableButton() {
+        LogIn.setEnabled( areFilled() );
     }
 
     //función para llamar a la API

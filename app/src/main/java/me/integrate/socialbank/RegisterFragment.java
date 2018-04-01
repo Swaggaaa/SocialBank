@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.android.volley.Response;
@@ -35,10 +36,10 @@ public class RegisterFragment extends Fragment {
     private EditText password;
     private Button SignUpGoogle;
     private Button SignUpButton;
+    private Spinner gender;
     private static final int RC_SIGN_IN = 9001;
     private static final String URL = "/register";
 
-    Intent i;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -47,6 +48,7 @@ public class RegisterFragment extends Fragment {
         name = (EditText) rootView.findViewById(R.id.editTextFirstName);
         lastName = (EditText)rootView.findViewById(R.id.editTextLastName);
         birthday = (EditText) rootView.findViewById(R.id.editTextBirthday);
+        gender = (Spinner) rootView.findViewById(R.id.editTextGender);
         email = (EditText) rootView.findViewById(R.id.editTextEmail);
         password = (EditText) rootView.findViewById(R.id.editTextPassword);
         SignUpButton = (Button) rootView.findViewById(R.id.buttonRegister);
@@ -54,7 +56,6 @@ public class RegisterFragment extends Fragment {
         enableButton();
         initGoogleLogin();
         return rootView;
-
     }
 
     @Override
@@ -70,13 +71,15 @@ public class RegisterFragment extends Fragment {
         getView().findViewById(R.id.buttonRegister).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //ampliar con todos los campos que falten
                 if (name.getText().toString().length() != 0 && lastName.getText().toString().length()!= 0 && email.getText().toString().length()!=0){
 
                     HashMap<String, String> params = new HashMap<>();
                     params.put("name", name.getText().toString());
                     params.put("lastName", lastName.getText().toString());
+                    params.put("birthday", birthday.getText().toString());
+                    params.put("gender", gender.getSelectedItem().toString());
                     params.put("email", email.getText().toString());
+                    params.put("password", password.getText().toString());
                     postCredentials(params);
                 }
             }
