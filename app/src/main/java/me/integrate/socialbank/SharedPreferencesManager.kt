@@ -17,4 +17,12 @@ object SharedPreferencesManager {
         val sharedPref = activity.getPreferences(Context.MODE_PRIVATE)
         return sharedPref.getString(key, null)
     }
+
+    fun remove(activity: Activity, key: String) {
+        val sharedPref = activity.getPreferences(Context.MODE_PRIVATE) ?: return
+        with (sharedPref.edit()) {
+            remove(key)
+            apply()
+        }
+    }
 }
