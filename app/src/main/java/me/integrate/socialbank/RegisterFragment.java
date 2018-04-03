@@ -233,8 +233,6 @@ public class RegisterFragment extends Fragment {
                 && Integer.parseInt(m) <= 12 && Integer.parseInt(d) <= 31)
             data = y + "-" + m + "-" + d;
 
-        if( data == "error" )
-
         return  data;
     }
 
