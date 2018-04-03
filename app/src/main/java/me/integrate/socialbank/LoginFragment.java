@@ -57,6 +57,12 @@ public class LoginFragment extends Fragment {
                 registerSelected();
             }
         });
+        getView().findViewById(R.id.forgot_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                forgotPasswordSelected();
+            }
+        });
         user.addTextChangedListener(new TextWatcher() {
             @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
@@ -120,5 +126,10 @@ public class LoginFragment extends Fragment {
         Fragment registerFragment = new RegisterFragment();
         FragmentChangeListener fc = (FragmentChangeListener) getActivity();
         fc.replaceFragment(registerFragment);
+    }
+    private void forgotPasswordSelected() {
+        Fragment recoverPasswordFragment = new RecoverPasswordFragment();
+        FragmentChangeListener fc = (FragmentChangeListener) getActivity();
+        fc.replaceFragment(recoverPasswordFragment);
     }
 }
