@@ -87,6 +87,7 @@ public class LoginFragment extends Fragment {
 
     //función para llamar a la API
     private void postCredentials(String user, String password) {
+
         APICommunicator apiCommunicator = new APICommunicator();
         Response.Listener responseListener = new Response.Listener<CustomRequest.CustomResponse>() {
             @Override
