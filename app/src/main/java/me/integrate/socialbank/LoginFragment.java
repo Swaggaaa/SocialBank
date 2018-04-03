@@ -94,6 +94,7 @@ public class LoginFragment extends Fragment {
                 String token = response.headers.get("Authorization");
                 SharedPreferencesManager.INSTANCE.store(getActivity(),"token",token);
                 startActivity(i);
+                getActivity().finish();
             }
         };
         Response.ErrorListener errorListener = new Response.ErrorListener() {

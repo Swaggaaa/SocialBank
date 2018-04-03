@@ -6,4 +6,13 @@
     android:layout_height="match_parent"
     tools:context="me.integrate.socialbank.BoardFragment">
 
+    <TextView
+        android:id="@+id/editText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="Hola Jordi, esto es el fragment Board"
+        tools:layout_editor_absoluteX="72dp"
+        tools:layout_editor_absoluteY="100dp" />
 </android.support.constraint.ConstraintLayout>
