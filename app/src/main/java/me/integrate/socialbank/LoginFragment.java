@@ -1,5 +1,6 @@
 package me.integrate.socialbank;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -22,6 +23,8 @@ public class LoginFragment extends Fragment {
     private EditText user;
     private EditText password;
     private Button LogIn;
+    SharedPreferencesManager sharedPreferencesManager;
+    Intent i;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -31,6 +34,7 @@ public class LoginFragment extends Fragment {
         user = (EditText) rootView.findViewById(R.id.email);
         password = (EditText) rootView.findViewById(R.id.password);
         LogIn = (Button) rootView.findViewById(R.id.log_in_button);
+        i = new Intent(getActivity().getApplicationContext(), InsideActivity.class);
         enableButton();
         return rootView;
     }
@@ -89,8 +93,10 @@ public class LoginFragment extends Fragment {
             public void onResponse(CustomRequest.CustomResponse response) {
                 //TODO: save token
                 String token = response.headers.get("Authorization");
+                sharedPreferencesManager.INSTANCE.store(getActivity(),"token","token");
                 Toast.makeText(getActivity().getApplicationContext(), "OK!", Toast.LENGTH_LONG).show();
                 //TODO: redirect to new Activity, destroy this one
+                startActivity(i);
             }
         };
         Response.ErrorListener errorListener = new Response.ErrorListener() {
