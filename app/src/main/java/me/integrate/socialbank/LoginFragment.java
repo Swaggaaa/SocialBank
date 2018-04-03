@@ -48,7 +48,6 @@ public class LoginFragment extends Fragment {
             public void onClick(View view) {
                 // disable button
                 if (user.getText().toString().length() != 0 && password.getText().toString().length() != 0) {
-                    Toast.makeText(getActivity().getApplicationContext(), "Button Pressed!", Toast.LENGTH_LONG).show();
                     postCredentials(user.getText().toString(), password.getText().toString());
                 }
             }
@@ -101,8 +100,8 @@ public class LoginFragment extends Fragment {
         Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getActivity().getApplicationContext(), "Something went wrong", Toast.LENGTH_LONG).show();
-                //TODO: tractament de error
+                cleanPassword();
+                Toast.makeText(getActivity().getApplicationContext(), "Email or password incorrect", Toast.LENGTH_LONG).show();
             }
         };
         HashMap<String, String> params = new HashMap<>();
@@ -110,6 +109,10 @@ public class LoginFragment extends Fragment {
         params.put("password", password);
 
         apiCommunicator.postRequest(getActivity().getApplicationContext(), URL, responseListener, errorListener, params);
+    }
+
+    private void cleanPassword() {
+        password.getText().clear();
     }
 
 
