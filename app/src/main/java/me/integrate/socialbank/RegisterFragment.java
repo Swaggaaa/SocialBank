@@ -38,7 +38,7 @@ public class RegisterFragment extends Fragment {
     private Button SignUpButton;
     private Spinner gender;
     private static final int RC_SIGN_IN = 9001;
-    private static final String URL = "/register";
+    private static final String URL = "/users";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -71,17 +71,15 @@ public class RegisterFragment extends Fragment {
         getView().findViewById(R.id.buttonRegister).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (name.getText().toString().length() != 0 && lastName.getText().toString().length()!= 0 && email.getText().toString().length()!=0){
+                HashMap<String, String> params = new HashMap<>();
+                params.put("name", name.getText().toString());
+                params.put("surname", lastName.getText().toString());
+                params.put("birthdate", birthday.getText().toString());
+                params.put("gender", gender.getSelectedItem().toString());
+                params.put("email", email.getText().toString());
+                params.put("password", password.getText().toString());
 
-                    HashMap<String, String> params = new HashMap<>();
-                    params.put("name", name.getText().toString());
-                    params.put("lastName", lastName.getText().toString());
-                    params.put("birthday", birthday.getText().toString());
-                    params.put("gender", gender.getSelectedItem().toString());
-                    params.put("email", email.getText().toString());
-                    params.put("password", password.getText().toString());
-                    postCredentials(params);
-                }
+                postCredentials(params);
             }
         });
         name.addTextChangedListener(new TextWatcher() {
