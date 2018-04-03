@@ -178,7 +178,10 @@ public class RegisterFragment extends Fragment {
         Response.Listener responseListener = new Response.Listener() {
             @Override
             public void onResponse(Object response) {
-                Toast.makeText(getActivity().getApplicationContext(), "OK!", Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity().getApplicationContext(), "Account created!", Toast.LENGTH_LONG).show();
+                Fragment loginFragment = new LoginFragment();
+                FragmentChangeListener fc = (FragmentChangeListener) getActivity();
+                fc.replaceFragment(loginFragment);
 
             }
         };
