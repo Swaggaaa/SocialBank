@@ -3,7 +3,15 @@
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="login">Login</string>
-    <string name="forgot">Forgot</string>
-    <string name="register">Register</string>
+    <string name="forgot">Forgot password?</string>
     <string name="hello">Hello world!</string>
+    <string name="log_in">Log in</string>
+    <string name="account">"Need an account?"</string>
+    <string name="google_sign_up">Sign up with Google</string>
+    <string name="email_address">Email address</string>
+    <string name="birthday">Birthday</string>
+    <string name="last_name">Last name</string>
+    <string name="first_name">First name</string>
+    <string name="register">REGISTER</string>
+    <string name="gender">Gender</string>
 </resources>
