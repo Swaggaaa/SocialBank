@@ -34,7 +34,7 @@ public class LoginFragment extends Fragment {
         user = (EditText) rootView.findViewById(R.id.email);
         password = (EditText) rootView.findViewById(R.id.password);
         LogIn = (Button) rootView.findViewById(R.id.log_in_button);
-        i = new Intent(getActivity().getApplicationContext(), InsideActivity.class);
+
         enableButton();
         return rootView;
     }
@@ -42,6 +42,7 @@ public class LoginFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        i = new Intent(getActivity().getApplicationContext(), InsideActivity.class);
         getView().findViewById(R.id.log_in_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -34,7 +34,7 @@ public class InsideActivity extends ActionBarActivity implements FragmentChangeL
 
             // Add the fragment to the 'fragment_container' FrameLayout
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.fragment_container, firstFragment).commit();
+                    .add(R.id.fragment_container_inside, firstFragment).commit();
         }
     }
 
@@ -42,7 +42,7 @@ public class InsideActivity extends ActionBarActivity implements FragmentChangeL
     public void replaceFragment(Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.fragment_container, fragment, fragment.toString());
+        fragmentTransaction.replace(R.id.fragment_container_inside, fragment, fragment.toString());
         fragmentTransaction.addToBackStack(fragment.toString());
         fragmentTransaction.commit();
     }
