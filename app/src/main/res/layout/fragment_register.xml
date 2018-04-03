@@ -43,14 +43,43 @@
             android:orientation="horizontal"
             android:layout_marginBottom="15dp">
 
-            <EditText
-                android:id="@+id/editTextBirthday"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:ems="10"
-                android:hint="@string/birthday"
-                android:inputType="date" />
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/editTextDay"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:hint="dd"
+                    android:inputType="number"
+                    android:maxLength="2" />
+
+                <EditText
+                    android:id="@+id/editTextMonth"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:hint="mm"
+                    android:inputType="number"
+                    android:maxLength="2" />
+
+                <EditText
+                    android:id="@+id/editTextYear"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:hint="yyyy"
+                    android:inputType="number"
+                    android:maxLength="4" />
+
+            </LinearLayout>
 
             <Spinner
                 android:id="@+id/editTextGender"

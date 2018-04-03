@@ -31,7 +31,9 @@ public class RegisterFragment extends Fragment {
     private GoogleSignInClient mGoogleSignInClient;
     private EditText name;
     private EditText lastName;
-    private EditText birthday;
+    private EditText  day;
+    private EditText month;
+    private EditText year;
     private EditText email;
     private EditText password;
     private Button SignUpGoogle;
@@ -47,7 +49,9 @@ public class RegisterFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_register, container, false);
         name = (EditText) rootView.findViewById(R.id.editTextFirstName);
         lastName = (EditText)rootView.findViewById(R.id.editTextLastName);
-        birthday = (EditText) rootView.findViewById(R.id.editTextBirthday);
+        day = (EditText) rootView.findViewById(R.id.editTextDay);
+        month = (EditText) rootView.findViewById(R.id.editTextMonth);
+        year = (EditText) rootView.findViewById(R.id.editTextYear);
         gender = (Spinner) rootView.findViewById(R.id.editTextGender);
         email = (EditText) rootView.findViewById(R.id.editTextEmail);
         password = (EditText) rootView.findViewById(R.id.editTextPassword);
@@ -55,7 +59,14 @@ public class RegisterFragment extends Fragment {
         SignUpGoogle = (Button) rootView.findViewById(R.id.googleSignInButton);
         enableButton();
         initGoogleLogin();
+
+
+
+        Toast.makeText(getActivity().getApplicationContext(), "lenght year " + year.getText().toString().length(), Toast.LENGTH_LONG).show();
+
         return rootView;
+
+
     }
 
     @Override
@@ -74,7 +85,7 @@ public class RegisterFragment extends Fragment {
                 HashMap<String, String> params = new HashMap<>();
                 params.put("name", name.getText().toString());
                 params.put("surname", lastName.getText().toString());
-                params.put("birthdate", birthday.getText().toString());
+                params.put("birthdate", buildDate());
                 params.put("gender", gender.getSelectedItem().toString());
                 params.put("email", email.getText().toString());
                 params.put("password", password.getText().toString());
@@ -98,14 +109,6 @@ public class RegisterFragment extends Fragment {
                 enableButton();
             }
         });
-        birthday.addTextChangedListener(new TextWatcher() {
-            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
-            @Override
-            public void afterTextChanged(Editable s) {
-                enableButton();
-            }
-        });
         email.addTextChangedListener(new TextWatcher() {
             @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
@@ -122,12 +125,36 @@ public class RegisterFragment extends Fragment {
                 enableButton();
             }
         });
+        year.addTextChangedListener(new TextWatcher() {
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            @Override
+            public void afterTextChanged(Editable s) {
+                enableButton();
+            }
+        });
+        month.addTextChangedListener(new TextWatcher() {
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            @Override
+            public void afterTextChanged(Editable s) {
+                enableButton();
+            }
+        });
+        day.addTextChangedListener(new TextWatcher() {
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            @Override
+            public void afterTextChanged(Editable s) {
+                enableButton();
+            }
+        });
 
     }
 
     private boolean areFilled() { return name.getText().toString().length() != 0 && lastName.getText().toString().length() != 0
-            && birthday.getText().toString().length() != 0 && email.getText().toString().length() != 0
-            && password.getText().toString().length() != 0;
+            && email.getText().toString().length() != 0 && password.getText().toString().length() != 0
+            && buildDate() != "error";
     }
 
     private void enableButton() {
@@ -196,5 +223,17 @@ public class RegisterFragment extends Fragment {
         apiCommunicator.postRequest(getActivity().getApplicationContext(), URL, responseListener, errorListener, params);
     }
 
+    private String buildDate() {
+        String y = year.getText().toString();
+        String m = month.getText().toString();
+        String d = day.getText().toString();
+        String data = "error";
+
+        if( y.length() == 4 && m.length() == 2 && d.length() == 2
+                && Integer.parseInt(m) <= 12 && Integer.parseInt(d) <= 31)
+            data = y + "-" + m + "-" + d;
+
+        return  data;
+    }
 
 }
