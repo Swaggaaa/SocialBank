@@ -60,13 +60,7 @@ public class RegisterFragment extends Fragment {
         enableButton();
         initGoogleLogin();
 
-
-
-        Toast.makeText(getActivity().getApplicationContext(), "lenght year " + year.getText().toString().length(), Toast.LENGTH_LONG).show();
-
         return rootView;
-
-
     }
 
     @Override
