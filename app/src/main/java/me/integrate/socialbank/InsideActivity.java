@@ -26,15 +26,14 @@ public class InsideActivity extends ActionBarActivity implements FragmentChangeL
             }
 
             // Create a new Fragment to be placed in the activity layout
-            LoginFragment firstFragment = new LoginFragment(); //it will be replaced by BoardFragm
+            BoardFragment firstFragment = new BoardFragment(); //it will be replaced by BoardFragm
 
             // In case this activity was started with special instructions from an
             // Intent, pass the Intent's extras to the fragment as arguments
             firstFragment.setArguments(getIntent().getExtras());
 
             // Add the fragment to the 'fragment_container' FrameLayout
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.fragment_container_inside, firstFragment).commit();
+            getSupportFragmentManager().beginTransaction().add(R.id.fragment_container_inside, firstFragment).commit();
         }
     }
 

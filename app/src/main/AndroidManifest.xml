@@ -18,6 +18,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".InsideActivity" />
+        <activity android:name=".BoardFragment"></activity>
     </application>
 
 </manifest>

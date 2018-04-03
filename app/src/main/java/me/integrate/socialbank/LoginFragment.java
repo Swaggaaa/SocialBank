@@ -23,7 +23,6 @@ public class LoginFragment extends Fragment {
     private EditText user;
     private EditText password;
     private Button LogIn;
-    SharedPreferencesManager sharedPreferencesManager;
     Intent i;
 
     @Override
@@ -93,8 +92,7 @@ public class LoginFragment extends Fragment {
             @Override
             public void onResponse(CustomRequest.CustomResponse response) {
                 String token = response.headers.get("Authorization");
-                sharedPreferencesManager.INSTANCE.store(getActivity(),"token",token);
-                Toast.makeText(getActivity().getApplicationContext(), "OK!", Toast.LENGTH_LONG).show();
+                SharedPreferencesManager.INSTANCE.store(getActivity(),"token",token);
                 startActivity(i);
             }
         };
