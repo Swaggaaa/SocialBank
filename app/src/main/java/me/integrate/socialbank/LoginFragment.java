@@ -92,11 +92,9 @@ public class LoginFragment extends Fragment {
         Response.Listener responseListener = new Response.Listener<CustomRequest.CustomResponse>() {
             @Override
             public void onResponse(CustomRequest.CustomResponse response) {
-                //TODO: save token
                 String token = response.headers.get("Authorization");
-                sharedPreferencesManager.INSTANCE.store(getActivity(),"token","token");
+                sharedPreferencesManager.INSTANCE.store(getActivity(),"token",token);
                 Toast.makeText(getActivity().getApplicationContext(), "OK!", Toast.LENGTH_LONG).show();
-                //TODO: redirect to new Activity, destroy this one
                 startActivity(i);
             }
         };
@@ -104,6 +102,7 @@ public class LoginFragment extends Fragment {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Toast.makeText(getActivity().getApplicationContext(), "Something went wrong", Toast.LENGTH_LONG).show();
+                //TODO: tractament de error
             }
         };
         HashMap<String, String> params = new HashMap<>();
