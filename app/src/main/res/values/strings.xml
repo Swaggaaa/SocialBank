@@ -7,6 +7,7 @@
     <string name="hello">Hello world!</string>
     <string name="log_in">Log in</string>
     <string name="account">"Need an account?"</string>
+    <string name="textForgot">"Forgot your password?\n Enter your email to send a new password"</string>
     <string name="google_sign_up">Sign up with Google</string>
     <string name="email_address">Email address</string>
     <string name="birthday">Birthday</string>
@@ -14,4 +15,6 @@
     <string name="first_name">First name</string>
     <string name="register">REGISTER</string>
     <string name="gender">Gender</string>
+    <string name="submit">Submit</string>
+
 </resources>
