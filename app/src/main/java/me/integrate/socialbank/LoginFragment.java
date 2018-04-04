@@ -22,8 +22,7 @@ public class LoginFragment extends Fragment {
     private static final String URL = "/login";
     private EditText user;
     private EditText password;
-    private Button LogIn;
-    Intent i;
+    private Button loginButton;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -32,7 +31,7 @@ public class LoginFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_login, container, false);
         user = (EditText) rootView.findViewById(R.id.email);
         password = (EditText) rootView.findViewById(R.id.password);
-        LogIn = (Button) rootView.findViewById(R.id.log_in_button);
+        loginButton = (Button) rootView.findViewById(R.id.log_in_button);
 
         enableButton();
         return rootView;
@@ -41,11 +40,12 @@ public class LoginFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        i = new Intent(getActivity().getApplicationContext(), InsideActivity.class);
-        getView().findViewById(R.id.log_in_button).setOnClickListener(new View.OnClickListener() {
+        loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // disable button
+                loginButton.setEnabled(false);
+                loginButton.setText(R.string.loading);
+
                 if (user.getText().toString().length() != 0 && password.getText().toString().length() != 0) {
                     postCredentials(user.getText().toString(), password.getText().toString());
                 }
@@ -81,7 +81,7 @@ public class LoginFragment extends Fragment {
 
     //Se extrae en función externa por si se quiere modificar el estilo
     private void enableButton() {
-        LogIn.setEnabled( areFilled() );
+        loginButton.setEnabled(areFilled());
     }
 
     //función para llamar a la API
@@ -93,7 +93,7 @@ public class LoginFragment extends Fragment {
             public void onResponse(CustomRequest.CustomResponse response) {
                 String token = response.headers.get("Authorization");
                 SharedPreferencesManager.INSTANCE.store(getActivity(),"token",token);
-                startActivity(i);
+                startActivity(new Intent(getActivity().getApplicationContext(), InsideActivity.class));
                 getActivity().finish();
             }
         };
@@ -101,6 +101,8 @@ public class LoginFragment extends Fragment {
             @Override
             public void onErrorResponse(VolleyError error) {
                 cleanPassword();
+                loginButton.setEnabled(true);
+                loginButton.setText(R.string.login);
                 Toast.makeText(getActivity().getApplicationContext(), "Email or password incorrect", Toast.LENGTH_LONG).show();
             }
         };

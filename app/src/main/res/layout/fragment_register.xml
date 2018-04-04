@@ -7,16 +7,16 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:layout_marginTop="30dp"
+        android:layout_marginEnd="15dp"
         android:layout_marginStart="15dp"
-        android:layout_marginEnd="15dp" >
+        android:layout_marginTop="30dp"
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="15dp">
+            android:layout_marginBottom="15dp"
+            android:orientation="horizontal">
 
             <EditText
                 android:id="@+id/editTextFirstName"
@@ -40,8 +40,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="15dp">
+            android:layout_marginBottom="15dp"
+            android:orientation="horizontal">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -50,34 +50,14 @@
                 android:orientation="horizontal">
 
                 <EditText
-                    android:id="@+id/editTextDay"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/birthdate"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:ems="10"
-                    android:hint="dd"
-                    android:inputType="number"
-                    android:maxLength="2" />
-
-                <EditText
-                    android:id="@+id/editTextMonth"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:ems="10"
-                    android:hint="mm"
-                    android:inputType="number"
-                    android:maxLength="2" />
-
-                <EditText
-                    android:id="@+id/editTextYear"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:ems="10"
-                    android:hint="yyyy"
-                    android:inputType="number"
-                    android:maxLength="4" />
+                    android:clickable="true"
+                    android:focusable="false"
+                    android:hint="@string/birthday"
+                    android:inputType="date"
+                    android:maxLines="1" />
 
             </LinearLayout>
 
@@ -86,8 +66,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:entries="@array/spinnerItems"
-                />
+                android:entries="@array/genders" />
         </LinearLayout>
 
         <EditText
@@ -109,19 +88,17 @@
             android:hint="@string/password"
             android:inputType="textPassword" />
 
-
         <Button
             android:id="@+id/googleSignInButton"
-            android:layout_marginTop="20dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/google_sign_up"
             android:layout_alignParentTop="true"
+            android:layout_marginTop="20dp"
             android:background="@android:color/holo_blue_dark"
             android:drawableLeft="@drawable/common_google_signin_btn_icon_dark_normal"
+            android:text="@string/google_sign_up"
             android:textColor="@android:color/white"
-            android:textStyle="bold"
-            />
+            android:textStyle="bold" />
 
 
         <Button
@@ -131,6 +108,6 @@
             android:layout_marginTop="15dp"
             android:background="@android:color/holo_blue_dark"
             android:text="@string/register"
-            tools:enabled="false"/>
+            tools:enabled="false" />
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>
