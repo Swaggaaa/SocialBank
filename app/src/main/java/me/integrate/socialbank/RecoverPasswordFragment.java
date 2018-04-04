@@ -13,13 +13,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
+
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 
 import java.util.HashMap;
 
 public class RecoverPasswordFragment extends Fragment {
 
     private EditText email;
-    private Button submit;
+    private Button submitButton;
+
+    //TODO mirar si es correcto
+    private static final String URL = "/users";
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -27,7 +35,7 @@ public class RecoverPasswordFragment extends Fragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_activity_recover_password, container, false);
         email = (EditText) rootView.findViewById(R.id.email_submit);
-        submit = (Button) rootView.findViewById(R.id.submit);
+        submitButton = (Button) rootView.findViewById(R.id.submit_button);
         enableButton();
         return rootView;
     }
@@ -35,12 +43,13 @@ public class RecoverPasswordFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        getView().findViewById(R.id.submit).setOnClickListener(new View.OnClickListener() {
+        getView().findViewById(R.id.submit_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                HashMap<String, String> params = new HashMap<>();
-                params.put("email", email.getText().toString());
-           //     postCredentials(params);
+                submitButton.setEnabled(false);
+                cleanEmail(); //TODO aqui no ira
+                if (email.getText().toString().length() != 0) { }
+                  // TODO postCredentials(user.getText().toString(), password.getText().toString());
             }
         });
         email.addTextChangedListener(new TextWatcher() {
@@ -54,8 +63,47 @@ public class RecoverPasswordFragment extends Fragment {
 
     }
 
+    //TODO conexion with API
+    private void postCredentials(String user, String password) {
+
+        APICommunicator apiCommunicator = new APICommunicator();
+        Response.Listener responseListener = new Response.Listener<CustomRequest.CustomResponse>() {
+            @Override
+            public void onResponse(CustomRequest.CustomResponse response) {
+                //TODO
+                String token = response.headers.get("Authorization");
+                SharedPreferencesManager.INSTANCE.store(getActivity(),"token",token);
+                startActivity(new Intent(getActivity().getApplicationContext(), InsideActivity.class));
+                getActivity().finish();
+            }
+        };
+        Response.ErrorListener errorListener = new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                submitButton.setEnabled(true);
+                //TODO tratar error
+                Toast.makeText(getActivity().getApplicationContext(), "Bu", Toast.LENGTH_LONG).show();
+            }
+        };
+        HashMap<String, String> params = new HashMap<>();
+        params.put("email", email.getText().toString());
+
+        apiCommunicator.postRequest(getActivity().getApplicationContext(), URL, responseListener, errorListener, params);
+    }
+
+    private void cleanEmail() {
+        email.getText().clear();
+    }
+
     private void enableButton() {
-        submit.setEnabled( email.getText().toString().length() != 0 );
+        submitButton.setEnabled( email.getText().toString().length() != 0 );
+    }
+
+    //TODO cambiar al new fragment
+    private void registerSelected() {
+        Fragment registerFragment = new RegisterFragment();
+        FragmentChangeListener fc = (FragmentChangeListener) getActivity();
+        fc.replaceFragment(registerFragment);
     }
 
 }
