@@ -17,21 +17,22 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class TokenFragment extends Fragment {
 
-    private EditText token;
+    private EditText tokenEditText;
     private EditText pass1;
     private EditText pass2;
     private Button changeButton;
-    private static final String URL = "/users";
+    private static final String URL = "/recover";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_token, container, false);
-        token = (EditText) rootView.findViewById(R.id.editTextToken);
+        tokenEditText = (EditText) rootView.findViewById(R.id.editTextToken);
         pass1 = (EditText) rootView.findViewById(R.id.editTextPassword1);
         pass2 = (EditText) rootView.findViewById(R.id.editTextPassword2);
         changeButton = (Button) rootView.findViewById(R.id.buttonChangePassword);
@@ -45,19 +46,13 @@ public class TokenFragment extends Fragment {
         getView().findViewById(R.id.buttonChangePassword).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if ( passwordMatch() && rightToken() ) {
-                    //Si els passwords coincideixen i el token es correcte
-
-                    HashMap<String, String> params = new HashMap<>();
-                    params.put("token", token.getText().toString());
-                    params.put("password", pass1.getText().toString());
-
-                    postCredentials(params);
+                if ( passwordMatch() ) {
+                    postCredentials(tokenEditText.getText().toString(), pass1.getText().toString());
                 }
 
             }
         });
-        token.addTextChangedListener(new TextWatcher() {
+        tokenEditText.addTextChangedListener(new TextWatcher() {
             @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
             @Override
@@ -85,15 +80,14 @@ public class TokenFragment extends Fragment {
     }
 
     //TODO conexion with API
-    private void postCredentials(HashMap<String, String> params) {
-
+    private void postCredentials(String newPassword, String token) {
         APICommunicator apiCommunicator = new APICommunicator();
         Response.Listener responseListener = new Response.Listener<CustomRequest.CustomResponse>() {
             @Override
             public void onResponse(CustomRequest.CustomResponse response) {
                 //TODO
                 String token = response.headers.get("Authorization");
-                SharedPreferencesManager.INSTANCE.store(getActivity(),"OK token",token);
+                SharedPreferencesManager.INSTANCE.store(getActivity(),"RIGHT!!!",token);
                 startActivity(new Intent(getActivity().getApplicationContext(), InsideActivity.class));
                 getActivity().finish();
             }
@@ -102,11 +96,15 @@ public class TokenFragment extends Fragment {
             @Override
             public void onErrorResponse(VolleyError error) {
                 //TODO tratar error
-                Toast.makeText(getActivity().getApplicationContext(), "Something went wrong", Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity().getApplicationContext(), "Wrong token", Toast.LENGTH_LONG).show();
+                tokenEditText.getText().clear();
             }
         };
 
-        apiCommunicator.postRequest(getActivity().getApplicationContext(), URL, responseListener, errorListener, params);
+        Map<String, String> params = new HashMap<>();
+        params.put("newPassword", newPassword);
+
+        apiCommunicator.putRequest(getActivity().getApplicationContext(), URL.concat("/".concat(token)), responseListener, errorListener, params);
     }
 
     private void clearPasswords() {
@@ -114,7 +112,7 @@ public class TokenFragment extends Fragment {
         pass2.getText().clear();
     }
 
-    private boolean areFilled() { return token.getText().toString().length() != 0
+    private boolean areFilled() { return tokenEditText.getText().toString().length() != 0
             && pass1.getText().toString().length() != 0 && pass2.getText().toString().length() != 0;
     }
 
@@ -123,7 +121,7 @@ public class TokenFragment extends Fragment {
     }
 
     private boolean passwordMatch() {
-        boolean ret = pass1.getText().toString() == pass2.getText().toString();
+        boolean ret = pass1.getText().toString().equals( pass2.getText().toString() );
         if( !ret ) {
             Toast.makeText(getActivity().getApplicationContext(), "Passwords are different", Toast.LENGTH_LONG).show();
             clearPasswords();
@@ -131,13 +129,5 @@ public class TokenFragment extends Fragment {
         return ret;
     }
 
-    private boolean rightToken() {
-        boolean ret = false; //Comprovar que el token es el correcte
-        if( !ret ) {
-            Toast.makeText(getActivity().getApplicationContext(), "Wrong token", Toast.LENGTH_LONG).show();
-            token.getText().clear();
-        }
-        return false;
-    }
 
 }
