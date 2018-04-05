@@ -26,8 +26,7 @@ public class RecoverPasswordFragment extends Fragment {
     private Button submitButton;
 
     //TODO mirar si es correcto
-    private static final String URL = "/users";
-
+    private static final String URL = "/recover";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -46,10 +45,13 @@ public class RecoverPasswordFragment extends Fragment {
         getView().findViewById(R.id.submit_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                submitButton.setEnabled(false);
-                cleanEmail(); //TODO aqui no ira
-                if (email.getText().toString().length() != 0) { }
-                  // TODO postCredentials(user.getText().toString(), password.getText().toString());
+                tokenSelected();
+                //submitButton.setEnabled(false);
+                //cleanEmail(); //TODO aqui no ira
+                //if (email.getText().toString().length() != 0) {
+                    //IF api funciona fa lo seguent
+                //}
+                // TODO postCredentials(user.getText().toString(), password.getText().toString());
             }
         });
         email.addTextChangedListener(new TextWatcher() {
@@ -100,10 +102,9 @@ public class RecoverPasswordFragment extends Fragment {
     }
 
     //TODO cambiar al new fragment
-    private void registerSelected() {
-        Fragment registerFragment = new RegisterFragment();
+    private void tokenSelected() {
+        Fragment tokenFragment = new TokenFragment();
         FragmentChangeListener fc = (FragmentChangeListener) getActivity();
-        fc.replaceFragment(registerFragment);
+        fc.replaceFragment(tokenFragment);
     }
-
 }

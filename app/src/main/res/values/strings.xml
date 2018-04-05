@@ -16,5 +16,10 @@
     <string name="register">REGISTER</string>
     <string name="gender">Gender</string>
     <string name="submit">Submit</string>
+    <string name="repeat_password">Repeat password</string>
+    <string name="change_password">CHANGE PASSWORD</string>
+    <string name="enter_token">Enter token</string>
+    <string name="token">Token</string>
+    <string name="new_password">New password</string>
 
 </resources>
