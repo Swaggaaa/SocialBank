@@ -50,8 +50,7 @@ public class TokenFragment extends Fragment {
 
                     HashMap<String, String> params = new HashMap<>();
                     params.put("token", token.getText().toString());
-                    params.put("newpassword", pass1.getText().toString());
-                    params.put("repeatedpassword", pass2.getText().toString());
+                    params.put("password", pass1.getText().toString());
 
                     postCredentials(params);
                 }
@@ -94,7 +93,7 @@ public class TokenFragment extends Fragment {
             public void onResponse(CustomRequest.CustomResponse response) {
                 //TODO
                 String token = response.headers.get("Authorization");
-                SharedPreferencesManager.INSTANCE.store(getActivity(),"token",token);
+                SharedPreferencesManager.INSTANCE.store(getActivity(),"OK token",token);
                 startActivity(new Intent(getActivity().getApplicationContext(), InsideActivity.class));
                 getActivity().finish();
             }
@@ -103,7 +102,7 @@ public class TokenFragment extends Fragment {
             @Override
             public void onErrorResponse(VolleyError error) {
                 //TODO tratar error
-                Toast.makeText(getActivity().getApplicationContext(), "Bu", Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity().getApplicationContext(), "Something went wrong", Toast.LENGTH_LONG).show();
             }
         };
 
@@ -124,7 +123,7 @@ public class TokenFragment extends Fragment {
     }
 
     private boolean passwordMatch() {
-        boolean ret = pass1.getText() == pass2.getText();
+        boolean ret = pass1.getText().toString() == pass2.getText().toString();
         if( !ret ) {
             Toast.makeText(getActivity().getApplicationContext(), "Passwords are different", Toast.LENGTH_LONG).show();
             clearPasswords();
