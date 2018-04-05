@@ -1,5 +1,6 @@
 package me.integrate.socialbank;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -11,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -21,26 +23,26 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.HashMap;
 
 public class RegisterFragment extends Fragment {
+    private static final int RC_SIGN_IN = 9001;
+    private static final String URL = "/users";
     private GoogleSignInClient mGoogleSignInClient;
     private EditText name;
     private EditText lastName;
-    private EditText  day;
-    private EditText month;
-    private EditText year;
     private EditText email;
     private EditText password;
     private Button SignUpGoogle;
     private Button SignUpButton;
     private Spinner gender;
-    private static final int RC_SIGN_IN = 9001;
-    private static final String URL = "/users";
+    private EditText birthdate;
+    private String strDate;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -48,10 +50,8 @@ public class RegisterFragment extends Fragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_register, container, false);
         name = (EditText) rootView.findViewById(R.id.editTextFirstName);
-        lastName = (EditText)rootView.findViewById(R.id.editTextLastName);
-        day = (EditText) rootView.findViewById(R.id.editTextDay);
-        month = (EditText) rootView.findViewById(R.id.editTextMonth);
-        year = (EditText) rootView.findViewById(R.id.editTextYear);
+        lastName = (EditText) rootView.findViewById(R.id.editTextLastName);
+        birthdate = (EditText) rootView.findViewById(R.id.birthdate);
         gender = (Spinner) rootView.findViewById(R.id.editTextGender);
         email = (EditText) rootView.findViewById(R.id.editTextEmail);
         password = (EditText) rootView.findViewById(R.id.editTextPassword);
@@ -66,21 +66,21 @@ public class RegisterFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        getView().findViewById(R.id.googleSignInButton).setOnClickListener(new View.OnClickListener() {
+        SignUpGoogle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent signInIntent = mGoogleSignInClient.getSignInIntent();
                 startActivityForResult(signInIntent, RC_SIGN_IN);
             }
         });
-        getView().findViewById(R.id.buttonRegister).setOnClickListener(new View.OnClickListener() {
+        SignUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 HashMap<String, String> params = new HashMap<>();
                 params.put("name", name.getText().toString());
                 params.put("surname", lastName.getText().toString());
-                params.put("birthdate", buildDate());
-                params.put("gender", gender.getSelectedItem().toString());
+                params.put("birthdate", strDate);
+                params.put("gender", gender.getSelectedItem().toString().toUpperCase());
                 params.put("email", email.getText().toString());
                 params.put("password", password.getText().toString());
 
@@ -88,71 +88,77 @@ public class RegisterFragment extends Fragment {
             }
         });
         name.addTextChangedListener(new TextWatcher() {
-            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
             @Override
             public void afterTextChanged(Editable s) {
                 enableButton();
             }
         });
         lastName.addTextChangedListener(new TextWatcher() {
-            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
             @Override
             public void afterTextChanged(Editable s) {
                 enableButton();
             }
         });
         email.addTextChangedListener(new TextWatcher() {
-            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
             @Override
             public void afterTextChanged(Editable s) {
                 enableButton();
             }
         });
         password.addTextChangedListener(new TextWatcher() {
-            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
             @Override
-            public void afterTextChanged(Editable s) {
-                enableButton();
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
-        });
-        year.addTextChangedListener(new TextWatcher() {
-            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
-            @Override
-            public void afterTextChanged(Editable s) {
-                enableButton();
-            }
-        });
-        month.addTextChangedListener(new TextWatcher() {
-            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
-            @Override
-            public void afterTextChanged(Editable s) {
-                enableButton();
-            }
-        });
-        day.addTextChangedListener(new TextWatcher() {
-            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
-            @Override
-            public void afterTextChanged(Editable s) {
-                enableButton();
-            }
-        });
 
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                enableButton();
+            }
+        });
+        birthdate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showDatePickerDialog();
+            }
+        });
     }
 
-    private boolean areFilled() { return name.getText().toString().length() != 0 && lastName.getText().toString().length() != 0
-            && email.getText().toString().length() != 0 && password.getText().toString().length() != 0
-            && buildDate() != "error";
+    private boolean areFilled() {
+        return name.getText().toString().length() != 0 && lastName.getText().toString().length() != 0
+                && email.getText().toString().length() != 0 && password.getText().toString().length() != 0
+                && !birthdate.getText().toString().isEmpty();
     }
 
     private void enableButton() {
-        SignUpButton.setEnabled( areFilled() );
+        SignUpButton.setEnabled(areFilled());
     }
 
     private void initGoogleLogin() {
@@ -194,6 +200,7 @@ public class RegisterFragment extends Fragment {
             //Excepción a lanzar
         }
     }
+
     private void postCredentials(HashMap<String, String> params) {
         APICommunicator apiCommunicator = new APICommunicator();
         Response.Listener responseListener = new Response.Listener() {
@@ -217,17 +224,23 @@ public class RegisterFragment extends Fragment {
         apiCommunicator.postRequest(getActivity().getApplicationContext(), URL, responseListener, errorListener, params);
     }
 
-    private String buildDate() {
-        String y = year.getText().toString();
-        String m = month.getText().toString();
-        String d = day.getText().toString();
-        String data = "error";
+    private void showDatePickerDialog() {
+        DatePickerFragment newFragment = DatePickerFragment.newInstance(new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                // +1 because january is zero
+                final String selectedDate = day + " / " + (month + 1) + " / " + year;
 
-        if( y.length() == 4 && m.length() == 2 && d.length() == 2
-                && Integer.parseInt(m) <= 12 && Integer.parseInt(d) <= 31)
-            data = y + "-" + m + "-" + d;
+                Calendar calendar = Calendar.getInstance();
+                calendar.set(year, month, day);
 
-        return  data;
+                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                strDate = format.format(calendar.getTime());
+                birthdate.setText(selectedDate);
+                enableButton();
+            }
+        });
+        newFragment.show(getActivity().getSupportFragmentManager(), "datePicker");
     }
 
 }
