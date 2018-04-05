@@ -42,7 +42,7 @@ public class TokenFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        getView().findViewById(R.id.submit_button).setOnClickListener(new View.OnClickListener() {
+        getView().findViewById(R.id.buttonChangePassword).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if ( passwordMatch() && rightToken() ) {
