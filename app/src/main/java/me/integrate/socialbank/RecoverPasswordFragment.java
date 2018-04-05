@@ -25,7 +25,6 @@ public class RecoverPasswordFragment extends Fragment {
     private EditText email;
     private Button submitButton;
 
-    //TODO mirar si es correcto
     private static final String URL = "/recover";
 
     @Override
@@ -45,13 +44,10 @@ public class RecoverPasswordFragment extends Fragment {
         getView().findViewById(R.id.submit_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                tokenSelected();
-                //submitButton.setEnabled(false);
-                //cleanEmail(); //TODO aqui no ira
-                //if (email.getText().toString().length() != 0) {
-                    //IF api funciona fa lo seguent
-                //}
-                // TODO postCredentials(user.getText().toString(), password.getText().toString());
+                submitButton.setEnabled(false);
+                if (email.getText().toString().length() != 0) {
+                    postCredentials(email.getText().toString());
+                }
             }
         });
         email.addTextChangedListener(new TextWatcher() {
@@ -65,43 +61,33 @@ public class RecoverPasswordFragment extends Fragment {
 
     }
 
-    //TODO conexion with API
-    private void postCredentials(String user, String password) {
+    private void postCredentials(String email) {
 
         APICommunicator apiCommunicator = new APICommunicator();
         Response.Listener responseListener = new Response.Listener<CustomRequest.CustomResponse>() {
             @Override
             public void onResponse(CustomRequest.CustomResponse response) {
-                //TODO
-                String token = response.headers.get("Authorization");
-                SharedPreferencesManager.INSTANCE.store(getActivity(),"token",token);
-                startActivity(new Intent(getActivity().getApplicationContext(), InsideActivity.class));
-                getActivity().finish();
+                Toast.makeText(getActivity().getApplicationContext(), "Tot funciona be", Toast.LENGTH_LONG).show();
+                tokenSelected();
             }
         };
         Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 submitButton.setEnabled(true);
-                //TODO tratar error
-                Toast.makeText(getActivity().getApplicationContext(), "Bu", Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity().getApplicationContext(), "Email not correct", Toast.LENGTH_LONG).show();
             }
         };
         HashMap<String, String> params = new HashMap<>();
-        params.put("email", email.getText().toString());
+        params.put("email", email);
 
         apiCommunicator.postRequest(getActivity().getApplicationContext(), URL, responseListener, errorListener, params);
-    }
-
-    private void cleanEmail() {
-        email.getText().clear();
     }
 
     private void enableButton() {
         submitButton.setEnabled( email.getText().toString().length() != 0 );
     }
 
-    //TODO cambiar al new fragment
     private void tokenSelected() {
         Fragment tokenFragment = new TokenFragment();
         FragmentChangeListener fc = (FragmentChangeListener) getActivity();
