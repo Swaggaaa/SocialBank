@@ -17,8 +17,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".InsideActivity" />
-        <activity android:name=".BoardFragment"></activity>
+        <activity android:name=".InsideActivity" >
+
+        </activity>
+
     </application>
 
 </manifest>
