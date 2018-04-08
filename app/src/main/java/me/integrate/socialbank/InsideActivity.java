@@ -1,33 +1,26 @@
 package me.integrate.socialbank;
 
-        import android.app.SearchManager;
-        import android.content.Intent;
-        import android.content.res.Configuration;
-        import android.os.Bundle;
-        import android.support.v4.app.ActionBarDrawerToggle;
-        import android.support.v4.app.Fragment;
-        import android.support.v4.app.FragmentActivity;
-        import android.support.v4.app.FragmentManager;
-        import android.support.v4.app.FragmentTransaction;
-        import android.support.v4.view.GravityCompat;
-        import android.support.v4.widget.DrawerLayout;
-        import android.support.v7.app.ActionBarActivity;
-        import android.support.v7.widget.Toolbar;
-        import android.util.Log;
-        import android.view.MenuItem;
-        import android.view.View;
-        import android.widget.AdapterView;
-        import android.widget.ArrayAdapter;
-        import android.widget.ListView;
-        import android.widget.Toast;
+import android.content.res.Configuration;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 public class InsideActivity extends ActionBarActivity implements FragmentChangeListener {
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
     private String[] mPlanetTitles;
     private ActionBarDrawerToggle mDrawerToggle;
-    private CharSequence mDrawerTitle;
-    private CharSequence mTitle;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -37,13 +30,12 @@ public class InsideActivity extends ActionBarActivity implements FragmentChangeL
         setSupportActionBar(myToolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         //TODO: arreglar que se vea completo el fragment
-        mTitle = mDrawerTitle = getTitle();
         mPlanetTitles = getResources().getStringArray(R.array.planets_array);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
 
         // set up the drawer's list view with items and click listener
-        mDrawerList.setAdapter(new ArrayAdapter<String>(this,
+        mDrawerList.setAdapter(new ArrayAdapter<>(this,
                 R.layout.drawer_list_item, mPlanetTitles));
         mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
@@ -53,7 +45,7 @@ public class InsideActivity extends ActionBarActivity implements FragmentChangeL
         mDrawerToggle = new ActionBarDrawerToggle(
                 this,                  /* host Activity */
                 mDrawerLayout,         /* DrawerLayout object */
-                R.drawable.ic_drawer,  /* nav drawer image to replace 'Up' caret */
+                myToolbar,  /* nav drawer image to replace 'Up' caret */
                 R.string.drawer_open,  /* "open drawer" description for accessibility */
                 R.string.drawer_close  /* "close drawer" description for accessibility */
         ) {
@@ -68,7 +60,7 @@ public class InsideActivity extends ActionBarActivity implements FragmentChangeL
         if (savedInstanceState == null) {
             selectItem(0);
         }
-        mDrawerLayout.setDrawerListener(mDrawerToggle);
+        mDrawerLayout.addDrawerListener(mDrawerToggle);
 
         // Check that the activity is using the layout version with
         // the fragment_container FrameLayout
@@ -93,14 +85,6 @@ public class InsideActivity extends ActionBarActivity implements FragmentChangeL
         }
     }
 
-    /* The click listner for ListView in the navigation drawer */
-    private class DrawerItemClickListener implements ListView.OnItemClickListener {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            selectItem(position);
-        }
-    }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // The action bar home/up action should open or close the drawer.
@@ -109,11 +93,12 @@ public class InsideActivity extends ActionBarActivity implements FragmentChangeL
             return true;
         }
         // Handle action buttons
-        switch(item.getItemId()) {
+        switch (item.getItemId()) {
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
+
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
@@ -124,12 +109,13 @@ public class InsideActivity extends ActionBarActivity implements FragmentChangeL
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        // Pass any configuration change to the drawer toggls
+        // Pass any configuration change to the drawer toggle
         mDrawerToggle.onConfigurationChanged(newConfig);
     }
- //TODO: enviar el fragment correspondiente
+
+    //TODO: enviar el fragment correspondiente
     private void selectItem(int position) {
-        switch (position){
+        switch (position) {
             case 1:
                 Log.v("test", "1");
                 break;
@@ -153,5 +139,13 @@ public class InsideActivity extends ActionBarActivity implements FragmentChangeL
         fragmentTransaction.replace(R.id.fragment_container_inside, fragment, fragment.toString());
         fragmentTransaction.addToBackStack(fragment.toString());
         fragmentTransaction.commit();
+    }
+
+    /* The click listener for ListView in the navigation drawer */
+    private class DrawerItemClickListener implements ListView.OnItemClickListener {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            selectItem(position);
+        }
     }
 }
