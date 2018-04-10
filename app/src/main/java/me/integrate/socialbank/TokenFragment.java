@@ -79,13 +79,11 @@ public class TokenFragment extends Fragment {
 
     }
 
-    //TODO conexion with API
     private void postCredentials(String newPassword, String token) {
         APICommunicator apiCommunicator = new APICommunicator();
         Response.Listener responseListener = new Response.Listener<CustomRequest.CustomResponse>() {
             @Override
             public void onResponse(CustomRequest.CustomResponse response) {
-                //TODO
                 String token = response.headers.get("Authorization");
                 SharedPreferencesManager.INSTANCE.store(getActivity(),"RIGHT!!!",token);
                 startActivity(new Intent(getActivity().getApplicationContext(), InsideActivity.class));
@@ -95,7 +93,6 @@ public class TokenFragment extends Fragment {
         Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                //TODO tratar error
                 Toast.makeText(getActivity().getApplicationContext(), "Wrong token", Toast.LENGTH_LONG).show();
                 tokenEditText.getText().clear();
             }
