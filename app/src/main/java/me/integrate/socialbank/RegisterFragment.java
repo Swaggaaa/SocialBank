@@ -152,8 +152,8 @@ public class RegisterFragment extends Fragment {
     }
 
     private boolean areFilled() {
-        return name.getText().toString().length() != 0 && lastName.getText().toString().length() != 0
-                && email.getText().toString().length() != 0 && password.getText().toString().length() != 0
+        return !name.getText().toString().isEmpty() && !lastName.getText().toString().isEmpty()
+                && !email.getText().toString().isEmpty() && !password.getText().toString().isEmpty()
                 && !birthdate.getText().toString().isEmpty();
     }
 
