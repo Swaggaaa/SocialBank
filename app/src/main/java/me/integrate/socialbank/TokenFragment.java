@@ -72,7 +72,6 @@ public class TokenFragment extends Fragment {
                 enableButton();
             }
         });
-
     }
 
     private void postCredentials(String newPassword, String token) {
@@ -80,14 +79,24 @@ public class TokenFragment extends Fragment {
         Response.Listener responseListener = new Response.Listener<CustomRequest.CustomResponse>() {
             @Override
             public void onResponse(CustomRequest.CustomResponse response) {
+                Toast.makeText(getActivity().getApplicationContext(), "Password successfully changed ", Toast.LENGTH_LONG).show();
                 loginSelected();
             }
         };
         Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                //TODO: error handling
-                Toast.makeText(getActivity().getApplicationContext(), "Wrong token", Toast.LENGTH_LONG).show();
+                String message;
+                int errorCode = error.networkResponse.statusCode;
+                if (errorCode >= 500  &&  errorCode <= 511)
+                    message = "Server error";
+                else if(errorCode == 400)
+                    message = "Bad request";
+                else if(errorCode == 404)
+                    message = "Wrong token";
+                else
+                    message = "Unexpected error";
+                Toast.makeText(getActivity().getApplicationContext(), message, Toast.LENGTH_LONG).show();
                 tokenEditText.getText().clear();
             }
         };
