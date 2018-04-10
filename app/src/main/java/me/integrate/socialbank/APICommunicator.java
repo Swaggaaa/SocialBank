@@ -35,6 +35,10 @@ class APICommunicator {
         doRequest(context, Request.Method.PUT, url, responseListener, errorListener, params);
     }
 
+    void putRequest(Context context, String url, Response.Listener responseListener, Response.ErrorListener errorListener, final String params) {
+        doRequest(context, Request.Method.PUT, url, responseListener, errorListener, params);
+    }
+
     void deleteRequest(Context context, String url, Response.Listener responseListener, Response.ErrorListener errorListener, final Map<String, String> params) {
         doRequest(context, Request.Method.DELETE, url, responseListener, errorListener, params);
     }

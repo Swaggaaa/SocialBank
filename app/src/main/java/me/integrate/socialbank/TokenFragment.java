@@ -15,9 +15,6 @@ import android.widget.Toast;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class TokenFragment extends Fragment {
 
     private static final String URL = "/recover";
@@ -46,7 +43,7 @@ public class TokenFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if ( passwordMatch() ) {
-                    postCredentials(tokenEditText.getText().toString(), pass1.getText().toString());
+                    postCredentials(pass1.getText().toString(), tokenEditText.getText().toString());
                 }
 
             }
@@ -83,8 +80,6 @@ public class TokenFragment extends Fragment {
         Response.Listener responseListener = new Response.Listener<CustomRequest.CustomResponse>() {
             @Override
             public void onResponse(CustomRequest.CustomResponse response) {
-                String token = response.headers.get("Authorization");
-                SharedPreferencesManager.INSTANCE.store(getActivity(),"Password changed!",token);
                 loginSelected();
             }
         };
@@ -97,10 +92,7 @@ public class TokenFragment extends Fragment {
             }
         };
 
-        Map<String, String> params = new HashMap<>();
-        params.put("newPassword", newPassword);
-
-        apiCommunicator.putRequest(getActivity().getApplicationContext(), URL.concat("/".concat(token)), responseListener, errorListener, params);
+        apiCommunicator.putRequest(getActivity().getApplicationContext(), URL.concat("/".concat(token)), responseListener, errorListener, newPassword);
     }
 
     private void clearPasswords() {
