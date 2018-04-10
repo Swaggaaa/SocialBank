@@ -51,7 +51,7 @@ public class LoginFragment extends Fragment {
                 }
             }
         });
-        getView().findViewById(R.id.register_button).setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.register_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 registerSelected();
@@ -76,7 +76,7 @@ public class LoginFragment extends Fragment {
     }
 
     private boolean areFilled() {
-        return user.getText().toString().length() != 0 && password.getText().toString().length() != 0;
+        return !user.getText().toString().isEmpty() && !password.getText().toString().isEmpty();
     }
 
     //Se extrae en función externa por si se quiere modificar el estilo
