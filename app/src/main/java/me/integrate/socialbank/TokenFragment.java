@@ -85,9 +85,8 @@ public class TokenFragment extends Fragment {
             @Override
             public void onResponse(CustomRequest.CustomResponse response) {
                 String token = response.headers.get("Authorization");
-                SharedPreferencesManager.INSTANCE.store(getActivity(),"RIGHT!!!",token);
-                startActivity(new Intent(getActivity().getApplicationContext(), InsideActivity.class));
-                getActivity().finish();
+                SharedPreferencesManager.INSTANCE.store(getActivity(),"Password changed!",token);
+                loginSelected();
             }
         };
         Response.ErrorListener errorListener = new Response.ErrorListener() {
@@ -127,5 +126,10 @@ public class TokenFragment extends Fragment {
         return ret;
     }
 
+    public void loginSelected() {
+        Fragment loginFragment = new LoginFragment();
+        FragmentChangeListener fc = (FragmentChangeListener) getActivity();
+        fc.replaceFragment(loginFragment);
+    }
 
 }
