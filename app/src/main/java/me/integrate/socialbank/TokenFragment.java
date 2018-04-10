@@ -1,9 +1,9 @@
 package me.integrate.socialbank;
 
-import android.support.v4.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -21,11 +21,11 @@ import java.util.Map;
 
 public class TokenFragment extends Fragment {
 
+    private static final String URL = "/recover";
     private EditText tokenEditText;
     private EditText pass1;
     private EditText pass2;
     private Button changeButton;
-    private static final String URL = "/recover";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -43,7 +43,7 @@ public class TokenFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        getView().findViewById(R.id.buttonChangePassword).setOnClickListener(new View.OnClickListener() {
+        changeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if ( passwordMatch() ) {
@@ -112,8 +112,9 @@ public class TokenFragment extends Fragment {
         pass2.getText().clear();
     }
 
-    private boolean areFilled() { return tokenEditText.getText().toString().length() != 0
-            && pass1.getText().toString().length() != 0 && pass2.getText().toString().length() != 0;
+    private boolean areFilled() {
+        return !tokenEditText.getText().toString().isEmpty()
+                && !pass1.getText().toString().isEmpty() && !pass2.getText().toString().isEmpty();
     }
 
     private void enableButton() {

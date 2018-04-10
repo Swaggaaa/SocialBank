@@ -1,11 +1,9 @@
 package me.integrate.socialbank;
 
 
-import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBarActivity;
-import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -22,10 +20,9 @@ import java.util.HashMap;
 
 public class RecoverPasswordFragment extends Fragment {
 
+    private static final String URL = "/recover";
     private EditText email;
     private Button submitButton;
-
-    private static final String URL = "/recover";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -41,7 +38,7 @@ public class RecoverPasswordFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        getView().findViewById(R.id.submit_button).setOnClickListener(new View.OnClickListener() {
+        submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 submitButton.setEnabled(false);
@@ -59,6 +56,13 @@ public class RecoverPasswordFragment extends Fragment {
             }
         });
 
+        view.findViewById(R.id.token_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                tokenSelected();
+            }
+        });
+
     }
 
     private void postCredentials(String email) {
@@ -67,7 +71,7 @@ public class RecoverPasswordFragment extends Fragment {
         Response.Listener responseListener = new Response.Listener<CustomRequest.CustomResponse>() {
             @Override
             public void onResponse(CustomRequest.CustomResponse response) {
-                Toast.makeText(getActivity().getApplicationContext(), "Recovery information initializated", Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity().getApplicationContext(), "Recovery information initialized", Toast.LENGTH_LONG).show();
                 tokenSelected();
             }
         };
@@ -75,7 +79,7 @@ public class RecoverPasswordFragment extends Fragment {
             @Override
             public void onErrorResponse(VolleyError error) {
                 submitButton.setEnabled(true);
-                Toast.makeText(getActivity().getApplicationContext(), "Email not correct", Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity().getApplicationContext(), "An unexpected error has occurred", Toast.LENGTH_LONG).show();
             }
         };
         HashMap<String, String> params = new HashMap<>();
@@ -85,10 +89,10 @@ public class RecoverPasswordFragment extends Fragment {
     }
 
     private void enableButton() {
-        submitButton.setEnabled( email.getText().toString().length() != 0 );
+        submitButton.setEnabled(!email.getText().toString().isEmpty());
     }
 
-    private void tokenSelected() {
+    public void tokenSelected() {
         Fragment tokenFragment = new TokenFragment();
         FragmentChangeListener fc = (FragmentChangeListener) getActivity();
         fc.replaceFragment(tokenFragment);
