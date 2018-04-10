@@ -1,6 +1,5 @@
 package me.integrate.socialbank;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -92,6 +91,7 @@ public class TokenFragment extends Fragment {
         Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                //TODO: error handling
                 Toast.makeText(getActivity().getApplicationContext(), "Wrong token", Toast.LENGTH_LONG).show();
                 tokenEditText.getText().clear();
             }

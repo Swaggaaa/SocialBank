@@ -16,8 +16,6 @@ import android.widget.Toast;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
-import java.util.HashMap;
-
 public class RecoverPasswordFragment extends Fragment {
 
     private static final String URL = "/recover";
@@ -82,10 +80,7 @@ public class RecoverPasswordFragment extends Fragment {
                 Toast.makeText(getActivity().getApplicationContext(), "An unexpected error has occurred", Toast.LENGTH_LONG).show();
             }
         };
-        HashMap<String, String> params = new HashMap<>();
-        params.put("email", email);
-
-        apiCommunicator.postRequest(getActivity().getApplicationContext(), URL, responseListener, errorListener, params);
+        apiCommunicator.postRequest(getActivity().getApplicationContext(), URL, responseListener, errorListener, email);
     }
 
     private void enableButton() {

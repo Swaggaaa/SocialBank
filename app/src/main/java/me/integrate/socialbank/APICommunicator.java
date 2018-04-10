@@ -27,6 +27,10 @@ class APICommunicator {
         doRequest(context, Request.Method.POST, url, responseListener, errorListener, params);
     }
 
+    void postRequest(Context context, String url, Response.Listener responseListener, Response.ErrorListener errorListener, final String params) {
+        doRequest(context, Request.Method.POST, url, responseListener, errorListener, params);
+    }
+
     void putRequest(Context context, String url, Response.Listener responseListener, Response.ErrorListener errorListener, final Map<String, String> params) {
         doRequest(context, Request.Method.PUT, url, responseListener, errorListener, params);
     }
@@ -41,6 +45,26 @@ class APICommunicator {
             public byte[] getBody() throws AuthFailureError {
                 try {
                     return new JSONObject(params).toString().getBytes(CHARSET);
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                    return null;
+                }
+            }
+
+            @Override
+            public String getBodyContentType() {
+                return CONTENT_TYPE;
+            }
+        };
+        Volley.newRequestQueue(context).add(postRequest);
+    }
+
+    private void doRequest(Context context, final int post, final String url, final Response.Listener responseListener, final Response.ErrorListener errorListener, final String params) {
+        CustomRequest postRequest = new CustomRequest(post, API_URL + url, responseListener, errorListener) {
+            @Override
+            public byte[] getBody() throws AuthFailureError {
+                try {
+                    return params.getBytes(CHARSET);
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                     return null;
