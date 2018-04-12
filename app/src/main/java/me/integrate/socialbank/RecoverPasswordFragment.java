@@ -69,7 +69,7 @@ public class RecoverPasswordFragment extends Fragment {
         Response.Listener responseListener = new Response.Listener<CustomRequest.CustomResponse>() {
             @Override
             public void onResponse(CustomRequest.CustomResponse response) {
-                Toast.makeText(getActivity().getApplicationContext(), "Recovery information initialized", Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity().getApplicationContext(), "Recovery code email sent!", Toast.LENGTH_LONG).show();
                 tokenSelected();
             }
         };
