@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginStart="20dp">
+
+        <EditText
+            android:id="@+id/email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp"
+            android:ems="10"
+            android:hint="@string/email"
+            android:inputType="textEmailAddress"
+            android:minHeight="?attr/actionBarSize"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:layout_editor_absoluteX="20dp" />
+
+        <EditText
+            android:id="@+id/password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp"
+            android:ems="10"
+            android:hint="@string/password"
+            android:inputType="textPassword"
+            app:layout_constraintTop_toBottomOf="@+id/email"
+            tools:layout_editor_absoluteX="0dp" />
+
+        <Button
+            android:id="@+id/forgot_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp"
+            android:background="@color/colorTransparent"
+            android:text="@string/forgot"
+            android:textAlignment="textEnd"
+            android:textColor="@color/colorTextForgot"
+            app:layout_constraintTop_toBottomOf="@+id/password"
+            tools:layout_editor_absoluteX="267dp" />
+
+        <Button
+            android:id="@+id/log_in_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp"
+            android:background="@android:color/holo_blue_dark"
+            android:text="@string/login"
+            app:layout_constraintTop_toBottomOf="@+id/password"
+            tools:enabled="false"
+            tools:layout_editor_absoluteX="148dp" />
+
+        <Button
+            android:id="@+id/register_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorTransparent"
+            android:text="@string/account"
+            android:textColor="@color/colorTextForgot"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/log_in_button" />
+
+    </LinearLayout>
+
+
+</android.support.constraint.ConstraintLayout>
