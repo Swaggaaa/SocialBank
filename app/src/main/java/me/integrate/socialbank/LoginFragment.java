@@ -14,7 +14,6 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.android.volley.Response;
-import com.android.volley.VolleyError;
 
 import java.util.HashMap;
 
@@ -103,14 +102,11 @@ public class LoginFragment extends Fragment {
                 getActivity().finish();
             }
         };
-        Response.ErrorListener errorListener = new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                cleanPassword();
-                loginButton.setEnabled(true);
-                loginButton.setText(R.string.login);
-                Toast.makeText(getActivity().getApplicationContext(), "Email or password incorrect", Toast.LENGTH_LONG).show();
-            }
+        Response.ErrorListener errorListener = error -> {
+            cleanPassword();
+            loginButton.setEnabled(true);
+            loginButton.setText(R.string.login);
+            Toast.makeText(getActivity().getApplicationContext(), "Email or password incorrect", Toast.LENGTH_LONG).show();
         };
         HashMap<String, String> params = new HashMap<>();
         params.put("email", user);
