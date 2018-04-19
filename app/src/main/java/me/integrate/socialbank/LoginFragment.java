@@ -14,7 +14,6 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.android.volley.Response;
-import com.android.volley.VolleyError;
 
 import java.util.HashMap;
 
@@ -51,10 +50,16 @@ public class LoginFragment extends Fragment {
                 }
             }
         });
-        getView().findViewById(R.id.register_button).setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.register_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 registerSelected();
+            }
+        });
+        getView().findViewById(R.id.forgot_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                forgotPasswordSelected();
             }
         });
         user.addTextChangedListener(new TextWatcher() {
@@ -76,7 +81,7 @@ public class LoginFragment extends Fragment {
     }
 
     private boolean areFilled() {
-        return user.getText().toString().length() != 0 && password.getText().toString().length() != 0;
+        return !user.getText().toString().isEmpty() && !password.getText().toString().isEmpty();
     }
 
     //Se extrae en función externa por si se quiere modificar el estilo
@@ -97,14 +102,11 @@ public class LoginFragment extends Fragment {
                 getActivity().finish();
             }
         };
-        Response.ErrorListener errorListener = new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                cleanPassword();
-                loginButton.setEnabled(true);
-                loginButton.setText(R.string.login);
-                Toast.makeText(getActivity().getApplicationContext(), "Email or password incorrect", Toast.LENGTH_LONG).show();
-            }
+        Response.ErrorListener errorListener = error -> {
+            cleanPassword();
+            loginButton.setEnabled(true);
+            loginButton.setText(R.string.login);
+            Toast.makeText(getActivity().getApplicationContext(), "Email or password incorrect", Toast.LENGTH_LONG).show();
         };
         HashMap<String, String> params = new HashMap<>();
         params.put("email", user);
@@ -122,5 +124,10 @@ public class LoginFragment extends Fragment {
         Fragment registerFragment = new RegisterFragment();
         FragmentChangeListener fc = (FragmentChangeListener) getActivity();
         fc.replaceFragment(registerFragment);
+    }
+    private void forgotPasswordSelected() {
+        Fragment recoverPasswordFragment = new RecoverPasswordFragment();
+        FragmentChangeListener fc = (FragmentChangeListener) getActivity();
+        fc.replaceFragment(recoverPasswordFragment);
     }
 }
