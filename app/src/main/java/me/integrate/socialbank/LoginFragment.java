@@ -39,29 +39,16 @@ public class LoginFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        loginButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                loginButton.setEnabled(false);
-                loginButton.setText(R.string.loading);
+        loginButton.setOnClickListener(view1 -> {
+            loginButton.setEnabled(false);
+            loginButton.setText(R.string.loading);
 
-                if (user.getText().toString().length() != 0 && password.getText().toString().length() != 0) {
-                    postCredentials(user.getText().toString(), password.getText().toString());
-                }
+            if (user.getText().toString().length() != 0 && password.getText().toString().length() != 0) {
+                postCredentials(user.getText().toString(), password.getText().toString());
             }
         });
-        view.findViewById(R.id.register_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                registerSelected();
-            }
-        });
-        getView().findViewById(R.id.forgot_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                forgotPasswordSelected();
-            }
-        });
+        view.findViewById(R.id.register_button).setOnClickListener(v -> registerSelected());
+        view.findViewById(R.id.forgot_button).setOnClickListener(v -> forgotPasswordSelected());
         user.addTextChangedListener(new TextWatcher() {
             @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
@@ -93,14 +80,11 @@ public class LoginFragment extends Fragment {
     private void postCredentials(String user, String password) {
 
         APICommunicator apiCommunicator = new APICommunicator();
-        Response.Listener responseListener = new Response.Listener<CustomRequest.CustomResponse>() {
-            @Override
-            public void onResponse(CustomRequest.CustomResponse response) {
-                String token = response.headers.get("Authorization");
-                SharedPreferencesManager.INSTANCE.store(getActivity(),"token",token);
-                startActivity(new Intent(getActivity().getApplicationContext(), InsideActivity.class));
-                getActivity().finish();
-            }
+        Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response -> {
+            String token = response.headers.get("Authorization");
+            SharedPreferencesManager.INSTANCE.store(getActivity(), "token", token);
+            startActivity(new Intent(getActivity().getApplicationContext(), InsideActivity.class));
+            getActivity().finish();
         };
         Response.ErrorListener errorListener = error -> {
             cleanPassword();
