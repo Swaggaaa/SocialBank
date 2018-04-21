@@ -41,7 +41,7 @@
             android:orientation="horizontal">
 
             <ImageButton
-                android:id="@+id/imageButtonAddPicture"
+                android:id="@+id/buttonImg"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -74,8 +74,7 @@
                     android:layout_weight="1"
                     android:background="@android:color/transparent"
                     android:text="@string/ask"
-                    android:textColor="@color/material_blue_grey_800" />
-
+                    android:textColor="@color/colorTextButton" />
                 <TextView
                     android:id="@+id/textView1"
                     android:layout_height="wrap_content"
@@ -95,7 +94,7 @@
                     android:layout_weight="1"
                     android:background="@android:color/transparent"
                     android:text="@string/offer"
-                    android:textColor="@color/material_blue_grey_800" />
+                    android:textColor="@color/colorTextButton" />
 
             </LinearLayout>
         </TableRow>
@@ -105,16 +104,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
+            android:hint="@string/event_name"
             android:inputType="textPersonName"
-            android:text="@string/event_name" />
+            android:textSize="15sp" />
 
         <EditText
             android:id="@+id/editTextAdress"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
+            android:hint="@string/event_adress"
             android:inputType="textPersonName"
-            android:text="@string/event_adress" />
+            android:textSize="15sp" />
 
         <TableRow
             android:layout_width="match_parent"
@@ -142,7 +143,7 @@
                     android:layout_weight="1"
                     android:background="@android:color/transparent"
                     android:text="@string/yes"
-                    android:textColor="@color/material_blue_grey_800" />
+                    android:textColor="@color/colorTextButton" />
 
                 <TextView
                     android:id="@+id/textView2"
@@ -163,14 +164,15 @@
                     android:layout_weight="1"
                     android:background="@android:color/transparent"
                     android:text="@string/no"
-                    android:textColor="@color/material_blue_grey_800" />
+                    android:textColor="@color/colorTextButton" />
 
             </LinearLayout>
         </TableRow>
 
         <TableLayout
+            android:id="@+id/groupTable"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
 
             <TableRow
                 android:layout_width="match_parent"
@@ -200,12 +202,12 @@
                         android:layout_weight="1"
                         android:background="@android:color/transparent"
                         android:text="@string/yes"
-                        android:textColor="@color/material_blue_grey_800" />
+                        android:textColor="@color/colorTextButton" />
 
                     <TextView
                         android:id="@+id/textView3"
-                        android:layout_height="wrap_content"
                         android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_weight="1"
                         android:text="|"
@@ -221,27 +223,34 @@
                         android:layout_weight="1"
                         android:background="@android:color/transparent"
                         android:text="@string/no"
-                        android:textColor="@color/material_blue_grey_800" />
+                        android:textColor="@color/colorTextButton" />
 
                 </LinearLayout>
             </TableRow>
 
             <TableRow
+                android:id="@+id/capacityRow"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" >
+                android:layout_height="match_parent">
 
                 <TextView
                     android:id="@+id/textViewCapacity"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:text="@string/capacity" />
 
                 <EditText
                     android:id="@+id/editTextCapacity"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:ems="10"
-                    android:inputType="number" />
+                    android:layout_weight="0"
+                    android:ems="6"
+                    android:hint="0"
+                    android:inputType="number"
+                    android:textAlignment="textEnd"
+                    android:textSize="15sp" />
+
             </TableRow>
         </TableLayout>
 
@@ -252,7 +261,8 @@
             android:ems="10"
             android:hint="@string/description"
             android:inputType="textMultiLine"
-            android:text="Add a desc" />
+            android:selectAllOnFocus="false"
+            android:singleLine="false" />
 
     </LinearLayout>
 
