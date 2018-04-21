@@ -7,7 +7,6 @@
     tools:context="me.integrate.socialbank.BoardFragment">
 
     <TextView
-        android:id="@+id/editText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"

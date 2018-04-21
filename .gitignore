@@ -5,6 +5,8 @@
 /.idea/modules.xml
 /.idea/vcs.xml
 /.idea/libraries
+/.idea/codeStyles/*
+/.idea/caches/*
 .DS_Store
 /build
 /captures

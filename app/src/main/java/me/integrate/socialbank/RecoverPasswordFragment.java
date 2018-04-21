@@ -1,6 +1,5 @@
 package me.integrate.socialbank;
 
-
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -14,7 +13,6 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.android.volley.Response;
-import com.android.volley.VolleyError;
 
 public class RecoverPasswordFragment extends Fragment {
 
@@ -36,49 +34,41 @@ public class RecoverPasswordFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        submitButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                submitButton.setEnabled(false);
-                if (email.getText().toString().length() != 0) {
-                    postCredentials(email.getText().toString());
-                }
+        submitButton.setOnClickListener(v -> {
+            submitButton.setEnabled(false);
+            if (email.getText().toString().length() != 0) {
+                postCredentials(email.getText().toString());
             }
         });
         email.addTextChangedListener(new TextWatcher() {
-            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
             @Override
             public void afterTextChanged(Editable s) {
                 enableButton();
             }
         });
 
-        view.findViewById(R.id.token_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                tokenSelected();
-            }
-        });
+        view.findViewById(R.id.token_button).setOnClickListener(view1 -> tokenSelected());
 
     }
 
     private void postCredentials(String email) {
 
         APICommunicator apiCommunicator = new APICommunicator();
-        Response.Listener responseListener = new Response.Listener<CustomRequest.CustomResponse>() {
-            @Override
-            public void onResponse(CustomRequest.CustomResponse response) {
-                Toast.makeText(getActivity().getApplicationContext(), "Recovery code email sent!", Toast.LENGTH_LONG).show();
-                tokenSelected();
-            }
+        Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response -> {
+            Toast.makeText(getActivity().getApplicationContext(), "Recovery code email sent!", Toast.LENGTH_LONG).show();
+            tokenSelected();
         };
-        Response.ErrorListener errorListener = new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                submitButton.setEnabled(true);
-                Toast.makeText(getActivity().getApplicationContext(), "An unexpected error has occurred", Toast.LENGTH_LONG).show();
-            }
+        Response.ErrorListener errorListener = error -> {
+            submitButton.setEnabled(true);
+            Toast.makeText(getActivity().getApplicationContext(), "An unexpected error has occurred", Toast.LENGTH_LONG).show();
         };
         apiCommunicator.postRequest(getActivity().getApplicationContext(), URL, responseListener, errorListener, email);
     }
