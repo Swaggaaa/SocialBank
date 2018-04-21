@@ -12,6 +12,8 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 
 public class InsideActivity extends AppCompatActivity implements FragmentChangeListener {
     private DrawerLayout mDrawerLayout;
@@ -45,6 +47,12 @@ public class InsideActivity extends AppCompatActivity implements FragmentChangeL
 
                     return true;
                 });
+
+        View headerView = navigationView.getHeaderView(0);
+        TextView userName = (TextView) headerView.findViewById(R.id.userName);
+        userName.setText(SharedPreferencesManager.INSTANCE.read(this, "user_name"));
+        TextView userEmail = (TextView) headerView.findViewById(R.id.userEmail);
+        userEmail.setText(SharedPreferencesManager.INSTANCE.read(this, "user_email"));
 
         // Check that the activity is using the layout version with
         // the fragment_container FrameLayout
