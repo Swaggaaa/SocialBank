@@ -18,19 +18,8 @@
     <string name="token">Token</string>
     <string name="new_password">New password</string>
     <string name="loading">Loading</string>
-    <string-array name="planets_array">
-        <item>Mercury</item>
-        <item>Venus</item>
-        <item>Earth</item>
-        <item>Mars</item>
-        <item>Jupiter</item>
-        <item>Saturn</item>
-        <item>Uranus</item>
-        <item>Neptune</item>
-    </string-array>
-    <string name="drawer_open">Open navigation drawer</string>
-    <string name="drawer_close">Close navigation drawer</string>
     <string name="update_password">Update your password\n Enter the token and update your password</string>
     <string name="i_have_token">I have a token</string>
     <string name="welcome">Welcome</string>
+    <string name="logout">Logout</string>
 </resources>
