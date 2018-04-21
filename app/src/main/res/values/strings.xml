@@ -31,7 +31,7 @@
     <string name="yes">YES</string>
     <string name="no">NO</string>
     <string name="event_group">Group service</string>
-    <string name="event_adress">Add adress</string>
+    <string name="event_address">Add address</string>
     <string name="event_name">Event name</string>
     <string name="event_fixed">Fixed schedule?</string>
     <string name="description">Add a description</string>
