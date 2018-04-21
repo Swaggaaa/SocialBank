@@ -1,5 +1,6 @@
 package me.integrate.socialbank;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -12,6 +13,10 @@ public class MainActivity extends ActionBarActivity implements FragmentChangeLis
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (SharedPreferencesManager.INSTANCE.read(this, "token") != null)
+            startActivity(new Intent(this, InsideActivity.class));
+
         setContentView(R.layout.activity_main);
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);

@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.android.volley.Response;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class LoginFragment extends Fragment {
     private static final String URL = "/login";
@@ -42,6 +43,8 @@ public class LoginFragment extends Fragment {
         loginButton.setOnClickListener(view1 -> {
             loginButton.setEnabled(false);
             loginButton.setText(R.string.loading);
+            user.setEnabled(false);
+            password.setEnabled(false);
 
             if (user.getText().toString().length() != 0 && password.getText().toString().length() != 0) {
                 postCredentials(user.getText().toString(), password.getText().toString());
@@ -89,10 +92,12 @@ public class LoginFragment extends Fragment {
         Response.ErrorListener errorListener = error -> {
             cleanPassword();
             loginButton.setEnabled(true);
+            this.user.setEnabled(true);
+            this.password.setEnabled(true);
             loginButton.setText(R.string.login);
             Toast.makeText(getActivity().getApplicationContext(), "Email or password incorrect", Toast.LENGTH_LONG).show();
         };
-        HashMap<String, String> params = new HashMap<>();
+        Map<String, String> params = new HashMap<>();
         params.put("email", user);
         params.put("password", password);
 
