@@ -42,7 +42,7 @@ public class InsideActivity extends AppCompatActivity implements FragmentChangeL
 
                     // Add code here to update the UI based on the item selected
                     // For example, swap UI fragments here
-                    if (menuItem.getTitle().equals(getResources().getString(R.string.logout)))
+                    if (menuItem.getItemId() == R.string.logout)
                         logout();
 
                     return true;
