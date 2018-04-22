@@ -15,6 +15,9 @@ import android.widget.Toast;
 
 import com.android.volley.Response;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -85,7 +88,19 @@ public class LoginFragment extends Fragment {
         APICommunicator apiCommunicator = new APICommunicator();
         Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response -> {
             String token = response.headers.get("Authorization");
+            JSONObject jsonObject = null;
+            String email = null;
+            String name = null;
+            try {
+                jsonObject = new JSONObject(response.response);
+                email = jsonObject.getString("email");
+                name = jsonObject.getString("name");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
             SharedPreferencesManager.INSTANCE.store(getActivity(), "token", token);
+            SharedPreferencesManager.INSTANCE.store(getActivity(), "user_email", email);
+            SharedPreferencesManager.INSTANCE.store(getActivity(), "user_name", name);
             startActivity(new Intent(getActivity().getApplicationContext(), InsideActivity.class));
             getActivity().finish();
         };
