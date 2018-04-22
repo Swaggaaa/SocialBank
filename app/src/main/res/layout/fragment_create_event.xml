@@ -21,9 +21,10 @@
 
             <ImageButton
                 android:id="@+id/buttonImg"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:contentDescription="@string/event_image"
                 app:srcCompat="@android:drawable/ic_menu_camera" />
         </LinearLayout>
 
@@ -60,10 +61,10 @@
                     android:layout_width="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
-                    android:text="|"
+                    android:text="@string/stick"
                     android:textAlignment="center"
                     android:textColor="@color/material_blue_grey_800"
-                    android:textSize="30dp" />
+                    android:textSize="30sp" />
 
                 <Button
                     android:id="@+id/buttonOffer"
@@ -82,7 +83,7 @@
             android:id="@+id/editTextName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ems="10"
+            android:ems="8"
             android:hint="@string/event_name"
             android:inputType="textPersonName"
             android:textSize="15sp" />
@@ -91,62 +92,139 @@
             android:id="@+id/editTextAddress"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ems="10"
+            android:ems="8"
             android:hint="@string/event_address"
             android:inputType="textPersonName"
             android:textSize="15sp" />
 
-        <TableRow
+        <TableLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/textViewFixed"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1"
-                android:text="@string/event_fixed"
-                android:textColor="@color/material_blue_grey_800" />
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <Button
-                    android:id="@+id/buttonYesFixed"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_weight="1"
-                    android:background="@android:color/transparent"
-                    android:text="@string/yes"
-                    android:textColor="@color/colorTextButton" />
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
                 <TextView
-                    android:id="@+id/textView2"
-                    android:layout_height="wrap_content"
-                    android:layout_width="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_weight="1"
-                    android:text="|"
-                    android:textAlignment="center"
-                    android:textColor="@color/material_blue_grey_800"
-                    android:textSize="30dp" />
-
-                <Button
-                    android:id="@+id/buttonNoFixed"
+                    android:id="@+id/textViewFixed"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
-                    android:background="@android:color/transparent"
-                    android:text="@string/no"
-                    android:textColor="@color/colorTextButton" />
+                    android:text="@string/event_fixed"
+                    android:textColor="@color/material_blue_grey_800" />
 
-            </LinearLayout>
-        </TableRow>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/buttonYesFixed"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="1"
+                        android:background="@android:color/transparent"
+                        android:text="@string/yes"
+                        android:textColor="@color/colorTextButton" />
+
+                    <TextView
+                        android:id="@+id/textView2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="1"
+                        android:text="@string/stick"
+                        android:textAlignment="center"
+                        android:textColor="@color/material_blue_grey_800"
+                        android:textSize="30sp" />
+
+                    <Button
+                        android:id="@+id/buttonNoFixed"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="1"
+                        android:background="@android:color/transparent"
+                        android:text="@string/no"
+                        android:textColor="@color/colorTextButton" />
+
+                </LinearLayout>
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:id="@+id/layoutDate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="right"
+                        android:orientation="vertical">
+
+                        <EditText
+                            android:id="@+id/editTextStartDate"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:ems="9"
+                            android:hint="Start date"
+                            android:inputType="date"
+                            android:textSize="15sp"
+                            android:clickable="true"
+                            android:focusable="false" />
+
+                        <EditText
+                            android:id="@+id/editTextEndDate"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:ems="9"
+                            android:hint="End date"
+                            android:inputType="date"
+                            android:textSize="15sp"
+                            android:clickable="true"
+                            android:focusable="false" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <EditText
+                            android:id="@+id/editTextStartHour"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:ems="9"
+                            android:hint="Start hour"
+                            android:inputType="number"
+                            android:textSize="15sp" />
+
+                        <EditText
+                            android:id="@+id/editTextEndHour"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:ems="9"
+                            android:hint="End hour"
+                            android:inputType="number"
+                            android:textSize="15sp" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </TableRow>
+
+        </TableLayout>
 
         <TableLayout
             android:id="@+id/groupTable"
@@ -178,7 +256,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:layout_weight="1"
                         android:background="@android:color/transparent"
                         android:text="@string/yes"
                         android:textColor="@color/colorTextButton" />
@@ -189,10 +266,10 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_weight="1"
-                        android:text="|"
+                        android:text="@string/stick"
                         android:textAlignment="center"
                         android:textColor="@color/material_blue_grey_800"
-                        android:textSize="30dp" />
+                        android:textSize="30sp" />
 
                     <Button
                         android:id="@+id/buttonNoGroup"
@@ -225,7 +302,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="0"
                     android:ems="6"
-                    android:hint="0"
+                    android:hint="@string/_0"
                     android:inputType="number"
                     android:textAlignment="textEnd"
                     android:textSize="15sp" />
@@ -237,11 +314,12 @@
             android:id="@+id/editTextDescription"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ems="10"
+            android:ems="8"
             android:hint="@string/description"
             android:inputType="textMultiLine"
             android:selectAllOnFocus="false"
-            android:singleLine="false" />
+            android:singleLine="false"
+            android:textSize="15sp" />
 
     </LinearLayout>
 

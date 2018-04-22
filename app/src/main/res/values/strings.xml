@@ -36,4 +36,7 @@
     <string name="event_fixed">Fixed schedule?</string>
     <string name="description">Add a description</string>
     <string name="capacity">Capacity</string>
+    <string name="stick">|</string>
+    <string name="_0">0</string>
+    <string name="event_image">Event image</string>
 </resources>

@@ -2,6 +2,7 @@ package me.integrate.socialbank;
 
 
 import android.Manifest;
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -13,6 +14,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.text.Layout;
 import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,8 +24,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.Toast;
@@ -33,13 +37,18 @@ import com.android.volley.VolleyError;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
 
 import static android.app.Activity.RESULT_OK;
 import static android.content.ContentValues.TAG;
 
 public class CreateEventFragment extends Fragment {
+    //TODO: figure url out
+    private static final String URL = "/event";
 
-    private static final String URL = "/recover";
     private ImageButton buttonImg;
     private Button buttonAsk;
     private Button buttonOffer;
@@ -49,7 +58,12 @@ public class CreateEventFragment extends Fragment {
     private Button buttonNoGroup;
     private EditText name;
     private EditText address;
+    private EditText editTextStartDate;
+    private EditText editTextEndDate;
+    private EditText editTextStartHour;
+    private EditText editTextEndHour;
     private EditText description;
+    private LinearLayout layoutDate;
     private TableLayout groupTable;
     private TableRow capacityRow;
     private int eventType;
@@ -60,6 +74,12 @@ public class CreateEventFragment extends Fragment {
     private static final int MY_PERMISSIONS_REQUEST_MANAGE_DOCUMENTS = 2;
     private boolean canWeRead;
     private boolean thereisPic;
+    private String strStartDate;
+    private String strEndDate;
+    private Date dateStart;
+
+    private Uri uriImg;
+
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -69,17 +89,28 @@ public class CreateEventFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
+        HashMap<String, String> params = new HashMap<>();
+
         if (id == R.id.action_createEvent) {
             if( areFilled() )
-                //TODO: fer be
-                postCredentials("asd","gsdf");
+                //TODO: match params with API (look for API's manual)
+                params.put("name", name.getText().toString());
+                params.put("address", address.getText().toString());
+                params.put("startHour", editTextStartHour.getText().toString());
+                params.put("endHour", editTextEndHour.getText().toString());
+                params.put("startDate", strStartDate);
+                params.put("endDate", strEndDate);
+                params.put("desc", description.getText().toString());
+                params.put("img", convertUriToBase64(uriImg));
+
+                postCredentials(params);
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
-    private void postCredentials(String newPassword, String token) {
-        //TODO: tot, canviar camps dentrada
+    private void postCredentials(HashMap<String, String> params) {
+        //TODO: All, look for API's manual
         APICommunicator apiCommunicator = new APICommunicator();
         Response.Listener responseListener = new Response.Listener<CustomRequest.CustomResponse>() {
             @Override
@@ -105,7 +136,9 @@ public class CreateEventFragment extends Fragment {
             }
         };
 
-        apiCommunicator.putRequest(getActivity().getApplicationContext(), URL.concat("/".concat(token)), responseListener, errorListener, newPassword);
+
+        apiCommunicator.postRequest(getActivity().getApplicationContext(), URL, responseListener, errorListener, params);
+        //apiCommunicator.putRequest(getActivity().getApplicationContext(), URL.concat("/".concat(token)), responseListener, errorListener, newPassword);
     }
 
     @Override
@@ -124,7 +157,13 @@ public class CreateEventFragment extends Fragment {
 
         name = (EditText) rootView.findViewById(R.id.editTextName);
         address = (EditText) rootView.findViewById(R.id.editTextAddress);
+        editTextStartDate = (EditText) rootView.findViewById(R.id.editTextStartDate);
+        editTextEndDate = (EditText) rootView.findViewById(R.id.editTextEndDate);
+        editTextStartHour = (EditText) rootView.findViewById(R.id.editTextStartHour);
+        editTextEndHour = (EditText) rootView.findViewById(R.id.editTextEndHour);
         description = (EditText) rootView.findViewById(R.id.editTextDescription);
+
+        layoutDate = (LinearLayout) rootView.findViewById(R.id.layoutDate);
 
         groupTable = (TableLayout) rootView.findViewById(R.id.groupTable);
         capacityRow = (TableRow) rootView.findViewById(R.id.capacityRow);
@@ -138,10 +177,17 @@ public class CreateEventFragment extends Fragment {
         if( isVerified() )
             groupTable.setVisibility(View.GONE);
 
+        //Fixed schedule disabled by default
+        buttonNoFixed.setTextColor(getResources().getColor(R.color.colorPrimary));
+        layoutDate.setVisibility(View.GONE);
+        eventFixed = 0;
+
         //Group Service disabled by default
         buttonNoGroup.setTextColor(getResources().getColor(R.color.colorPrimary));
         capacityRow.setVisibility(View.GONE);
         eventGroup = 0;
+
+        editTextEndDate.setEnabled(false);
 
         return rootView;
     }
@@ -176,6 +222,7 @@ public class CreateEventFragment extends Fragment {
             public void onClick(View view) {
                 buttonYesFixed.setTextColor(getResources().getColor(R.color.colorPrimary));
                 buttonNoFixed.setTextColor(getResources().getColor(R.color.colorTextButton));
+                layoutDate.setVisibility(View.VISIBLE);
                 eventFixed = 1;
             }
         });
@@ -184,6 +231,7 @@ public class CreateEventFragment extends Fragment {
             public void onClick(View view) {
                 buttonNoFixed.setTextColor(getResources().getColor(R.color.colorPrimary));
                 buttonYesFixed.setTextColor(getResources().getColor(R.color.colorTextButton));
+                layoutDate.setVisibility(View.GONE);
                 eventFixed = 0;
             }
         });
@@ -193,7 +241,7 @@ public class CreateEventFragment extends Fragment {
                 buttonYesGroup.setTextColor(getResources().getColor(R.color.colorPrimary));
                 buttonNoGroup.setTextColor(getResources().getColor(R.color.colorTextButton));
                 capacityRow.setVisibility(View.VISIBLE);
-                eventFixed = 1;
+                eventGroup = 1;
             }
         });
         view.findViewById(R.id.buttonNoGroup).setOnClickListener(new View.OnClickListener() {
@@ -204,6 +252,19 @@ public class CreateEventFragment extends Fragment {
                 capacityRow.setVisibility(View.GONE);
                 eventGroup = 0;
 
+            }
+        });
+        view.findViewById(R.id.editTextStartDate).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showStartDatePickerDialog();
+                editTextEndDate.setEnabled(true);
+            }
+        });
+        view.findViewById(R.id.editTextEndDate).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showEndDatePickerDialog();
             }
         });
 
@@ -264,6 +325,7 @@ public class CreateEventFragment extends Fragment {
     private void loadImageFromUri(Uri imageUri) {
         try {
             buttonImg.setImageBitmap(MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), imageUri));
+            uriImg = imageUri;
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -310,5 +372,46 @@ public class CreateEventFragment extends Fragment {
         Fragment eventsFragment = new LoginFragment();
         FragmentChangeListener fc = (FragmentChangeListener) getActivity();
         fc.replaceFragment(eventsFragment);
+    }
+
+    private void showStartDatePickerDialog() {
+        DatePickerFragment newFragment = DatePickerFragment.newInstance(new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                // +1 because january is zero
+                final String selectedDate = day + " / " + (month + 1) + " / " + year;
+
+                Calendar calendar = Calendar.getInstance();
+                calendar.set(year, month, day);
+
+                dateStart = calendar.getTime();
+
+                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                strStartDate = format.format(calendar.getTime());
+                editTextStartDate.setText(selectedDate);
+            }
+        });
+        newFragment.show(getActivity().getSupportFragmentManager(), "datePicker");
+    }
+
+    private void showEndDatePickerDialog() {
+        DatePickerFragment newFragment = DatePickerFragment.newInstance(new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                // +1 because january is zero
+                final String selectedDate = day + " / " + (month + 1) + " / " + year;
+
+                Calendar calendar = Calendar.getInstance();
+                calendar.set(year, month, day);
+
+                if( calendar.getTime().after(dateStart) ) {
+                    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                    strEndDate = format.format(calendar.getTime());
+                    editTextEndDate.setText(selectedDate);
+                } else
+                    Toast.makeText(getActivity(), "End date must be greater than Start date", Toast.LENGTH_SHORT).show();
+            }
+        });
+        newFragment.show(getActivity().getSupportFragmentManager(), "datePicker");
     }
 }
