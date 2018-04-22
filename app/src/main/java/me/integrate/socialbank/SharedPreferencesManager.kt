@@ -4,7 +4,7 @@ import android.content.Context
 
 object SharedPreferencesManager {
 
-    private const val PREFERENCES_FILE: String = "com.example.myapp.PREFERENCE_FILE_KEY"
+    private const val PREFERENCES_FILE: String = "me.integrate.socialbank.PREFERENCE_FILE_KEY"
 
     fun store(context: Context, key: String, value: String) {
         val sharedPref = context.getSharedPreferences(PREFERENCES_FILE, Context.MODE_PRIVATE)
