@@ -21,4 +21,8 @@
     <string name="update_password">Update your password\n Enter the token and update your password</string>
     <string name="i_have_token">I have a token</string>
     <string name="welcome">Welcome</string>
+    <string name="logout">Logout</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
 </resources>

@@ -18,7 +18,7 @@ public class MainActivity extends ActionBarActivity implements FragmentChangeLis
             startActivity(new Intent(this, InsideActivity.class));
 
         setContentView(R.layout.activity_main);
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(myToolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
