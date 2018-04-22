@@ -1,6 +1,5 @@
 package me.integrate.socialbank;
 
-import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -12,13 +11,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -66,26 +63,20 @@ public class RegisterFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        SignUpGoogle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-                startActivityForResult(signInIntent, RC_SIGN_IN);
-            }
+        SignUpGoogle.setOnClickListener(v -> {
+            Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+            startActivityForResult(signInIntent, RC_SIGN_IN);
         });
-        SignUpButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                HashMap<String, String> params = new HashMap<>();
-                params.put("name", name.getText().toString());
-                params.put("surname", lastName.getText().toString());
-                params.put("birthdate", strDate);
-                params.put("gender", gender.getSelectedItem().toString().toUpperCase());
-                params.put("email", email.getText().toString());
-                params.put("password", password.getText().toString());
+        SignUpButton.setOnClickListener(v -> {
+            HashMap<String, String> params = new HashMap<>();
+            params.put("name", name.getText().toString());
+            params.put("surname", lastName.getText().toString());
+            params.put("birthdate", strDate);
+            params.put("gender", gender.getSelectedItem().toString().toUpperCase());
+            params.put("email", email.getText().toString());
+            params.put("password", password.getText().toString());
 
-                postCredentials(params);
-            }
+            postCredentials(params);
         });
         name.addTextChangedListener(new TextWatcher() {
             @Override
@@ -143,12 +134,7 @@ public class RegisterFragment extends Fragment {
                 enableButton();
             }
         });
-        birthdate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showDatePickerDialog();
-            }
-        });
+        birthdate.setOnClickListener(view1 -> showDatePickerDialog());
     }
 
     private boolean areFilled() {
@@ -203,42 +189,31 @@ public class RegisterFragment extends Fragment {
 
     private void postCredentials(HashMap<String, String> params) {
         APICommunicator apiCommunicator = new APICommunicator();
-        Response.Listener responseListener = new Response.Listener() {
-            @Override
-            public void onResponse(Object response) {
-                Toast.makeText(getActivity().getApplicationContext(), "Account created!", Toast.LENGTH_LONG).show();
-                Fragment loginFragment = new LoginFragment();
-                FragmentChangeListener fc = (FragmentChangeListener) getActivity();
-                fc.replaceFragment(loginFragment);
+        Response.Listener responseListener = response -> {
+            Toast.makeText(getActivity().getApplicationContext(), "Account created!", Toast.LENGTH_LONG).show();
+            Fragment loginFragment = new LoginFragment();
+            FragmentChangeListener fc = (FragmentChangeListener) getActivity();
+            fc.replaceFragment(loginFragment);
 
-            }
         };
-        Response.ErrorListener errorListener = new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getActivity().getApplicationContext(), "Something went wrong", Toast.LENGTH_LONG).show();
-            }
-        };
+        Response.ErrorListener errorListener = error -> Toast.makeText(getActivity().getApplicationContext(), "Something went wrong", Toast.LENGTH_LONG).show();
 
 
         apiCommunicator.postRequest(getActivity().getApplicationContext(), URL, responseListener, errorListener, params);
     }
 
     private void showDatePickerDialog() {
-        DatePickerFragment newFragment = DatePickerFragment.newInstance(new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                // +1 because january is zero
-                final String selectedDate = day + " / " + (month + 1) + " / " + year;
+        DatePickerFragment newFragment = DatePickerFragment.newInstance((datePicker, year, month, day) -> {
+            // +1 because january is zero
+            final String selectedDate = day + " / " + (month + 1) + " / " + year;
 
-                Calendar calendar = Calendar.getInstance();
-                calendar.set(year, month, day);
+            Calendar calendar = Calendar.getInstance();
+            calendar.set(year, month, day);
 
-                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-                strDate = format.format(calendar.getTime());
-                birthdate.setText(selectedDate);
-                enableButton();
-            }
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+            strDate = format.format(calendar.getTime());
+            birthdate.setText(selectedDate);
+            enableButton();
         });
         newFragment.show(getActivity().getSupportFragmentManager(), "datePicker");
     }
