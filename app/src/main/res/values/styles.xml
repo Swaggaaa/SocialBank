@@ -6,7 +6,7 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorTextButton</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:textColorSecondary">@color/colorNavigation</item>
+        <item name="android:textColorSecondary">@color/colorAccent</item>
         <item name="android:textColorPrimary">@color/colorNavigation</item>
     </style>
 

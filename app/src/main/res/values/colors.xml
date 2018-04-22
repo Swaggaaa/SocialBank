@@ -6,5 +6,6 @@
     <color name="colorTextButton">#A9A9A9</color>
     <color name="colorTextForgot">#7E7E7E</color>
     <color name="colorTransparent">#00000000</color>
-    <color name="colorNavigation">#3F51B5</color>
+    <color name="colorNavigation">#000000</color>
+    <color name="colorNavigationSecundary">#ff0008</color>
 </resources>
