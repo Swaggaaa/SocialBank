@@ -3,6 +3,7 @@ package me.integrate.socialbank;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
+import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.Manifest;
 import android.app.DatePickerDialog;
@@ -48,6 +49,8 @@ import static android.content.ContentValues.TAG;
 public class CreateEventFragment extends Fragment {
     //TODO: figure url out
     private static final String URL = "/event";
+
+    private ImageView imageView;
 
     private ImageButton buttonImg;
     private Button buttonAsk;
@@ -118,7 +121,9 @@ public class CreateEventFragment extends Fragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_create_event, container, false);
 
-        buttonImg = (ImageButton) rootView.findViewById(R.id.buttonImg);
+        imageView = (ImageView) rootView.findViewById(R.id.imageView);
+
+        //buttonImg = (ImageButton) rootView.findViewById(R.id.buttonImg);
         buttonAsk = (Button) rootView.findViewById(R.id.buttonAsk);
         buttonOffer = (Button) rootView.findViewById(R.id.buttonOffer);
         buttonYesFixed = (Button) rootView.findViewById(R.id.buttonYesFixed);
@@ -168,7 +173,14 @@ public class CreateEventFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        view.findViewById(R.id.buttonImg).setOnClickListener(new View.OnClickListener() {
+        /*view.findViewById(R.id.buttonImg).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                readGallery();
+                enableButton();
+            }
+        });*/
+        view.findViewById(R.id.imageView).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 readGallery();
@@ -377,7 +389,8 @@ public class CreateEventFragment extends Fragment {
 
     private void loadImageFromUri(Uri imageUri) {
         try {
-            buttonImg.setImageBitmap(MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), imageUri));
+            //buttonImg.setImageBitmap(MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), imageUri));
+            imageView.setImageBitmap(MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), imageUri));
             uriImg = imageUri;
         } catch (IOException e) {
             e.printStackTrace();
