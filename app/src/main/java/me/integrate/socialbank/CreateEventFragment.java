@@ -1,6 +1,9 @@
 package me.integrate.socialbank;
 
-
+import android.content.Context;
+import android.util.AttributeSet;
+import android.view.MotionEvent;
+import android.widget.ScrollView;
 import android.Manifest;
 import android.app.DatePickerDialog;
 import android.content.Intent;
@@ -12,15 +15,12 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
-import android.text.Layout;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -56,6 +56,7 @@ public class CreateEventFragment extends Fragment {
     private Button buttonNoFixed;
     private Button buttonYesGroup;
     private Button buttonNoGroup;
+    private Button buttonCreate;
     private EditText name;
     private EditText address;
     private EditText editTextStartDate;
@@ -80,42 +81,13 @@ public class CreateEventFragment extends Fragment {
 
     private Uri uriImg;
 
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_create_event, menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        HashMap<String, String> params = new HashMap<>();
-
-        if (id == R.id.action_createEvent) {
-            if( areFilled() )
-                //TODO: match params with API (look for API's manual)
-                params.put("name", name.getText().toString());
-                params.put("address", address.getText().toString());
-                params.put("startHour", editTextStartHour.getText().toString());
-                params.put("endHour", editTextEndHour.getText().toString());
-                params.put("startDate", strStartDate);
-                params.put("endDate", strEndDate);
-                params.put("desc", description.getText().toString());
-                params.put("img", convertUriToBase64(uriImg));
-
-                postCredentials(params);
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
     private void postCredentials(HashMap<String, String> params) {
         //TODO: All, look for API's manual
         APICommunicator apiCommunicator = new APICommunicator();
         Response.Listener responseListener = new Response.Listener<CustomRequest.CustomResponse>() {
             @Override
             public void onResponse(CustomRequest.CustomResponse response) {
-                Toast.makeText(getActivity().getApplicationContext(), "holi", Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity().getApplicationContext(), "Esdeveniment creat", Toast.LENGTH_LONG).show();
                 eventsSelected();
             }
         };
@@ -124,12 +96,12 @@ public class CreateEventFragment extends Fragment {
             public void onErrorResponse(VolleyError error) {
                 String message;
                 int errorCode = error.networkResponse.statusCode;
-                if (errorCode >= 500  &&  errorCode <= 511)
-                    message = "Server error";
-                else if(errorCode == 400)
-                    message = "Bad request";
+                if (errorCode == 401)
+                    message = "Unauthorized";
+                else if(errorCode == 403)
+                    message = "Forbidden";
                 else if(errorCode == 404)
-                    message = "Wrong token";
+                    message = "Not Found";
                 else
                     message = "Unexpected error";
                 Toast.makeText(getActivity().getApplicationContext(), message, Toast.LENGTH_LONG).show();
@@ -138,7 +110,6 @@ public class CreateEventFragment extends Fragment {
 
 
         apiCommunicator.postRequest(getActivity().getApplicationContext(), URL, responseListener, errorListener, params);
-        //apiCommunicator.putRequest(getActivity().getApplicationContext(), URL.concat("/".concat(token)), responseListener, errorListener, newPassword);
     }
 
     @Override
@@ -154,6 +125,7 @@ public class CreateEventFragment extends Fragment {
         buttonNoFixed = (Button) rootView.findViewById(R.id.buttonNoFixed);
         buttonYesGroup = (Button) rootView.findViewById(R.id.buttonYesGroup);
         buttonNoGroup = (Button) rootView.findViewById(R.id.buttonNoGroup);
+        buttonCreate = (Button) rootView.findViewById(R.id.buttonCreate);
 
         name = (EditText) rootView.findViewById(R.id.editTextName);
         address = (EditText) rootView.findViewById(R.id.editTextAddress);
@@ -174,7 +146,7 @@ public class CreateEventFragment extends Fragment {
         eventType = -1;
         eventFixed = -1;
 
-        if( isVerified() )
+        if( !isVerified() )
             groupTable.setVisibility(View.GONE);
 
         //Fixed schedule disabled by default
@@ -188,6 +160,7 @@ public class CreateEventFragment extends Fragment {
         eventGroup = 0;
 
         editTextEndDate.setEnabled(false);
+        buttonCreate.setEnabled(false);
 
         return rootView;
     }
@@ -199,6 +172,28 @@ public class CreateEventFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 readGallery();
+                enableButton();
+            }
+        });
+        view.findViewById(R.id.buttonCreate).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                HashMap<String, String> params = new HashMap<>();
+                if( areFilled_msg() ) { //Not required, theorically, just in case sth fails
+                    //TODO: match params with API (look for API's manual)
+
+                    params.put("description", description.getText().toString());
+                    params.put("endDate", strEndDate);
+                    params.put("iniDate", strStartDate);
+                    params.put("startHour", editTextStartHour.getText().toString());
+                    params.put("endHour", editTextEndHour.getText().toString());
+
+                    params.put("location", address.getText().toString());
+                    params.put("title", name.getText().toString());
+                    //params.put("img", convertUriToBase64(uriImg));
+
+                    postCredentials(params);
+                }
             }
         });
         view.findViewById(R.id.buttonAsk).setOnClickListener(new View.OnClickListener() {
@@ -207,6 +202,7 @@ public class CreateEventFragment extends Fragment {
                 buttonAsk.setTextColor(getResources().getColor(R.color.colorPrimary));
                 buttonOffer.setTextColor(getResources().getColor(R.color.colorTextButton));
                 eventType = 1;
+                enableButton();
             }
         });
         view.findViewById(R.id.buttonOffer).setOnClickListener(new View.OnClickListener() {
@@ -215,6 +211,7 @@ public class CreateEventFragment extends Fragment {
                 buttonOffer.setTextColor(getResources().getColor(R.color.colorPrimary));
                 buttonAsk.setTextColor(getResources().getColor(R.color.colorTextButton));
                 eventType = 0;
+                enableButton();
             }
         });
         view.findViewById(R.id.buttonYesFixed).setOnClickListener(new View.OnClickListener() {
@@ -224,6 +221,7 @@ public class CreateEventFragment extends Fragment {
                 buttonNoFixed.setTextColor(getResources().getColor(R.color.colorTextButton));
                 layoutDate.setVisibility(View.VISIBLE);
                 eventFixed = 1;
+                enableButton();
             }
         });
         view.findViewById(R.id.buttonNoFixed).setOnClickListener(new View.OnClickListener() {
@@ -233,6 +231,7 @@ public class CreateEventFragment extends Fragment {
                 buttonYesFixed.setTextColor(getResources().getColor(R.color.colorTextButton));
                 layoutDate.setVisibility(View.GONE);
                 eventFixed = 0;
+                enableButton();
             }
         });
         view.findViewById(R.id.buttonYesGroup).setOnClickListener(new View.OnClickListener() {
@@ -242,6 +241,7 @@ public class CreateEventFragment extends Fragment {
                 buttonNoGroup.setTextColor(getResources().getColor(R.color.colorTextButton));
                 capacityRow.setVisibility(View.VISIBLE);
                 eventGroup = 1;
+                enableButton();
             }
         });
         view.findViewById(R.id.buttonNoGroup).setOnClickListener(new View.OnClickListener() {
@@ -251,7 +251,7 @@ public class CreateEventFragment extends Fragment {
                 buttonYesGroup.setTextColor(getResources().getColor(R.color.colorTextButton));
                 capacityRow.setVisibility(View.GONE);
                 eventGroup = 0;
-
+                enableButton();
             }
         });
         view.findViewById(R.id.editTextStartDate).setOnClickListener(new View.OnClickListener() {
@@ -265,6 +265,47 @@ public class CreateEventFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 showEndDatePickerDialog();
+                enableButton();
+            }
+        });
+        name.addTextChangedListener(new TextWatcher() {
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            @Override
+            public void afterTextChanged(Editable s) {
+                enableButton();
+            }
+        });
+        address.addTextChangedListener(new TextWatcher() {
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            @Override
+            public void afterTextChanged(Editable s) {
+                enableButton();
+            }
+        });
+        description.addTextChangedListener(new TextWatcher() {
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            @Override
+            public void afterTextChanged(Editable s) {
+                enableButton();
+            }
+        });
+        editTextStartHour.addTextChangedListener(new TextWatcher() {
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            @Override
+            public void afterTextChanged(Editable s) {
+                enableButton();
+            }
+        });
+        editTextEndHour.addTextChangedListener(new TextWatcher() {
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            @Override
+            public void afterTextChanged(Editable s) {
+                enableButton();
             }
         });
 
@@ -275,12 +316,12 @@ public class CreateEventFragment extends Fragment {
         return false;
     }
 
-    private boolean areFilled() {
+    private boolean areFilled_msg() {
         if( !thereisPic )
             Toast.makeText(getActivity(), "You must set an image", Toast.LENGTH_SHORT).show();
-        else if( !name.getText().toString().isEmpty()
-                && !address.getText().toString().isEmpty()
-                && !description.getText().toString().isEmpty())
+        else if( name.getText().toString().isEmpty()
+                || address.getText().toString().isEmpty()
+                || description.getText().toString().isEmpty())
             Toast.makeText(getActivity(), "Fill all fields", Toast.LENGTH_SHORT).show();
         else if( eventFixed == -1 )
             Toast.makeText(getActivity(), "Set schedule used", Toast.LENGTH_SHORT).show();
@@ -288,6 +329,19 @@ public class CreateEventFragment extends Fragment {
             Toast.makeText(getActivity(), "Set event type", Toast.LENGTH_SHORT).show();
         else return true;
         return false;
+    }
+
+    private boolean areFilled() {
+        return ((thereisPic) && !(name.getText().toString().isEmpty()) && !(address.getText().toString().isEmpty()) &&
+                !(description.getText().toString().isEmpty()) && !(eventFixed == -1) && !(eventType == -1)
+                && (eventFixed == 0 || (eventFixed == 1 && !editTextEndDate.getText().toString().isEmpty()
+                && !editTextStartDate.getText().toString().isEmpty()
+                && !editTextEndHour.getText().toString().isEmpty()
+                && !editTextStartHour.getText().toString().isEmpty() ) ));
+    }
+
+    private void enableButton() {
+        buttonCreate.setEnabled( areFilled() );
     }
 
     private void readGallery() {
@@ -299,7 +353,6 @@ public class CreateEventFragment extends Fragment {
 
         startActivityForResult(pickAnImage, 2);
     }
-
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -389,6 +442,7 @@ public class CreateEventFragment extends Fragment {
                 SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
                 strStartDate = format.format(calendar.getTime());
                 editTextStartDate.setText(selectedDate);
+                enableButton();
             }
         });
         newFragment.show(getActivity().getSupportFragmentManager(), "datePicker");
@@ -408,6 +462,7 @@ public class CreateEventFragment extends Fragment {
                     SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
                     strEndDate = format.format(calendar.getTime());
                     editTextEndDate.setText(selectedDate);
+                    enableButton();
                 } else
                     Toast.makeText(getActivity(), "End date must be greater than Start date", Toast.LENGTH_SHORT).show();
             }

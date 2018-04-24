@@ -24,7 +24,6 @@
     <string name="welcome">Welcome</string>
     <string name="new_event">New event</string>
     <string name="create_event">CREATE</string>
-    <string name="event_create">CREATE</string>
     <string name="event_type">Event type</string>
     <string name="ask">ASK</string>
     <string name="offer">OFFER</string>
