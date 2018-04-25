@@ -6,34 +6,95 @@
     android:layout_height="match_parent"
     tools:context=".SeeMyProfileFragment">
 
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
         <ImageView
+            android:id="@+id/myProfileImage"
             android:layout_width="match_parent"
-            android:layout_height="250dp"
-            android:contentDescription="TODO"
-            android:id="@+id/myProfileImage"/>
-
+            android:layout_height="200dp"
+            android:contentDescription="TODO" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <TextView
-                android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="20dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/myProfileName"
-                android:text="Joan Sánchez"
-                android:layout_weight="1"/>
+                android:orientation="horizontal">
 
+                <TextView
+                    android:id="@+id/myProfileName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="User name"
+                    android:textStyle="bold"
+                    tools:textSize="24sp" />
 
+                <ImageView
+                    android:id="@+id/loadPicture"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:maxHeight="42dp"
+                    android:maxWidth="42dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_camera_alt_black_24dp" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/userLocation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Location" />
+
+            <TextView
+                android:id="@+id/hoursBalance"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="+3 hours"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+            <View
+                android:id="@+id/divider"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="?android:attr/listDivider" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/my_events" />
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <android.support.v7.widget.RecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+                <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/fab"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|end"
+                    android:layout_margin="16dp"
+                    android:src="@drawable/ic_edit_black_24dp" />
+
+            </FrameLayout>
         </LinearLayout>
 
-
-        
     </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>
