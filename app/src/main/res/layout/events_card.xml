@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     tools:context="me.integrate.socialbank.BoardFragment">
 
     <RelativeLayout
@@ -19,71 +19,69 @@
             android:id="@+id/event_photo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/individual_or_group"
+            android:layout_alignParentStart="true"
             android:contentDescription="@string/nav_header_desc"
             android:src="@drawable/user_icon" />
 
         <TextView
+            android:id="@+id/title_event"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/title_event"
-            android:text="Title"
-            android:layout_marginBottom="5dp"
-            android:textColor="@color/cardview_dark_background"
-            android:textSize="25sp"
-            android:paddingBottom="5dp"
+            android:layout_alignParentTop="true"
             android:layout_toEndOf="@+id/event_photo"
-            android:layout_alignParentTop="true" />
+            android:paddingBottom="5dp"
+            android:textColor="@color/cardview_dark_background"
+            android:textSize="25sp" />
 
         <TextView
-            android:id="@+id/time_event"
+            android:id="@+id/date_event"
+            android:layout_marginStart="2dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginBottom="8dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
-            android:layout_alignBaseline="@+id/title_event"
-            android:layout_alignBottom="@+id/title_event"
-            android:layout_alignParentEnd="true"
-            android:paddingLeft="30dp"
-            android:paddingRight="30dp"
-            android:singleLine="true"
-            android:text="@string/i_have_token" />
+            android:layout_below="@+id/title_event"
+            android:layout_toEndOf="@+id/event_photo"
+            android:singleLine="true"/>
 
         <TextView
             android:id="@+id/hour_event"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/date_event"
             android:layout_marginBottom="5dp"
             android:layout_marginLeft="5dp"
-            android:drawableStart="@drawable/timer"
-            android:drawablePadding="10dp"
-            android:text="@string/i_have_token"
+            android:layout_marginRight="5dp"
             android:layout_toEndOf="@+id/event_photo"
-            android:layout_below="@+id/title_event" />
+            android:drawablePadding="10dp"
+            android:drawableStart="@drawable/timer" />
 
 
         <TextView
             android:id="@+id/place_event"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/hour_event"
             android:layout_marginBottom="5dp"
             android:layout_marginLeft="5dp"
-            android:drawableStart="@drawable/map_marker"
-            android:drawablePadding="10dp"
-            android:text="@string/i_have_token"
+            android:layout_marginRight="5dp"
             android:layout_toEndOf="@+id/event_photo"
-            android:layout_below="@+id/hour_event" />
+            android:drawablePadding="10dp"
+            android:drawableStart="@drawable/map_marker" />
 
 
         <TextView
+            android:id="@+id/individual_or_group"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/individual_or_group"
+            android:layout_below="@+id/place_event"
             android:layout_marginBottom="15dp"
             android:layout_marginLeft="5dp"
-            android:drawableStart="@drawable/account_group"
-            android:drawablePadding="10dp"
-            android:text="@string/i_have_token"
+            android:layout_marginRight="5dp"
             android:layout_toEndOf="@+id/event_photo"
-            android:layout_below="@+id/place_event" />
+            android:drawablePadding="10dp"
+            android:drawableStart="@drawable/account_group" />
 
     </RelativeLayout>
 
