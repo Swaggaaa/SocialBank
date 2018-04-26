@@ -2,7 +2,6 @@ package me.integrate.socialbank;
 
 import android.content.Context;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
@@ -10,6 +9,7 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
 import java.util.Map;
 
 class APICommunicator {
@@ -46,13 +46,21 @@ class APICommunicator {
     private void doRequest(Context context, final int post, final String url, final Response.Listener responseListener, final Response.ErrorListener errorListener, final Map<String, String> params) {
         CustomRequest postRequest = new CustomRequest(post, API_URL + url, responseListener, errorListener) {
             @Override
-            public byte[] getBody() throws AuthFailureError {
+            public byte[] getBody() {
                 try {
                     return new JSONObject(params).toString().getBytes(CHARSET);
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                     return null;
                 }
+            }
+
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> headers = new HashMap<>();
+                String token = SharedPreferencesManager.INSTANCE.read(context, "token");
+                if (token != null) headers.put("Authorization", token);
+                return headers;
             }
 
             @Override
@@ -66,7 +74,7 @@ class APICommunicator {
     private void doRequest(Context context, final int post, final String url, final Response.Listener responseListener, final Response.ErrorListener errorListener, final String params) {
         CustomRequest postRequest = new CustomRequest(post, API_URL + url, responseListener, errorListener) {
             @Override
-            public byte[] getBody() throws AuthFailureError {
+            public byte[] getBody() {
                 try {
                     return params.getBytes(CHARSET);
                 } catch (UnsupportedEncodingException e) {
