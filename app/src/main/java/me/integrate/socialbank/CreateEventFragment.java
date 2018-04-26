@@ -47,8 +47,7 @@ import static android.app.Activity.RESULT_OK;
 import static android.content.ContentValues.TAG;
 
 public class CreateEventFragment extends Fragment {
-    //TODO: figure url out
-    private static final String URL = "/event";
+    private static final String URL = "/events";
 
     private ImageView imageView;
 
@@ -97,6 +96,8 @@ public class CreateEventFragment extends Fragment {
         Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+
+                Toast.makeText(getActivity(), "ERROR", Toast.LENGTH_SHORT).show();
                 String message;
                 int errorCode = error.networkResponse.statusCode;
                 if (errorCode == 401)
@@ -107,10 +108,9 @@ public class CreateEventFragment extends Fragment {
                     message = "Not Found";
                 else
                     message = "Unexpected error";
-                Toast.makeText(getActivity().getApplicationContext(), message, Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity().getApplicationContext(), String.valueOf(errorCode), Toast.LENGTH_LONG).show();
             }
         };
-
 
         apiCommunicator.postRequest(getActivity().getApplicationContext(), URL, responseListener, errorListener, params);
     }
@@ -190,22 +190,33 @@ public class CreateEventFragment extends Fragment {
         view.findViewById(R.id.buttonCreate).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Toast.makeText(getActivity(), "button create", Toast.LENGTH_SHORT).show();
+
                 HashMap<String, String> params = new HashMap<>();
-                if( areFilled_msg() ) { //Not required, theorically, just in case sth fails
-                    //TODO: match params with API (look for API's manual)
+                //TODO: Set to 00
+                String dataIni = "2018-04-26T15:10:02Z";
+                String dataEnd = "2018-04-26T15:10:02Z";
 
-                    params.put("description", description.getText().toString());
-                    params.put("endDate", strEndDate);
-                    params.put("iniDate", strStartDate);
-                    params.put("startHour", editTextStartHour.getText().toString());
-                    params.put("endHour", editTextEndHour.getText().toString());
+                //if( areFilled_msg() ) { //Not required, theorically, just in case sth fails
+                //TODO: Still not working
+                String emailUser = SharedPreferencesManager.INSTANCE.read(getActivity(),"user_email");
 
-                    params.put("location", address.getText().toString());
-                    params.put("title", name.getText().toString());
-                    //params.put("img", convertUriToBase64(uriImg));
+                Toast.makeText(getActivity(), "email " + emailUser , Toast.LENGTH_SHORT).show();
 
-                    postCredentials(params);
+                params.put("creatorEmail", emailUser);
+                params.put("description", description.getText().toString());
+                if(eventFixed == 1) {
+                    dataIni = strEndDate.concat(" ").concat(editTextEndHour.getText().toString()).concat(":00:00");
+                    dataEnd = strStartDate.concat(" ").concat(editTextStartHour.getText().toString()).concat(":00:00");
                 }
+                params.put("endDate", dataEnd);
+                params.put("iniDate", dataIni);
+                params.put("location", address.getText().toString());
+                params.put("title", name.getText().toString());
+                params.put("image", "");
+
+                postCredentials(params);
+                //}
             }
         });
         view.findViewById(R.id.buttonAsk).setOnClickListener(new View.OnClickListener() {
@@ -304,19 +315,67 @@ public class CreateEventFragment extends Fragment {
                 enableButton();
             }
         });
+        view.findViewById(R.id.editTextStartHour).setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                if(b) {
+                    editTextStartHour.setText("");
+                }
+                else if(editTextStartHour.getText().length()==1) {
+                        String hora = editTextStartHour.getText().toString();
+                    editTextStartHour.setText("0".concat(hora));
+                }
+            }
+        });
         editTextStartHour.addTextChangedListener(new TextWatcher() {
             @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(editTextStartHour.getText().length()>0) {
+                    int num = Integer.parseInt(editTextStartHour.getText().toString());
+                    if (!(num>=0 && num<=23)) {
+                        Toast.makeText(getActivity(),"Please enter the code in the range of 0-23",Toast.LENGTH_SHORT).show();
+                        editTextStartHour.setText("");
+                    }
+                }
+            }
             @Override
             public void afterTextChanged(Editable s) {
                 enableButton();
             }
         });
+        view.findViewById(R.id.editTextEndHour).setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                if(b) {
+                editTextEndHour.setText("");
+                }
+                else if(editTextEndHour.getText().length()==1) {
+                        String hora = editTextStartHour.getText().toString();
+                    editTextEndHour.setText("0".concat(hora));
+                }
+            }
+        });
         editTextEndHour.addTextChangedListener(new TextWatcher() {
-            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(editTextEndHour.getText().length()>0) {
+                    int num = Integer.parseInt(editTextEndHour.getText().toString());
+                    if (!(num>=0 && num<=23)) {
+                        Toast.makeText(getActivity(),"Please enter the code in the range of 0-23",Toast.LENGTH_SHORT).show();
+                        editTextEndHour.setText("");
+                    }
+                }
+            }
             @Override
             public void afterTextChanged(Editable s) {
+                if(editTextEndHour.getText().length()==1) {
+                    String hora = editTextEndHour.getText().toString();
+                    editTextEndHour.setText("0".concat(hora));
+                }
                 enableButton();
             }
         });
@@ -324,7 +383,7 @@ public class CreateEventFragment extends Fragment {
     }
 
     public boolean isVerified() {
-        //TODO: funcio que comprova si l'usuari es entitat verificada i retorna boolean
+        //TODO: API function still not implemented
         return false;
     }
 
@@ -434,7 +493,7 @@ public class CreateEventFragment extends Fragment {
     }
 
     private void eventsSelected() {
-        //TODO: Choose the proper Fragment (not created yet
+        //TODO: Choose the proper Fragment (not created yet)
         Fragment eventsFragment = new LoginFragment();
         FragmentChangeListener fc = (FragmentChangeListener) getActivity();
         fc.replaceFragment(eventsFragment);

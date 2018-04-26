@@ -33,7 +33,8 @@
                 android:layout_height="100dp"
                 android:layout_gravity="center"
                 android:layout_weight="1"
-                app:srcCompat="@android:drawable/ic_menu_camera" />
+                app:srcCompat="@android:drawable/ic_menu_camera"
+                android:clickable="true"/>
 
         </LinearLayout>
 
@@ -216,7 +217,8 @@
                             android:ems="9"
                             android:hint="Start hour"
                             android:inputType="number"
-                            android:textSize="15sp" />
+                            android:textSize="15sp"
+                            android:clickable="true"/>
 
                         <EditText
                             android:id="@+id/editTextEndHour"
@@ -226,7 +228,8 @@
                             android:ems="9"
                             android:hint="End hour"
                             android:inputType="number"
-                            android:textSize="15sp" />
+                            android:textSize="15sp"
+                            android:clickable="true"/>
                     </LinearLayout>
 
                 </LinearLayout>
