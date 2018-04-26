@@ -4,86 +4,83 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    app:cardUseCompatPadding="true"
     tools:context="me.integrate.socialbank.BoardFragment">
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginEnd="20dp"
         android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
-        android:orientation="vertical">
+        android:orientation="horizontal">
 
 
         <ImageView
             android:id="@+id/event_photo"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/individual_or_group"
-            android:layout_alignParentStart="true"
+            android:layout_height="match_parent"
             android:contentDescription="@string/nav_header_desc"
             android:src="@drawable/user_icon" />
 
-        <TextView
-            android:id="@+id/title_event"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_toEndOf="@+id/event_photo"
-            android:paddingBottom="5dp"
-            android:textColor="@color/cardview_dark_background"
-            android:textSize="25sp" />
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/date_event"
-            android:layout_marginStart="2dp"
-            android:layout_marginEnd="5dp"
-            android:layout_marginBottom="8dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/title_event"
-            android:layout_toEndOf="@+id/event_photo"
-            android:singleLine="true"/>
+            <TextView
+                android:id="@+id/title_event"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
+                android:layout_marginStart="5dp"
+                android:text="BUUUUUUUUUUUUUU"
+                android:textColor="@color/cardview_dark_background"
+                android:textSize="20sp" />
 
-        <TextView
-            android:id="@+id/hour_event"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/date_event"
-            android:layout_marginBottom="5dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:layout_toEndOf="@+id/event_photo"
-            android:drawablePadding="10dp"
-            android:drawableStart="@drawable/timer" />
+            <TextView
+                android:id="@+id/init_date_event"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
+                android:layout_marginStart="5dp"
+                android:drawablePadding="10dp"
+                android:drawableStart="@drawable/ic_event_date" />
 
-
-        <TextView
-            android:id="@+id/place_event"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/hour_event"
-            android:layout_marginBottom="5dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:layout_toEndOf="@+id/event_photo"
-            android:drawablePadding="10dp"
-            android:drawableStart="@drawable/map_marker" />
+            <TextView
+                android:id="@+id/finish_date_event"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:drawablePadding="10dp"
+                android:drawableStart="@drawable/timer" />
 
 
-        <TextView
-            android:id="@+id/individual_or_group"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/place_event"
-            android:layout_marginBottom="15dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:layout_toEndOf="@+id/event_photo"
-            android:drawablePadding="10dp"
-            android:drawableStart="@drawable/account_group" />
+            <TextView
+                android:id="@+id/place_event"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:drawablePadding="10dp"
+                android:drawableStart="@drawable/map_marker" />
 
-    </RelativeLayout>
+
+            <TextView
+                android:id="@+id/individual_or_group"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginBottom="2dp"
+                android:drawablePadding="10dp"
+                android:drawableStart="@drawable/account_group" />
+
+        </LinearLayout>
+
+
+    </LinearLayout>
 
 </android.support.v7.widget.CardView>
 

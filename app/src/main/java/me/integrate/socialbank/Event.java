@@ -3,18 +3,22 @@ package me.integrate.socialbank;
 public class Event {
 
     private String title;
-    private String hour;
+    private int id;
+    private String initDate;
     private String place;
-    private String date;
+    private String finishDate;
     private String individual;
+    private String description;
     private int photoID;
 
-    Event(String title, String hour, String place, String date, String individual, int photoId) {
+    Event(int id, String title, String initDate, String place, String finishDate, String individual, String description, int photoId) {
+        this.id = id;
         this.title = title;
-        this.hour = hour;
+        this.initDate = initDate;
         this.photoID = photoId;
         this.place = place;
-        this.date = date;
+        this.description = description;
+        this.finishDate = finishDate;
         this.individual = individual;
     }
 
@@ -22,16 +26,16 @@ public class Event {
         return title;
     }
 
-    public String getHour() {
-        return hour;
+    public String getInitDate() {
+        return initDate;
     }
 
     public String getPlace() {
         return place;
     }
 
-    public String getDate() {
-        return date;
+    public String getFinishDate() {
+        return finishDate;
     }
 
     public String getIndividual() {
@@ -42,5 +46,11 @@ public class Event {
         return photoID;
     }
 
+    public String getDescription() {
+        return description;
+    }
 
+    public int getId() {
+        return id;
+    }
 }

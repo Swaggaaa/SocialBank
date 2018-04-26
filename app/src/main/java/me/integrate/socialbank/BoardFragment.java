@@ -5,18 +5,23 @@ import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Response;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static android.content.ContentValues.TAG;
 
 public class BoardFragment extends Fragment {
 
@@ -27,11 +32,13 @@ public class BoardFragment extends Fragment {
     private List items = new ArrayList();
 
     private String title;
-    private String hour;
+    private String initDate;
     private String place;
-    private String date;
+    private String finishDate;
     private String individual;
+    private String description;
     private String photoEvent;
+    private int id;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -42,23 +49,32 @@ public class BoardFragment extends Fragment {
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
-        items = getAllEvents();
-        inicialBoard(items);
+        items.clear();
+        inicialBoard(rootView);
         return rootView;
     }
 
-    public List getAllEvents() {
-        List allEvents = new ArrayList();
+    public void getAllEvents(List<Event> items) {
+
         APICommunicator apiCommunicator = new APICommunicator();
         Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response -> {
-            JSONObject jsonObject;
+            JSONArray jsonArray;
             try {
-                jsonObject = new JSONObject(response.response);
-                title = jsonObject.getString("title");
-                hour = jsonObject.getString("hours");
-                place = jsonObject.getString("place");
-                date = jsonObject.getString("iniDate") + " - " + jsonObject.getString("endDate");
-                photoEvent = jsonObject.getString("image");
+                //TODO solucionar datas
+                jsonArray = new JSONArray(response.response);
+                for ( int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+                    id = Integer.parseInt(jsonObject.getString("id"));
+                    title = jsonObject.getString("title");
+                    initDate = jsonObject.getString("initDate");
+                    place = jsonObject.getString("place");
+                    finishDate = jsonObject.getString("endDate");
+                    description = jsonObject.getString("description");
+                    photoEvent = jsonObject.getString("image");
+
+                    //todo añadir a items
+                    //items.add(new Event(id, title, hour, place, date,"No", description, R.drawable.user_icon));
+                }
 
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -71,26 +87,34 @@ public class BoardFragment extends Fragment {
             Toast.makeText(getActivity().getApplicationContext(), "An unexpected error has occurred", Toast.LENGTH_LONG).show();
         };
         apiCommunicator.getRequest(getActivity().getApplicationContext(), URL, responseListener, errorListener,null);
-        return allEvents;
     }
 
-    public void inicialBoard(List<Event> items) {
+    public void inicialBoard(View v) {
 
-        //TODO Coger JSon y transformarlo la imagen bitmap
-        //TODO cambiar imagen si es individual o no
-        //TODO hacer un foreach
-        //TODO hacer click imagen
-      //  items.add(new Event(title, hour, place, date,"No", R.drawable.user_icon));
-        items.add(new Event("Ferran", "Guapo", "Aqui", "3-4", "No", R.drawable.user_icon));
-        items.add(new Event("Sergio", "Guapo","Aqui", "3-4", "No", R.drawable.user_icon));
-        items.add(new Event("Sergi", "Guapo","Aqui", "3-4", "No", R.drawable.user_icon));
+        //TODO Coger JSONObject y transformarlo la imagen bitmap
+        //TODO hacer click imagen --> como guardo la imagen
+        getAllEvents(items);
 
-        mAdapter = new EventAdapter(items);
+        //TODO borrar
+        items.add(new Event(1,"Ferran", "Guapo", "Aqui", "3-4", "No","bu", R.drawable.ic_menu));
+        items.add(new Event( 2,"Sergio", "Guapo","Aqui", "3-4", "No", "bu", R.drawable.user_icon));
+        items.add(new Event(3,"Sergi", "Guapo","Aqui", "3-4", "No", "bu", R.drawable.user_icon));
+        items.add(new Event(3,"Sergi", "Guapo","Aqui", "3-4", "No", "bu", R.drawable.user_icon));
+
+
+        mAdapter = new EventAdapter(items, getActivity(), new CustomItemClickListener() {
+            @Override
+            public void onItemClick(View v, int position) {
+                //TODO hacer comunicacion entre fragments
+                // concuerda id con position
+
+                Fragment eventFragment = new EventFragment();
+                FragmentChangeListener fc = (FragmentChangeListener) getActivity();
+                fc.replaceFragment(eventFragment);
+            }
+        });
+
+
         mRecyclerView.setAdapter(mAdapter);
-
-
-
     }
-
-
 }
