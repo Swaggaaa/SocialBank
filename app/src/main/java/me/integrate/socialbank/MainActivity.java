@@ -14,8 +14,10 @@ public class MainActivity extends ActionBarActivity implements FragmentChangeLis
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (SharedPreferencesManager.INSTANCE.read(this, "token") != null)
+        if (SharedPreferencesManager.INSTANCE.read(this, "token") != null) {
             startActivity(new Intent(this, InsideActivity.class));
+            finish();
+        }
 
         setContentView(R.layout.activity_main);
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);

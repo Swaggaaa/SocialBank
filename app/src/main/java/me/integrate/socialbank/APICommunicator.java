@@ -9,6 +9,7 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
 import java.util.Map;
 
 class APICommunicator {
@@ -52,6 +53,14 @@ class APICommunicator {
                     e.printStackTrace();
                     return null;
                 }
+            }
+
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> headers = new HashMap<>();
+                String token = SharedPreferencesManager.INSTANCE.read(context, "token");
+                if (token != null) headers.put("Authorization", token);
+                return headers;
             }
 
             @Override
