@@ -1,6 +1,7 @@
 package me.integrate.socialbank;
 
 import android.content.Context;
+import android.graphics.drawable.BitmapDrawable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.widget.ImageView;
@@ -51,7 +52,6 @@ public class CreateEventFragment extends Fragment {
 
     private ImageView imageView;
 
-    private ImageButton buttonImg;
     private Button buttonAsk;
     private Button buttonOffer;
     private Button buttonYesFixed;
@@ -73,13 +73,11 @@ public class CreateEventFragment extends Fragment {
     private int eventFixed;
     private int eventGroup;
 
-    private static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 1;
-    private static final int MY_PERMISSIONS_REQUEST_MANAGE_DOCUMENTS = 2;
-    private boolean canWeRead;
     private boolean thereisPic;
     private String strStartDate;
     private String strEndDate;
-    private Date dateStart;
+    private Date dateStart = null;
+    private Date dateEnd = null;
 
     private Uri uriImg;
 
@@ -89,15 +87,13 @@ public class CreateEventFragment extends Fragment {
         Response.Listener responseListener = new Response.Listener<CustomRequest.CustomResponse>() {
             @Override
             public void onResponse(CustomRequest.CustomResponse response) {
-                Toast.makeText(getActivity().getApplicationContext(), "Esdeveniment creat", Toast.LENGTH_LONG).show();
-                eventsSelected();
+                Toast.makeText(getActivity().getApplicationContext(), "Event created successfully", Toast.LENGTH_LONG).show();
+                boardSelected();
             }
         };
         Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-
-                Toast.makeText(getActivity(), "ERROR", Toast.LENGTH_SHORT).show();
                 String message;
                 int errorCode = error.networkResponse.statusCode;
                 if (errorCode == 401)
@@ -108,7 +104,7 @@ public class CreateEventFragment extends Fragment {
                     message = "Not Found";
                 else
                     message = "Unexpected error";
-                Toast.makeText(getActivity().getApplicationContext(), String.valueOf(errorCode), Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity().getApplicationContext(), message, Toast.LENGTH_LONG).show();
             }
         };
 
@@ -123,7 +119,6 @@ public class CreateEventFragment extends Fragment {
 
         imageView = (ImageView) rootView.findViewById(R.id.imageView);
 
-        //buttonImg = (ImageButton) rootView.findViewById(R.id.buttonImg);
         buttonAsk = (Button) rootView.findViewById(R.id.buttonAsk);
         buttonOffer = (Button) rootView.findViewById(R.id.buttonOffer);
         buttonYesFixed = (Button) rootView.findViewById(R.id.buttonYesFixed);
@@ -146,7 +141,6 @@ public class CreateEventFragment extends Fragment {
         capacityRow = (TableRow) rootView.findViewById(R.id.capacityRow);
 
         thereisPic = false;
-        canWeRead = checkPermissions();
 
         eventType = -1;
         eventFixed = -1;
@@ -173,50 +167,38 @@ public class CreateEventFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        /*view.findViewById(R.id.buttonImg).setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.buttonCreate).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                readGallery();
-                enableButton();
+            public void onClick(View view) {
+                HashMap<String, String> params = new HashMap<>();
+                //TODO: Change them to null when API accepts it
+                String dataIni = "9999-09-09T09:09:09Z";
+                String dataEnd = "9999-09-10T09:09:09Z";
+                if(eventFixed == 1) {
+                    dataIni = strStartDate.concat("T").concat(editTextEndHour.getText().toString()).concat(":00:00Z");
+                    dataEnd = strEndDate.concat("T").concat(editTextEndHour.getText().toString()).concat(":00:00Z");
+                }
+                String emailUser = SharedPreferencesManager.INSTANCE.read(getActivity(),"user_email");
+
+                params.put("creatorEmail", emailUser);
+                params.put("description", description.getText().toString());
+                params.put("endDate", dataEnd);
+                params.put("iniDate", dataIni);
+                params.put("location", address.getText().toString());
+                params.put("title", name.getText().toString());
+                if(thereisPic)
+                    params.put("image", getImgBase64());
+                else
+                    params.put("image", "");
+
+                postCredentials(params);
             }
-        });*/
+        });
         view.findViewById(R.id.imageView).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 readGallery();
                 enableButton();
-            }
-        });
-        view.findViewById(R.id.buttonCreate).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(getActivity(), "button create", Toast.LENGTH_SHORT).show();
-
-                HashMap<String, String> params = new HashMap<>();
-                //TODO: Set to 00
-                String dataIni = "2018-04-26T15:10:02Z";
-                String dataEnd = "2018-04-26T15:10:02Z";
-
-                //if( areFilled_msg() ) { //Not required, theorically, just in case sth fails
-                //TODO: Still not working
-                String emailUser = SharedPreferencesManager.INSTANCE.read(getActivity(),"user_email");
-
-                Toast.makeText(getActivity(), "email " + emailUser , Toast.LENGTH_SHORT).show();
-
-                params.put("creatorEmail", emailUser);
-                params.put("description", description.getText().toString());
-                if(eventFixed == 1) {
-                    dataIni = strEndDate.concat(" ").concat(editTextEndHour.getText().toString()).concat(":00:00");
-                    dataEnd = strStartDate.concat(" ").concat(editTextStartHour.getText().toString()).concat(":00:00");
-                }
-                params.put("endDate", dataEnd);
-                params.put("iniDate", dataIni);
-                params.put("location", address.getText().toString());
-                params.put("title", name.getText().toString());
-                params.put("image", "");
-
-                postCredentials(params);
-                //}
             }
         });
         view.findViewById(R.id.buttonAsk).setOnClickListener(new View.OnClickListener() {
@@ -321,9 +303,15 @@ public class CreateEventFragment extends Fragment {
                 if(b) {
                     editTextStartHour.setText("");
                 }
-                else if(editTextStartHour.getText().length()==1) {
+                else {
+                    if(editTextStartHour.getText().length()==1) {
                         String hora = editTextStartHour.getText().toString();
-                    editTextStartHour.setText("0".concat(hora));
+                        editTextStartHour.setText("0".concat(hora));
+                    }
+                    if (!checkHours()) {
+                        editTextStartHour.setText("");
+                        Toast.makeText(getActivity(), "Start hour cannot be major than end hour", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         });
@@ -348,12 +336,21 @@ public class CreateEventFragment extends Fragment {
             @Override
             public void onFocusChange(View view, boolean b) {
                 if(b) {
-                editTextEndHour.setText("");
+                    editTextEndHour.setText("");
                 }
-                else if(editTextEndHour.getText().length()==1) {
-                        String hora = editTextStartHour.getText().toString();
-                    editTextEndHour.setText("0".concat(hora));
+                else {
+                    if(editTextEndHour.getText().length()==1) {
+                        String hora = editTextEndHour.getText().toString();
+                        editTextEndHour.setText("0".concat(hora));
+                    }
+
+                    if (!checkHours()) {
+                        editTextEndHour.setText("");
+                        Toast.makeText(getActivity(), "End hour cannot be minor than start date", Toast.LENGTH_SHORT).show();
+                    }
                 }
+
+
             }
         });
         editTextEndHour.addTextChangedListener(new TextWatcher() {
@@ -372,10 +369,6 @@ public class CreateEventFragment extends Fragment {
             }
             @Override
             public void afterTextChanged(Editable s) {
-                if(editTextEndHour.getText().length()==1) {
-                    String hora = editTextEndHour.getText().toString();
-                    editTextEndHour.setText("0".concat(hora));
-                }
                 enableButton();
             }
         });
@@ -387,23 +380,8 @@ public class CreateEventFragment extends Fragment {
         return false;
     }
 
-    private boolean areFilled_msg() {
-        if( !thereisPic )
-            Toast.makeText(getActivity(), "You must set an image", Toast.LENGTH_SHORT).show();
-        else if( name.getText().toString().isEmpty()
-                || address.getText().toString().isEmpty()
-                || description.getText().toString().isEmpty())
-            Toast.makeText(getActivity(), "Fill all fields", Toast.LENGTH_SHORT).show();
-        else if( eventFixed == -1 )
-            Toast.makeText(getActivity(), "Set schedule used", Toast.LENGTH_SHORT).show();
-        else if( eventType == -1 )
-            Toast.makeText(getActivity(), "Set event type", Toast.LENGTH_SHORT).show();
-        else return true;
-        return false;
-    }
-
     private boolean areFilled() {
-        return ((thereisPic) && !(name.getText().toString().isEmpty()) && !(address.getText().toString().isEmpty()) &&
+        return (/*(thereisPic) && */!(name.getText().toString().isEmpty()) && !(address.getText().toString().isEmpty()) &&
                 !(description.getText().toString().isEmpty()) && !(eventFixed == -1) && !(eventType == -1)
                 && (eventFixed == 0 || (eventFixed == 1 && !editTextEndDate.getText().toString().isEmpty()
                 && !editTextStartDate.getText().toString().isEmpty()
@@ -416,7 +394,6 @@ public class CreateEventFragment extends Fragment {
     }
 
     private void readGallery() {
-        PermissionChecker.checkReadExternalStoragePermissions(getActivity(),MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
         Intent pickAnImage = new Intent(
                 Intent.ACTION_PICK,
                 android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -434,9 +411,7 @@ public class CreateEventFragment extends Fragment {
                 thereisPic = true;
                 data.getData();
                 Uri selectedImage = data.getData();
-                if(canWeRead && requestCode == 2){
-                    Log.v(TAG, "Selected image uri" + selectedImage);
-                }
+                Log.v(TAG, "Selected image uri" + selectedImage);
                 Log.v(TAG, String.valueOf(selectedImage));
                 loadImageFromUri(selectedImage);
             }
@@ -448,7 +423,6 @@ public class CreateEventFragment extends Fragment {
 
     private void loadImageFromUri(Uri imageUri) {
         try {
-            //buttonImg.setImageBitmap(MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), imageUri));
             imageView.setImageBitmap(MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), imageUri));
             uriImg = imageUri;
         } catch (IOException e) {
@@ -456,9 +430,8 @@ public class CreateEventFragment extends Fragment {
         }
     }
 
-    private String convertUriToBase64(Uri imageUri) {
-        String imagePath = imageUri.toString();
-        Bitmap bm = BitmapFactory.decodeFile(imagePath);
+    private String getImgBase64() {
+        Bitmap bm = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bm.compress(Bitmap.CompressFormat.JPEG, 100, baos);
         byte[] byteArrayImage = baos.toByteArray();
@@ -466,37 +439,11 @@ public class CreateEventFragment extends Fragment {
         return encodedImage;
     }
 
-    private boolean checkPermissions() {
-        PermissionChecker.checkReadExternalStoragePermissions(getActivity(), MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
-        return ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_DENIED;
-    }
-
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        switch (requestCode) {
-            case MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE: {
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED)
-                    canWeRead = true; //Permission granted
-                else
-                    canWeRead = false; //Permission denied
-                return;
-            }
-            case  MY_PERMISSIONS_REQUEST_MANAGE_DOCUMENTS: {
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED)
-                    canWeRead = true; //Permission granted
-                else
-                    canWeRead = false; //Permission denied
-                return;
-            }
-        }
-    }
-
-    private void eventsSelected() {
+    private void boardSelected() {
         //TODO: Choose the proper Fragment (not created yet)
-        Fragment eventsFragment = new LoginFragment();
+        Fragment boardFragment = new BoardFragment();
         FragmentChangeListener fc = (FragmentChangeListener) getActivity();
-        fc.replaceFragment(eventsFragment);
+        fc.replaceFragment(boardFragment);
     }
 
     private void showStartDatePickerDialog() {
@@ -511,10 +458,15 @@ public class CreateEventFragment extends Fragment {
 
                 dateStart = calendar.getTime();
 
-                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-                strStartDate = format.format(calendar.getTime());
-                editTextStartDate.setText(selectedDate);
-                enableButton();
+                if( ( dateEnd == null || dateStart.before(dateEnd) ) && dateStart.after(Calendar.getInstance().getTime()) ) {
+                    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                    strStartDate = format.format(calendar.getTime());
+                    editTextStartDate.setText(selectedDate);
+                    if(!checkHours()) editTextEndHour.setText("");
+                    enableButton();
+                } else
+                    Toast.makeText(getActivity(), "Start date must be minor than End date and greater than current date", Toast.LENGTH_SHORT).show();
+
             }
         });
         newFragment.show(getActivity().getSupportFragmentManager(), "datePicker");
@@ -530,15 +482,27 @@ public class CreateEventFragment extends Fragment {
                 Calendar calendar = Calendar.getInstance();
                 calendar.set(year, month, day);
 
-                if( calendar.getTime().after(dateStart) ) {
+                dateEnd = calendar.getTime();
+
+                if( dateEnd.after(dateStart) ) {
                     SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-                    strEndDate = format.format(calendar.getTime());
+                    strEndDate = format.format( dateEnd );
                     editTextEndDate.setText(selectedDate);
+                    if(!checkHours()) editTextEndHour.setText("");
                     enableButton();
                 } else
                     Toast.makeText(getActivity(), "End date must be greater than Start date", Toast.LENGTH_SHORT).show();
             }
         });
         newFragment.show(getActivity().getSupportFragmentManager(), "datePicker");
+    }
+
+    private boolean checkHours() {
+        String hourStart = editTextStartHour.getText().toString();
+        String hourEnd = editTextEndHour.getText().toString();
+        if(dateStart != null && dateEnd != null && !hourStart.isEmpty() && !hourEnd.isEmpty()
+         && (editTextStartDate.getText().toString().equals(editTextEndDate.getText().toString()))) {
+            return Integer.valueOf( hourEnd ) > Integer.valueOf( hourStart );
+        } else return true;
     }
 }
