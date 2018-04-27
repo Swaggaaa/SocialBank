@@ -79,10 +79,7 @@ public class CreateEventFragment extends Fragment {
     private Date dateStart = null;
     private Date dateEnd = null;
 
-    private Uri uriImg;
-
     private void postCredentials(HashMap<String, String> params) {
-        //TODO: All, look for API's manual
         APICommunicator apiCommunicator = new APICommunicator();
         Response.Listener responseListener = new Response.Listener<CustomRequest.CustomResponse>() {
             @Override
@@ -424,7 +421,6 @@ public class CreateEventFragment extends Fragment {
     private void loadImageFromUri(Uri imageUri) {
         try {
             imageView.setImageBitmap(MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), imageUri));
-            uriImg = imageUri;
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -440,7 +436,6 @@ public class CreateEventFragment extends Fragment {
     }
 
     private void boardSelected() {
-        //TODO: Choose the proper Fragment (not created yet)
         Fragment boardFragment = new BoardFragment();
         FragmentChangeListener fc = (FragmentChangeListener) getActivity();
         fc.replaceFragment(boardFragment);
