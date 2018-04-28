@@ -5,7 +5,7 @@ import android.graphics.Bitmap;
 public class Event {
 
     private String title;
-    private int id;
+    private String id;
     private String initDate;
     private String place;
     private String finishDate;
@@ -13,7 +13,7 @@ public class Event {
     private String description;
     private Bitmap photoID;
 
-    Event(int id, String title, String initDate, String place, String finishDate, String individual, String description, Bitmap photoId) {
+    Event(String id, String title, String initDate, String place, String finishDate, String individual, String description, Bitmap photoId) {
         this.id = id;
         this.title = title;
         this.initDate = initDate;
@@ -52,7 +52,7 @@ public class Event {
         return description;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 }

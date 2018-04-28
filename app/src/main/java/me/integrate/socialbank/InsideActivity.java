@@ -15,7 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-public class InsideActivity extends AppCompatActivity implements FragmentChangeListener {
+public class InsideActivity extends AppCompatActivity implements FragmentChangeListener, BoardFragment.PositionRecyclerView {
     private DrawerLayout mDrawerLayout;
 
     @Override
@@ -109,6 +109,16 @@ public class InsideActivity extends AppCompatActivity implements FragmentChangeL
         fragmentTransaction.replace(R.id.fragment_container_inside, fragment, fragment.toString());
         fragmentTransaction.addToBackStack(fragment.toString());
         fragmentTransaction.commit();
+    }
+
+    @Override
+    public void sendId (String id) {
+        Bundle bundle = new Bundle();
+        bundle.putString("id", id);
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.fragment_container_inside, EventFragment.newInstance(bundle));
+        ft.addToBackStack(null);
+        ft.commit();
     }
 
 }
