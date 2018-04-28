@@ -1,5 +1,7 @@
 package me.integrate.socialbank;
 
+import android.graphics.Bitmap;
+
 public class Event {
 
     private String title;
@@ -9,9 +11,9 @@ public class Event {
     private String finishDate;
     private String individual;
     private String description;
-    private int photoID;
+    private Bitmap photoID;
 
-    Event(int id, String title, String initDate, String place, String finishDate, String individual, String description, int photoId) {
+    Event(int id, String title, String initDate, String place, String finishDate, String individual, String description, Bitmap photoId) {
         this.id = id;
         this.title = title;
         this.initDate = initDate;
@@ -42,7 +44,7 @@ public class Event {
         return individual;
     }
 
-    public int getImagen() {
+    public Bitmap getImagen() {
         return photoID;
     }
 

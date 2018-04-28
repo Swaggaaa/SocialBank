@@ -63,7 +63,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
     @Override
     public void onBindViewHolder(EventViewHolder viewHolder, int i) {
 
-        viewHolder.imagen.setImageResource(items.get(i).getImagen());
+        viewHolder.imagen.setImageBitmap(items.get(i).getImagen());
         viewHolder.title.setText(items.get(i).getTitle());
         viewHolder.initDate.setText(items.get(i).getInitDate());
         viewHolder.finishDate.setText(items.get(i).getFinishDate());
