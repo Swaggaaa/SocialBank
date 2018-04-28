@@ -177,7 +177,6 @@ public class BoardFragment extends Fragment {
         mAdapter = new EventAdapter(items, getActivity(), new CustomItemClickListener() {
             @Override
             public void onItemClick(View v, int position) {
-                //TODO hacer comunicacion entre fragments
                 mCallback.sendId(items.get(position).getId());
             }
         });
