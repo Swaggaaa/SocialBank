@@ -23,7 +23,7 @@ public class MainActivity extends ActionBarActivity implements FragmentChangeLis
 
         if (!hasPermissions()) {
 
-            // Permission is not granted request the permission
+            // Permissions are not granted request them
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
                             Manifest.permission.READ_EXTERNAL_STORAGE},
@@ -90,7 +90,7 @@ public class MainActivity extends ActionBarActivity implements FragmentChangeLis
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // permission was granted, yay!
+                    // at least one permission was granted, yay!
                     finish();
                     startActivity(getIntent());
                 } else {
