@@ -91,6 +91,8 @@ public class CreateEventFragment extends Fragment {
         Response.ErrorListener errorListener = new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                buttonCreate.setText("CREATE");
+                buttonCreate.setEnabled(true);
                 String message;
                 int errorCode = error.networkResponse.statusCode;
                 if (errorCode == 401)
@@ -169,15 +171,18 @@ public class CreateEventFragment extends Fragment {
             public void onClick(View view) {
                 HashMap<String, String> params = new HashMap<>();
                 //TODO: Change them to null when API accepts it
-                String dataIni = "9999-09-09T09:09:09Z";
-                String dataEnd = "9999-09-10T09:09:09Z";
+                String dataIni = null;
+                String dataEnd = null;
                 if(eventFixed == 1) {
                     dataIni = strStartDate.concat("T").concat(editTextEndHour.getText().toString()).concat(":00:00Z");
                     dataEnd = strEndDate.concat("T").concat(editTextEndHour.getText().toString()).concat(":00:00Z");
                 }
                 String emailUser = SharedPreferencesManager.INSTANCE.read(getActivity(),"user_email");
+                String demand = "false";
+                if(eventType == 1) demand = "true";
 
                 params.put("creatorEmail", emailUser);
+                params.put("demand", demand);
                 params.put("description", description.getText().toString());
                 params.put("endDate", dataEnd);
                 params.put("iniDate", dataIni);
@@ -188,6 +193,8 @@ public class CreateEventFragment extends Fragment {
                 else
                     params.put("image", "");
 
+                buttonCreate.setText("LOADING");
+                buttonCreate.setEnabled(false);
                 postCredentials(params);
             }
         });
