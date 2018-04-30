@@ -76,6 +76,11 @@ public class BoardFragment extends Fragment {
                 }
 
                 mAdapter = new EventAdapter(items, getActivity(), (v1, position) -> {
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("id", items.get(position).getId());
+                    Fragment eventFragment = EventFragment.newInstance(bundle);
+                    FragmentChangeListener fc = (FragmentChangeListener) getActivity();
+                    fc.replaceFragment(eventFragment);
                 });
 
                 mRecyclerView.setAdapter(mAdapter);
