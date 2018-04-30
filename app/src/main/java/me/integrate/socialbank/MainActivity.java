@@ -10,10 +10,10 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
-public class MainActivity extends ActionBarActivity implements FragmentChangeListener {
+public class MainActivity extends AppCompatActivity implements FragmentChangeListener {
 
     public static final int REQUEST_PERMISSIONS = 1;
 
