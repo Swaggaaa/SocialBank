@@ -112,9 +112,9 @@ public class InsideActivity extends AppCompatActivity implements FragmentChangeL
     }
 
     @Override
-    public void sendId (String id) {
+    public void sendId (int id) {
         Bundle bundle = new Bundle();
-        bundle.putString("id", id);
+        bundle.putInt("id", id);
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.fragment_container_inside, EventFragment.newInstance(bundle));
         ft.addToBackStack(null);

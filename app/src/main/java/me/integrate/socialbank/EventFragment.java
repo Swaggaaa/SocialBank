@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 public class EventFragment extends Fragment {
 
-    private String id;
+    private int id;
 
     private TextView ID;
 
@@ -25,11 +25,11 @@ public class EventFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_event, container, false);
-        id = getArguments().getString("id");
+        id = getArguments().getInt("id");
 
         //TODO borrar
         ID = (TextView) rootView.findViewById(R.id.event_id);
-        ID.setText(id);
+        ID.setText(String.valueOf(id));
         return rootView;
     }
 }
