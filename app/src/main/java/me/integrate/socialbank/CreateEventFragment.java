@@ -1,23 +1,13 @@
 package me.integrate.socialbank;
 
-import android.content.Context;
-import android.graphics.drawable.BitmapDrawable;
-import android.util.AttributeSet;
-import android.view.MotionEvent;
-import android.widget.ImageView;
-import android.widget.ScrollView;
-import android.Manifest;
-import android.app.DatePickerDialog;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Base64;
@@ -26,16 +16,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.Toast;
 
 import com.android.volley.Response;
-import com.android.volley.VolleyError;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -81,30 +69,26 @@ public class CreateEventFragment extends Fragment {
 
     private void postCredentials(HashMap<String, String> params) {
         APICommunicator apiCommunicator = new APICommunicator();
-        Response.Listener responseListener = new Response.Listener<CustomRequest.CustomResponse>() {
-            @Override
-            public void onResponse(CustomRequest.CustomResponse response) {
-                Toast.makeText(getActivity().getApplicationContext(), "Event created successfully", Toast.LENGTH_LONG).show();
-                boardSelected();
-            }
+        Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response ->
+        {
+            Toast.makeText(getActivity().getApplicationContext(), "Event created successfully", Toast.LENGTH_LONG).show();
+            boardSelected();
         };
-        Response.ErrorListener errorListener = new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                buttonCreate.setText("CREATE");
-                buttonCreate.setEnabled(true);
-                String message;
-                int errorCode = error.networkResponse.statusCode;
-                if (errorCode == 401)
-                    message = "Unauthorized";
-                else if(errorCode == 403)
-                    message = "Forbidden";
-                else if(errorCode == 404)
-                    message = "Not Found";
-                else
-                    message = "Unexpected error";
-                Toast.makeText(getActivity().getApplicationContext(), message, Toast.LENGTH_LONG).show();
-            }
+        Response.ErrorListener errorListener = error ->
+        {
+            buttonCreate.setText("CREATE");
+            buttonCreate.setEnabled(true);
+            String message;
+            int errorCode = error.networkResponse.statusCode;
+            if (errorCode == 401)
+                message = "Unauthorized";
+            else if(errorCode == 403)
+                message = "Forbidden";
+            else if(errorCode == 404)
+                message = "Not Found";
+            else
+                message = "Unexpected error";
+            Toast.makeText(getActivity().getApplicationContext(), message, Toast.LENGTH_LONG).show();
         };
 
         apiCommunicator.postRequest(getActivity().getApplicationContext(), URL, responseListener, errorListener, params);
@@ -166,116 +150,95 @@ public class CreateEventFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        view.findViewById(R.id.buttonCreate).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                HashMap<String, String> params = new HashMap<>();
-                //TODO: Change them to null when API accepts it
-                String dataIni = null;
-                String dataEnd = null;
-                if(eventFixed == 1) {
-                    dataIni = strStartDate.concat("T").concat(editTextEndHour.getText().toString()).concat(":00:00Z");
-                    dataEnd = strEndDate.concat("T").concat(editTextEndHour.getText().toString()).concat(":00:00Z");
-                }
-                String emailUser = SharedPreferencesManager.INSTANCE.read(getActivity(),"user_email");
-                String demand = "false";
-                if(eventType == 1) demand = "true";
+        view.findViewById(R.id.buttonCreate).setOnClickListener(view1 ->
+        {
+            HashMap<String, String> params = new HashMap<>();
+            //TODO: Change them to null when API accepts it
+            String dataIni = null;
+            String dataEnd = null;
+            if(eventFixed == 1) {
+                dataIni = strStartDate.concat("T").concat(editTextEndHour.getText().toString()).concat(":00:00Z");
+                dataEnd = strEndDate.concat("T").concat(editTextEndHour.getText().toString()).concat(":00:00Z");
+            }
+            String emailUser = SharedPreferencesManager.INSTANCE.read(getActivity(),"user_email");
+            String demand = "false";
+            if(eventType == 1) demand = "true";
 
-                params.put("creatorEmail", emailUser);
-                params.put("demand", demand);
-                params.put("description", description.getText().toString());
-                params.put("endDate", dataEnd);
-                params.put("iniDate", dataIni);
-                params.put("location", address.getText().toString());
-                params.put("title", name.getText().toString());
-                if(thereisPic)
-                    params.put("image", getImgBase64());
-                else
-                    params.put("image", "");
+            params.put("creatorEmail", emailUser);
+            params.put("demand", demand);
+            params.put("description", description.getText().toString());
+            params.put("endDate", dataEnd);
+            params.put("iniDate", dataIni);
+            params.put("location", address.getText().toString());
+            params.put("title", name.getText().toString());
+            params.put("image", thereisPic ? ImageCompressor.INSTANCE.compressAndEncodeAsBase64(
+                    ((BitmapDrawable)imageView.getDrawable()).getBitmap())
+                    : "");
 
-                buttonCreate.setText("LOADING");
-                buttonCreate.setEnabled(false);
-                postCredentials(params);
-            }
+            buttonCreate.setText("LOADING");
+            buttonCreate.setEnabled(false);
+            postCredentials(params);
         });
-        view.findViewById(R.id.imageView).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                readGallery();
-                enableButton();
-            }
+        view.findViewById(R.id.imageView).setOnClickListener(v ->
+        {
+            readGallery();
+            enableButton();
         });
-        view.findViewById(R.id.buttonAsk).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                buttonAsk.setTextColor(getResources().getColor(R.color.colorPrimary));
-                buttonOffer.setTextColor(getResources().getColor(R.color.colorTextButton));
-                eventType = 1;
-                enableButton();
-            }
+        view.findViewById(R.id.buttonAsk).setOnClickListener(view12 ->
+        {
+            buttonAsk.setTextColor(getResources().getColor(R.color.colorPrimary));
+            buttonOffer.setTextColor(getResources().getColor(R.color.colorTextButton));
+            eventType = 1;
+            enableButton();
         });
-        view.findViewById(R.id.buttonOffer).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                buttonOffer.setTextColor(getResources().getColor(R.color.colorPrimary));
-                buttonAsk.setTextColor(getResources().getColor(R.color.colorTextButton));
-                eventType = 0;
-                enableButton();
-            }
+        view.findViewById(R.id.buttonOffer).setOnClickListener(view13 ->
+        {
+            buttonOffer.setTextColor(getResources().getColor(R.color.colorPrimary));
+            buttonAsk.setTextColor(getResources().getColor(R.color.colorTextButton));
+            eventType = 0;
+            enableButton();
         });
-        view.findViewById(R.id.buttonYesFixed).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                buttonYesFixed.setTextColor(getResources().getColor(R.color.colorPrimary));
-                buttonNoFixed.setTextColor(getResources().getColor(R.color.colorTextButton));
-                layoutDate.setVisibility(View.VISIBLE);
-                eventFixed = 1;
-                enableButton();
-            }
+        view.findViewById(R.id.buttonYesFixed).setOnClickListener(view14 ->
+        {
+            buttonYesFixed.setTextColor(getResources().getColor(R.color.colorPrimary));
+            buttonNoFixed.setTextColor(getResources().getColor(R.color.colorTextButton));
+            layoutDate.setVisibility(View.VISIBLE);
+            eventFixed = 1;
+            enableButton();
         });
-        view.findViewById(R.id.buttonNoFixed).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                buttonNoFixed.setTextColor(getResources().getColor(R.color.colorPrimary));
-                buttonYesFixed.setTextColor(getResources().getColor(R.color.colorTextButton));
-                layoutDate.setVisibility(View.GONE);
-                eventFixed = 0;
-                enableButton();
-            }
+        view.findViewById(R.id.buttonNoFixed).setOnClickListener(view15 ->
+        {
+            buttonNoFixed.setTextColor(getResources().getColor(R.color.colorPrimary));
+            buttonYesFixed.setTextColor(getResources().getColor(R.color.colorTextButton));
+            layoutDate.setVisibility(View.GONE);
+            eventFixed = 0;
+            enableButton();
         });
-        view.findViewById(R.id.buttonYesGroup).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                buttonYesGroup.setTextColor(getResources().getColor(R.color.colorPrimary));
-                buttonNoGroup.setTextColor(getResources().getColor(R.color.colorTextButton));
-                capacityRow.setVisibility(View.VISIBLE);
-                eventGroup = 1;
-                enableButton();
-            }
+        view.findViewById(R.id.buttonYesGroup).setOnClickListener(view16 ->
+        {
+            buttonYesGroup.setTextColor(getResources().getColor(R.color.colorPrimary));
+            buttonNoGroup.setTextColor(getResources().getColor(R.color.colorTextButton));
+            capacityRow.setVisibility(View.VISIBLE);
+            eventGroup = 1;
+            enableButton();
         });
-        view.findViewById(R.id.buttonNoGroup).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                buttonNoGroup.setTextColor(getResources().getColor(R.color.colorPrimary));
-                buttonYesGroup.setTextColor(getResources().getColor(R.color.colorTextButton));
-                capacityRow.setVisibility(View.GONE);
-                eventGroup = 0;
-                enableButton();
-            }
+        view.findViewById(R.id.buttonNoGroup).setOnClickListener(view17 ->
+        {
+            buttonNoGroup.setTextColor(getResources().getColor(R.color.colorPrimary));
+            buttonYesGroup.setTextColor(getResources().getColor(R.color.colorTextButton));
+            capacityRow.setVisibility(View.GONE);
+            eventGroup = 0;
+            enableButton();
         });
-        view.findViewById(R.id.editTextStartDate).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showStartDatePickerDialog();
-                editTextEndDate.setEnabled(true);
-            }
+        view.findViewById(R.id.editTextStartDate).setOnClickListener(view18 ->
+        {
+            showStartDatePickerDialog();
+            editTextEndDate.setEnabled(true);
         });
-        view.findViewById(R.id.editTextEndDate).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showEndDatePickerDialog();
-                enableButton();
-            }
+        view.findViewById(R.id.editTextEndDate).setOnClickListener(view19 ->
+        {
+            showEndDatePickerDialog();
+            enableButton();
         });
         name.addTextChangedListener(new TextWatcher() {
             @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -301,21 +264,19 @@ public class CreateEventFragment extends Fragment {
                 enableButton();
             }
         });
-        view.findViewById(R.id.editTextStartHour).setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean b) {
-                if(b) {
-                    editTextStartHour.setText("");
+        view.findViewById(R.id.editTextStartHour).setOnFocusChangeListener((view110, b) ->
+        {
+            if(b) {
+                editTextStartHour.setText("");
+            }
+            else {
+                if(editTextStartHour.getText().length()==1) {
+                    String hora = editTextStartHour.getText().toString();
+                    editTextStartHour.setText("0".concat(hora));
                 }
-                else {
-                    if(editTextStartHour.getText().length()==1) {
-                        String hora = editTextStartHour.getText().toString();
-                        editTextStartHour.setText("0".concat(hora));
-                    }
-                    if (!checkHours()) {
-                        editTextStartHour.setText("");
-                        Toast.makeText(getActivity(), "Start hour cannot be major than end hour", Toast.LENGTH_SHORT).show();
-                    }
+                if (!checkHours()) {
+                    editTextStartHour.setText("");
+                    Toast.makeText(getActivity(), "Start hour cannot be major than end hour", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -336,26 +297,24 @@ public class CreateEventFragment extends Fragment {
                 enableButton();
             }
         });
-        view.findViewById(R.id.editTextEndHour).setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean b) {
-                if(b) {
-                    editTextEndHour.setText("");
-                }
-                else {
-                    if(editTextEndHour.getText().length()==1) {
-                        String hora = editTextEndHour.getText().toString();
-                        editTextEndHour.setText("0".concat(hora));
-                    }
-
-                    if (!checkHours()) {
-                        editTextEndHour.setText("");
-                        Toast.makeText(getActivity(), "End hour cannot be minor than start date", Toast.LENGTH_SHORT).show();
-                    }
-                }
-
-
+        view.findViewById(R.id.editTextEndHour).setOnFocusChangeListener((view111, b) ->
+        {
+            if(b) {
+                editTextEndHour.setText("");
             }
+            else {
+                if(editTextEndHour.getText().length()==1) {
+                    String hora = editTextEndHour.getText().toString();
+                    editTextEndHour.setText("0".concat(hora));
+                }
+
+                if (!checkHours()) {
+                    editTextEndHour.setText("");
+                    Toast.makeText(getActivity(), "End hour cannot be minor than start date", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+
         });
         editTextEndHour.addTextChangedListener(new TextWatcher() {
             @Override
@@ -433,15 +392,6 @@ public class CreateEventFragment extends Fragment {
         }
     }
 
-    private String getImgBase64() {
-        Bitmap bm = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bm.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-        byte[] byteArrayImage = baos.toByteArray();
-        String encodedImage = Base64.encodeToString(byteArrayImage, Base64.DEFAULT);
-        return encodedImage;
-    }
-
     private void boardSelected() {
         Fragment boardFragment = new BoardFragment();
         FragmentChangeListener fc = (FragmentChangeListener) getActivity();
@@ -449,62 +399,57 @@ public class CreateEventFragment extends Fragment {
     }
 
     private void showStartDatePickerDialog() {
-        DatePickerFragment newFragment = DatePickerFragment.newInstance(new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                // +1 because january is zero
-                final String selectedDate = day + " / " + (month + 1) + " / " + year;
+        DatePickerFragment newFragment = DatePickerFragment.newInstance((datePicker, year, month, day) ->
+        {
+            // +1 because january is zero
+            final String selectedDate = day + " / " + (month + 1) + " / " + year;
 
-                Calendar calendar = Calendar.getInstance();
-                calendar.set(year, month, day);
+            Calendar calendar = Calendar.getInstance();
+            calendar.set(year, month, day);
 
-                dateStart = calendar.getTime();
+            dateStart = calendar.getTime();
 
-                if( ( dateEnd == null || dateStart.before(dateEnd) ) && dateStart.after(Calendar.getInstance().getTime()) ) {
-                    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-                    strStartDate = format.format(calendar.getTime());
-                    editTextStartDate.setText(selectedDate);
-                    if(!checkHours()) editTextEndHour.setText("");
-                    enableButton();
-                } else
-                    Toast.makeText(getActivity(), "Start date must be minor than End date and greater than current date", Toast.LENGTH_SHORT).show();
+            if( ( dateEnd == null || dateStart.before(dateEnd) ) && dateStart.after(Calendar.getInstance().getTime()) ) {
+                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                strStartDate = format.format(calendar.getTime());
+                editTextStartDate.setText(selectedDate);
+                if(!checkHours()) editTextEndHour.setText("");
+                enableButton();
+            } else
+                Toast.makeText(getActivity(), "Start date must be minor than End date and greater than current date", Toast.LENGTH_SHORT).show();
 
-            }
         });
         newFragment.show(getActivity().getSupportFragmentManager(), "datePicker");
     }
 
     private void showEndDatePickerDialog() {
-        DatePickerFragment newFragment = DatePickerFragment.newInstance(new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                // +1 because january is zero
-                final String selectedDate = day + " / " + (month + 1) + " / " + year;
+        DatePickerFragment newFragment = DatePickerFragment.newInstance((datePicker, year, month, day) ->
+        {
+            // +1 because january is zero
+            final String selectedDate = day + " / " + (month + 1) + " / " + year;
 
-                Calendar calendar = Calendar.getInstance();
-                calendar.set(year, month, day);
+            Calendar calendar = Calendar.getInstance();
+            calendar.set(year, month, day);
 
-                dateEnd = calendar.getTime();
+            dateEnd = calendar.getTime();
 
-                if( dateEnd.after(dateStart) ) {
-                    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-                    strEndDate = format.format( dateEnd );
-                    editTextEndDate.setText(selectedDate);
-                    if(!checkHours()) editTextEndHour.setText("");
-                    enableButton();
-                } else
-                    Toast.makeText(getActivity(), "End date must be greater than Start date", Toast.LENGTH_SHORT).show();
-            }
+            if( dateEnd.after(dateStart) ) {
+                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                strEndDate = format.format( dateEnd );
+                editTextEndDate.setText(selectedDate);
+                if(!checkHours()) editTextEndHour.setText("");
+                enableButton();
+            } else
+                Toast.makeText(getActivity(), "End date must be greater than Start date", Toast.LENGTH_SHORT).show();
         });
         newFragment.show(getActivity().getSupportFragmentManager(), "datePicker");
     }
 
-    private boolean checkHours() {
+    private boolean checkHours()
+    {
         String hourStart = editTextStartHour.getText().toString();
         String hourEnd = editTextEndHour.getText().toString();
-        if(dateStart != null && dateEnd != null && !hourStart.isEmpty() && !hourEnd.isEmpty()
-         && (editTextStartDate.getText().toString().equals(editTextEndDate.getText().toString()))) {
-            return Integer.valueOf( hourEnd ) > Integer.valueOf( hourStart );
-        } else return true;
+        return !(dateStart != null && dateEnd != null && !hourStart.isEmpty() && !hourEnd.isEmpty()
+                && (editTextStartDate.getText().toString().equals(editTextEndDate.getText().toString()))) || Integer.valueOf(hourEnd) > Integer.valueOf(hourStart);
     }
 }
