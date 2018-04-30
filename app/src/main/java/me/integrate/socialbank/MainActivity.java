@@ -29,7 +29,7 @@ public class MainActivity extends ActionBarActivity implements FragmentChangeLis
             }
 
             // Create a new Fragment to be placed in the activity layout
-            LoginFragment firstFragment = new LoginFragment();
+            NearbyEventsFragment firstFragment = new NearbyEventsFragment();
 
             // In case this activity was started with special instructions from an
             // Intent, pass the Intent's extras to the fragment as arguments
