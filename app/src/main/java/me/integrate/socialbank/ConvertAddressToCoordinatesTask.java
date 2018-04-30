@@ -40,13 +40,14 @@ public class ConvertAddressToCoordinatesTask extends AsyncTask<URL,Integer,LatLn
 
             JSONObject json = new JSONObject(full);
 
-            JSONObject location = json.getJSONObject(full).getJSONArray("results").getJSONObject(0).getJSONObject("geometry").getJSONObject("location");
+
+            JSONObject location = json.getJSONArray("results").getJSONObject(0).getJSONObject("geometry").getJSONObject("location");
             String longitude = location.getString("lng");
             String latitude = location.getString("lat");
 
             System.out.println(latitude);
 
-            coordinates = new LatLng(Float.parseFloat(longitude), Float.parseFloat(latitude));
+            coordinates = new LatLng(Double.parseDouble(longitude), Double.parseDouble(latitude));
             return coordinates;
 
 
