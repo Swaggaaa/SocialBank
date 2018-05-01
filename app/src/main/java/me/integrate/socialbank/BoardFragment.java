@@ -1,6 +1,7 @@
 package me.integrate.socialbank;
 
 
+import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -19,12 +20,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 
 public class BoardFragment extends Fragment {
-
 
     private static final String URL = "/events";
     private RecyclerView mRecyclerView;
@@ -37,6 +38,7 @@ public class BoardFragment extends Fragment {
     private String description;
     private String photoEvent;
     private int id;
+    private ProgressDialog loadingDialog;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -47,6 +49,8 @@ public class BoardFragment extends Fragment {
         mRecyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
+        loadingDialog = ProgressDialog.show(getActivity(), "",
+                getString(R.string.loadingMessage), true);
         getAllEvents();
         return rootView;
     }
@@ -77,19 +81,23 @@ public class BoardFragment extends Fragment {
 
                 mAdapter = new EventAdapter(items, getActivity(), (v1, position) -> {
                     Bundle bundle = new Bundle();
-                    bundle.putInt("id", items.get(position).getId());
+                    Event event = items.get(position);
+
+                    bundle.putInt("id", event.getId());
+                    bundle.putByteArray("image", bitmapToByteArray(event.getImagen()));
+                    bundle.putString("title", event.getTitle());
+                    bundle.putString("description", event.getDescription());
                     Fragment eventFragment = EventFragment.newInstance(bundle);
                     FragmentChangeListener fc = (FragmentChangeListener) getActivity();
                     fc.replaceFragment(eventFragment);
                 });
 
                 mRecyclerView.setAdapter(mAdapter);
+                loadingDialog.dismiss();
 
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            //TODO quitar
-            Toast.makeText(getActivity().getApplicationContext(), "FUNCIONA!", Toast.LENGTH_LONG).show();
         };
         Response.ErrorListener errorListener = error -> {
             String message;
@@ -102,6 +110,8 @@ public class BoardFragment extends Fragment {
                 message = "Not Found";
             else
                 message = "Unexpected error";
+
+            loadingDialog.dismiss();
             Toast.makeText(getActivity().getApplicationContext(), message, Toast.LENGTH_LONG).show();
         };
         apiCommunicator.getRequest(getActivity().getApplicationContext(), URL, responseListener, errorListener, null);
@@ -151,5 +161,10 @@ public class BoardFragment extends Fragment {
 
     }
 
+    private byte[] bitmapToByteArray(Bitmap bitmap) {
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
+        return byteArrayOutputStream.toByteArray();
+    }
 
 }
