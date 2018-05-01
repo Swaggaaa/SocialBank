@@ -1,18 +1,66 @@
 package me.integrate.socialbank;
 
-        import android.os.Bundle;
-        import android.support.v4.app.Fragment;
-        import android.support.v4.app.FragmentActivity;
-        import android.support.v4.app.FragmentManager;
-        import android.support.v4.app.FragmentTransaction;
-        import android.support.v7.app.ActionBarActivity;
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 
-public class InsideActivity extends ActionBarActivity implements FragmentChangeListener {
+public class InsideActivity extends AppCompatActivity implements FragmentChangeListener {
+    private DrawerLayout mDrawerLayout;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_inside);
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(myToolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+        ActionBar actionbar = getSupportActionBar();
+        actionbar.setDisplayHomeAsUpEnabled(true);
+        actionbar.setHomeAsUpIndicator(R.drawable.ic_menu);
+
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(
+                menuItem -> {
+                    // set item as selected to persist highlight
+                    menuItem.setChecked(true);
+                    // close drawer when item is tapped
+                    mDrawerLayout.closeDrawers();
+
+                    // Add code here to update the UI based on the item selected
+                    // For example, swap UI fragments here
+                    int itemId = menuItem.getItemId();
+                    switch (itemId){
+                        case R.id.myProfile:
+                            Fragment nextFragment = new RegisterFragment();  //we must put our fragment instead
+                            replaceFragment(nextFragment);
+                            break;
+                        case R.id.logout:
+                            logout();
+                            break;
+                    }
+
+                    return true;
+                });
+
+        View headerView = navigationView.getHeaderView(0);
+        TextView userName = (TextView) headerView.findViewById(R.id.userName);
+        userName.setText(SharedPreferencesManager.INSTANCE.read(this, "user_name"));
+        TextView userEmail = (TextView) headerView.findViewById(R.id.userEmail);
+        userEmail.setText(SharedPreferencesManager.INSTANCE.read(this, "user_email"));
 
         // Check that the activity is using the layout version with
         // the fragment_container FrameLayout
@@ -38,6 +86,23 @@ public class InsideActivity extends ActionBarActivity implements FragmentChangeL
     }
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                mDrawerLayout.openDrawer(GravityCompat.START);
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void logout() {
+        SharedPreferencesManager.INSTANCE.remove(this, "token");
+        startActivity(new Intent(this, MainActivity.class));
+    }
+
+    @Override
     public void replaceFragment(Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -45,4 +110,5 @@ public class InsideActivity extends ActionBarActivity implements FragmentChangeL
         fragmentTransaction.addToBackStack(fragment.toString());
         fragmentTransaction.commit();
     }
+
 }
