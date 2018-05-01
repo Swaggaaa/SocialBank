@@ -47,7 +47,7 @@ public class ConvertAddressToCoordinatesTask extends AsyncTask<URL,Integer,LatLn
 
             System.out.println(latitude);
 
-            coordinates = new LatLng(Double.parseDouble(longitude), Double.parseDouble(latitude));
+            coordinates = new LatLng(Double.parseDouble(latitude), Double.parseDouble(longitude));
             return coordinates;
 
 

@@ -1,6 +1,7 @@
 package me.integrate.socialbank;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.hardware.SensorManager;
 import android.location.Criteria;
 import android.location.Location;
@@ -15,7 +16,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
+import com.android.volley.Response;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -23,15 +26,24 @@ import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import static android.content.Context.LOCATION_SERVICE;
 
 public class NearbyEventsFragment extends Fragment {
+
+    private static final String URL = "/events";
 
     MapView mMapView;
     private GoogleMap googleMap;
@@ -59,6 +71,7 @@ public class NearbyEventsFragment extends Fragment {
             e.printStackTrace();
         }
 
+
         mMapView.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(GoogleMap mMap) {
@@ -67,22 +80,35 @@ public class NearbyEventsFragment extends Fragment {
                 // For showing a move to my location button
                 googleMap.setMyLocationEnabled(true);
 
-               /* Criteria criteria = new Criteria();
+                LocationManager mLocationManager = (LocationManager) getActivity().getApplicationContext().getSystemService(LOCATION_SERVICE);
+                List<String> providers = mLocationManager.getProviders(true);
+                Location bestLocation = null;
+                for (String provider : providers) {
+                    Location l = mLocationManager.getLastKnownLocation(provider);
+                    if (l == null) {
+                        continue;
+                    }
+                    if (bestLocation == null || l.getAccuracy() < bestLocation.getAccuracy()) {
+                        // Found best last known location: %s", l);
+                        bestLocation = l;
+                    }
+                }
 
-                LocationManager locationManager = (LocationManager)getActivity().getApplicationContext().getSystemService(LOCATION_SERVICE);
-                String provider = locationManager.getBestProvider(criteria, true);
-                Location location = locationManager.getLastKnownLocation(provider);
-                double latitude = location.getLatitude();
-                double longitude = location.getLongitude();
+                double latitude = bestLocation.getLatitude();
+                double longitude = bestLocation.getLongitude();
+
+                showNearbyEvents();
                 myPosition = new LatLng(latitude, longitude);
-                */
+
+
+
 
                 //For dropping a marker at a point on the Map
-                LatLng sydney = new LatLng(-34, 151);
+                //LatLng sydney = new LatLng(-34, 151);
                 //googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker Title").snippet("Marker Description"));
 
                 // For zooming automatically to the location of the marker
-                CameraPosition cameraPosition = new CameraPosition.Builder().target(sydney).zoom(12).build();
+                CameraPosition cameraPosition = new CameraPosition.Builder().target(myPosition).zoom(12).build();
                 googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
             }
         });
@@ -114,6 +140,31 @@ public class NearbyEventsFragment extends Fragment {
         });
     }
 
+    private void showNearbyEvents() {
+        APICommunicator apiCommunicator = new APICommunicator();
+        Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response -> {
+            JSONArray jsonArray = null;
+            try {
+                jsonArray = new JSONArray(response.response);
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject object = jsonArray.getJSONObject(i);
+                    LatLng eventPosition = new LatLng(object.getDouble("latitude"), object.getDouble("longitude"));
+                    googleMap.addMarker(new MarkerOptions().position(eventPosition).title(object.getString("title")).snippet(object.getString("description")));
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        };
+        Response.ErrorListener errorListener = error -> {
+            Toast.makeText(getActivity().getApplicationContext(), "Something went wrong", Toast.LENGTH_LONG).show();
+            Fragment boardFragment = new BoardFragment();
+            FragmentChangeListener fc = (FragmentChangeListener) getActivity();
+            fc.replaceFragment(boardFragment);
+        };
+
+        apiCommunicator.getRequest(getActivity().getApplicationContext(), URL, responseListener, errorListener, null);
+
+    }
 
     private LatLng convertToCoordinates(String address) {
         URL url = getUrlForAddress(address);

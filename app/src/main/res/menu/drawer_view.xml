@@ -9,6 +9,9 @@
             android:icon="@drawable/ic_close"
             android:id="@+id/myProfile"
             android:title="@string/my_profile" />
+        <item
+            android:id="@+id/nearbyEvents"
+            android:title="@string/location" />
 
     </group>
     <item android:title="@string/settings">
