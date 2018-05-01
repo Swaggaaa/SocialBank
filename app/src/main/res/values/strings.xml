@@ -28,5 +28,6 @@
     <string name="my_profile">My Profile</string>
     <string name="settings">Settings</string>
     <string name="dashboard">Dashboard</string>
+    <string name="loadingMessage">Loading. Please wait…</string>
     <string name="location">Location</string>
 </resources>
