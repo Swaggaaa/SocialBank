@@ -1,6 +1,7 @@
 package me.integrate.socialbank;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.hardware.SensorManager;
 import android.location.Criteria;
@@ -11,6 +12,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +28,7 @@ import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 
@@ -36,7 +39,9 @@ import org.json.JSONObject;
 import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 import static android.content.Context.LOCATION_SERVICE;
@@ -51,6 +56,8 @@ public class NearbyEventsFragment extends Fragment {
 
     private EditText address;
     private Button searchButton;
+    //TODO: Change JSONObject to proper Event casting. Event needs to get remade.
+    private Map<Marker, JSONObject> eventsMap;
 
 
     @Override
@@ -64,6 +71,8 @@ public class NearbyEventsFragment extends Fragment {
         mMapView.onCreate(savedInstanceState);
 
         mMapView.onResume(); // needed to get the map to display immediately
+
+        eventsMap = new HashMap<>();
 
         try {
             MapsInitializer.initialize(getActivity().getApplicationContext());
@@ -79,6 +88,24 @@ public class NearbyEventsFragment extends Fragment {
 
                 // For showing a move to my location button
                 googleMap.setMyLocationEnabled(true);
+                googleMap.setOnInfoWindowClickListener(marker -> {
+                    JSONObject event = eventsMap.get(marker);
+                    Bundle bundle = new Bundle();
+                    try {
+                        bundle.putInt("id", event.getInt("id"));
+                        bundle.putByteArray("image",
+                                Base64.decode(
+                                        event.getString("image"),
+                                        event.getString("image").length()));
+                        bundle.putString("title", event.getString("title"));
+                        bundle.putString("description", event.getString("description"));
+                        Fragment eventFragment = EventFragment.newInstance(bundle);
+                        FragmentChangeListener fc = (FragmentChangeListener) getActivity();
+                        fc.replaceFragment(eventFragment);
+                    } catch (JSONException ex) {
+                        Toast.makeText(getActivity().getApplicationContext(), R.string.errorEventInfo, Toast.LENGTH_LONG).show();
+                    }
+                });
 
                 LocationManager mLocationManager = (LocationManager) getActivity().getApplicationContext().getSystemService(LOCATION_SERVICE);
                 List<String> providers = mLocationManager.getProviders(true);
@@ -149,7 +176,8 @@ public class NearbyEventsFragment extends Fragment {
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject object = jsonArray.getJSONObject(i);
                     LatLng eventPosition = new LatLng(object.getDouble("latitude"), object.getDouble("longitude"));
-                    googleMap.addMarker(new MarkerOptions().position(eventPosition).title(object.getString("title")).snippet(object.getString("description")));
+                    Marker marker = googleMap.addMarker(new MarkerOptions().position(eventPosition).title(object.getString("title")).snippet(object.getString("description")));
+                    eventsMap.put(marker, object);
                 }
             } catch (JSONException e) {
                 e.printStackTrace();

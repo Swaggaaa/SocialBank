@@ -30,4 +30,5 @@
     <string name="dashboard">Dashboard</string>
     <string name="loadingMessage">Loading. Please wait…</string>
     <string name="location">Location</string>
+    <string name="errorEventInfo">Error getting event info</string>
 </resources>
