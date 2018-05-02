@@ -21,7 +21,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
@@ -31,10 +34,14 @@ public class BoardFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
 
+    private String creatorEmail;
+    private boolean demand;
     private String title;
-    private String initDate;
-    private String place;
-    private String finishDate;
+    private Date initDate;
+    private String location;
+    private Date finishDate;
+    private int latitude;
+    private int longitude;
     private String description;
     private String photoEvent;
     private int id;
@@ -71,11 +78,8 @@ public class BoardFragment extends Fragment {
                     getInfoEvent(jsonObject);
                     Bitmap decodedByte = getImageFromString(photoEvent);
 
-                    //TODO: do it again
-                    if (decodedByte != null) {
-                        items.add(new Event(id, title, initDate, place, finishDate, "No", description, decodedByte));
-                    } else
-                        items.add(new Event(id, title, initDate, place, finishDate, "No", description, R.drawable.user_icon));
+                    items.add(new Event(creatorEmail,demand, description, finishDate, id, decodedByte, initDate, latitude, location, longitude, title, getContext()));
+
 
                 }
 
@@ -124,21 +128,40 @@ public class BoardFragment extends Fragment {
 
             id = jsonObject.getInt("id");
 
+            demand = jsonObject.getBoolean("demand");
+
             title = jsonObject.getString("title");
 
-            initDate = jsonObject.getString("iniDate");
-            if (!initDate.equals("null")) {
-                initDate = initDate.substring(8, 10) + "-" + initDate.substring(5, 7) + "-" +
-                        initDate.substring(0, 4);
-            } else initDate = "No hay fecha";
+            latitude = jsonObject.getInt("latitude");
+            longitude = jsonObject.getInt("longitude");
 
+            creatorEmail = jsonObject.getString("creatorEmail");
 
-            place = jsonObject.getString("location");
+            String aux = jsonObject.getString("iniDate");
+            if(aux.equals("null")) initDate = null;
+            else {
+                try {
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyy-MM-dd HH:mm:ss");
+                    initDate = sdf.parse(aux);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            }
 
-            finishDate = jsonObject.getString("endDate");
-            if (!finishDate.equals("null")) {
-                finishDate = finishDate.substring(8, 10) + "-" + finishDate.substring(5, 7) + "-" + finishDate.substring(0, 4);
-            } else finishDate = "No hay fecha";
+            location = jsonObject.getString("location");
+
+            aux = jsonObject.getString("endDate");
+            if(aux.equals("null")) initDate = null;
+            else {
+                try {
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyy-MM-dd HH:mm:ss");
+                    finishDate = sdf.parse(aux);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            System.out.println("FINAL: " + aux);
 
             description = jsonObject.getString("description");
 
@@ -152,7 +175,6 @@ public class BoardFragment extends Fragment {
     //Transform and string base64 to bitmap
     private Bitmap getImageFromString(String image) {
 
-        //TODO quitar
         if (!image.equals("")) {
             byte[] decodeString = Base64.decode(image, Base64.DEFAULT);
             return BitmapFactory.decodeByteArray(decodeString, 0, decodeString.length);

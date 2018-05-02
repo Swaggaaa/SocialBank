@@ -23,8 +23,8 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
         private TextView title;
         private TextView initDate;
         private TextView finishDate;
-        private TextView place;
-        private TextView individual;
+        private TextView location;
+        private TextView demand;
 
             public EventViewHolder(View v) {
                 super(v);
@@ -32,8 +32,8 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
                 title = (TextView) v.findViewById(R.id.title_event);
                 initDate = (TextView) v.findViewById(R.id.init_date_event);
                 finishDate = (TextView) v.findViewById(R.id.finish_date_event);
-                place = (TextView) v.findViewById(R.id.place_event);
-                individual = (TextView) v.findViewById(R.id.individual_or_group);
+                location = (TextView) v.findViewById(R.id.place_event);
+                demand = (TextView) v.findViewById(R.id.demand);
 
             }
     }
@@ -65,10 +65,10 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
 
         viewHolder.imagen.setImageBitmap(items.get(i).getImagen());
         viewHolder.title.setText(items.get(i).getTitle());
-        viewHolder.initDate.setText(items.get(i).getInitDate());
-        viewHolder.finishDate.setText(items.get(i).getFinishDate());
-        viewHolder.place.setText(items.get(i).getPlace());
-        viewHolder.individual.setText(items.get(i).getIndividual());
+        viewHolder.initDate.setText(items.get(i).getInitString());
+        viewHolder.finishDate.setText(items.get(i).getFinishString());
+        viewHolder.location.setText(items.get(i).getLocation());
+        viewHolder.demand.setText(String.valueOf(items.get(i).getDemandOrOffer()));
 
 
     }

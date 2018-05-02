@@ -1,63 +1,96 @@
 package me.integrate.socialbank;
 
+import android.content.Context;
 import android.graphics.Bitmap;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class Event {
 
+    private String creatorEmail;
+    private boolean demand;
     private String title;
-    private int id;
-    private String initDate;
-    private String place;
-    private String finishDate;
-    private String individual;
+    private Date initDate;
+    private String location;
+    private Date finishDate;
+    private int latitude;
+    private int longitude;
     private String description;
-    private int image;
-    private Bitmap photoID;
+    private String photoEvent;
+    private int id;
+    private Bitmap decodedByte;
 
-    Event(int id, String title, String initDate, String place, String finishDate, String individual, String description, Bitmap photoId) {
+    Context context;
+
+    Event(String creatorEmail, boolean demand, String description, Date finishDate, int id, Bitmap decodedByte, Date initDate, int latitude, String location, int longitude, String title, Context context) {
         this.id = id;
         this.title = title;
         this.initDate = initDate;
-        this.photoID = photoId;
-        this.place = place;
+        this.decodedByte = decodedByte;
+        this.location = location;
         this.description = description;
         this.finishDate = finishDate;
-        this.individual = individual;
+        this.demand = demand;
+        this.longitude = longitude;
+        this.latitude = latitude;
+        this.creatorEmail = creatorEmail;
+        this.context = context;
     }
 
-    Event(int id, String title, String initDate, String place, String finishDate, String individual, String description, int image) {
-        this.id = id;
-        this.title = title;
-        this.initDate = initDate;
-        this.place = place;
-        this.image = image;
-        this.description = description;
-        this.finishDate = finishDate;
-        this.individual = individual;
+    public String getCreatorEmail() { return creatorEmail; }
+
+    public int getLatitude() {return latitude; }
+
+    public int getLongitude() {
+        return longitude;
     }
 
     public String getTitle() {
         return title;
     }
 
-    public String getInitDate() {
+    public Date getInitDate() {
         return initDate;
     }
 
-    public String getPlace() {
-        return place;
+    public String getInitString() {
+        if (initDate == null) {
+            return context.getResources().getString(R.string.notInitDate);
+        } else {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyy-MM-dd HH:mm:ss");
+            return sdf.format(finishDate);
+        }
     }
 
-    public String getFinishDate() {
+    public String getLocation() {
+        return location;
+    }
+
+    public Date getFinishDate() {
         return finishDate;
     }
 
-    public String getIndividual() {
-        return individual;
+    public String getFinishString() {
+        if (finishDate == null) {
+            return context.getResources().getString(R.string.notFinishDate);
+        } else {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyy-MM-dd HH:mm:ss");
+            return sdf.format(finishDate);
+        }
+    }
+
+    public String getDemandOrOffer() {
+        if(demand) return context.getResources().getString(R.string.demand);
+        else return context.getResources().getString(R.string.offer);
+    }
+
+    public boolean getDemand() {
+        return demand;
     }
 
     public Bitmap getImagen() {
-        return photoID;
+        return decodedByte;
     }
 
     public String getDescription() {
