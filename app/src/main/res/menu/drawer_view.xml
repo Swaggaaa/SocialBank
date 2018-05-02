@@ -10,6 +10,11 @@
             android:id="@+id/myProfile"
             android:title="@string/my_profile" />
 
+        <item
+            android:icon="@drawable/ic_close"
+            android:id="@+id/newEvent"
+            android:title="@string/create_event_menu" />
+
     </group>
     <item android:title="@string/settings">
         <menu>
