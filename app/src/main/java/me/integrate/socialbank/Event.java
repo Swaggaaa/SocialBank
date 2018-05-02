@@ -58,7 +58,7 @@ public class Event {
         if (initDate == null) {
             return context.getResources().getString(R.string.notInitDate);
         } else {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyy-MM-dd HH:mm:ss");
+            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
             return sdf.format(finishDate);
         }
     }
@@ -75,7 +75,7 @@ public class Event {
         if (finishDate == null) {
             return context.getResources().getString(R.string.notFinishDate);
         } else {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyy-MM-dd HH:mm:ss");
+            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
             return sdf.format(finishDate);
         }
     }

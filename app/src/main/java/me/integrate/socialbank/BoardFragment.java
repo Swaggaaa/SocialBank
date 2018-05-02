@@ -141,7 +141,7 @@ public class BoardFragment extends Fragment {
             if(aux.equals("null")) initDate = null;
             else {
                 try {
-                    SimpleDateFormat sdf = new SimpleDateFormat("yyy-MM-dd HH:mm:ss");
+                    SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
                     initDate = sdf.parse(aux);
                 } catch (ParseException e) {
                     e.printStackTrace();
@@ -154,14 +154,13 @@ public class BoardFragment extends Fragment {
             if(aux.equals("null")) initDate = null;
             else {
                 try {
-                    SimpleDateFormat sdf = new SimpleDateFormat("yyy-MM-dd HH:mm:ss");
+                    SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
                     finishDate = sdf.parse(aux);
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
             }
 
-            System.out.println("FINAL: " + aux);
 
             description = jsonObject.getString("description");
 
