@@ -131,7 +131,7 @@ public class NearbyEventsFragment extends Fragment {
 
                 if (address.getText().toString().length() != 0) {
                     EventLocation eventLocation = new EventLocation (address.getText().toString());
-                    if (eventLocation.getAddress() == null) {
+                    if (eventLocation.getAddress() == null){
                         Toast.makeText(getActivity().getApplicationContext(), R.string.AddressNotFound, Toast.LENGTH_LONG).show();
                     }
                     else {
