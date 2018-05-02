@@ -47,7 +47,6 @@
     <string name="loadingMessage">Loading. Please wait…</string>
     <string name="location">Location</string>
     <string name="errorEventInfo">Error getting event info</string>
-    <string name="create_event_menu">Create event</string>
     <string name="endDateBigger">End date must be greater than Start date</string>
     <string name="Unauthorized">Unauthorized</string>
     <string name="Forbidden">Forbidden</string>
@@ -55,4 +54,5 @@
     <string name="UnexpectedError">Unexpected error</string>
     <string name="JSONException">JSONException</string>
     <string name="AddressNotFound">Address not found</string>
+    <string name="create_event_menu">Create event</string>
 </resources>
