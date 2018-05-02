@@ -1,70 +1,167 @@
 package me.integrate.socialbank;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Base64;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 
 public class Event {
 
-    private String title;
     private int id;
-    private String initDate;
-    private String place;
-    private String finishDate;
-    private String individual;
+    private String creatorEmail;
+    private String iniDate, endDate;
+    private String location;
+    private String title;
     private String description;
-    private int image;
-    private Bitmap photoID;
+    private Bitmap image;
+    private int picture;
+    private boolean isDemand;
+    private double latitude;
+    private double longitude;
 
-    Event(int id, String title, String initDate, String place, String finishDate, String individual, String description, Bitmap photoId) {
+    public Event(int id, String creatorEmail, String iniDate, String endDate, String location, String title, String description, Bitmap image, boolean isDemand, double latitude, double longitude) {
         this.id = id;
+        this.creatorEmail = creatorEmail;
+        this.iniDate = iniDate;
+        this.endDate = endDate;
+        this.location = location;
         this.title = title;
-        this.initDate = initDate;
-        this.photoID = photoId;
-        this.place = place;
         this.description = description;
-        this.finishDate = finishDate;
-        this.individual = individual;
+        this.image = image;
+        this.isDemand = isDemand;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
-    Event(int id, String title, String initDate, String place, String finishDate, String individual, String description, int image) {
+    public Event(int id, String creatorEmail, String iniDate, String endDate, String location, String title, String description, int picture, boolean isDemand, double latitude, double longitude) {
         this.id = id;
+        this.creatorEmail = creatorEmail;
+        this.iniDate = iniDate;
+        this.endDate = endDate;
+        this.location = location;
         this.title = title;
-        this.initDate = initDate;
-        this.place = place;
-        this.image = image;
         this.description = description;
-        this.finishDate = finishDate;
-        this.individual = individual;
+        this.picture = picture;
+        this.isDemand = isDemand;
+        this.latitude = latitude;
+        this.longitude = longitude;
+    }
+
+    public Event(JSONObject object) throws JSONException{
+        this.id = object.getInt("id");
+        this.creatorEmail = object.getString("creatorEmail");
+        this.iniDate = object.getString("iniDate");
+        this.endDate = object.getString("endDate");
+        this.location = object.getString("location");
+        this.title = object.getString("title");
+        this.description = object.getString("description");
+        this.image = getImageFromString(object.getString("image"));
+        this.isDemand = object.getBoolean("demand");
+        this.latitude = object.getDouble("latitude");
+        this.longitude = object.getDouble("longitude");
+    }
+
+    private Bitmap getImageFromString(String image) {
+
+        //TODO quitar
+        if (!image.equals("")) {
+            byte[] decodeString = Base64.decode(image, Base64.DEFAULT);
+            return BitmapFactory.decodeByteArray(decodeString, 0, decodeString.length);
+        }
+        return null;
+
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getCreatorEmail() {
+        return creatorEmail;
+    }
+
+    public void setCreatorEmail(String creatorEmail) {
+        this.creatorEmail = creatorEmail;
+    }
+
+    public String getIniDate() {
+        return iniDate;
+    }
+
+    public void setIniDate(String iniDate) {
+        this.iniDate = iniDate;
+    }
+
+    public String getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(String endDate) {
+        this.endDate = endDate;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
     }
 
     public String getTitle() {
         return title;
     }
 
-    public String getInitDate() {
-        return initDate;
-    }
-
-    public String getPlace() {
-        return place;
-    }
-
-    public String getFinishDate() {
-        return finishDate;
-    }
-
-    public String getIndividual() {
-        return individual;
-    }
-
-    public Bitmap getImagen() {
-        return photoID;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getDescription() {
         return description;
     }
 
-    public int getId() {
-        return id;
+    public void setDescription(String description) {
+        this.description = description;
     }
+
+    public Bitmap getImage() {
+        return image;
+    }
+
+    public void setImage(Bitmap image) {
+        this.image = image;
+    }
+
+    public Boolean isDemand() {
+        return isDemand;
+    }
+
+    public void setDemand(Boolean demand) {
+        isDemand = demand;
+    }
+
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
+
+    public Double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
+    }
+
+
 }

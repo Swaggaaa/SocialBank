@@ -1,6 +1,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical">
 
     <LinearLayout
@@ -25,6 +26,15 @@
             android:layout_weight="0.5"
             android:enabled="false"
             android:text="Search" />
+        <Button
+            android:id="@+id/buttonCreate"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="15dp"
+            android:background="@android:color/holo_blue_dark"
+            android:text="@string/create_event"
+            tools:enabled="false" />
 
     </LinearLayout>
 

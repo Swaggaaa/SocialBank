@@ -71,12 +71,11 @@ public class BoardFragment extends Fragment {
                     getInfoEvent(jsonObject);
                     Bitmap decodedByte = getImageFromString(photoEvent);
 
-                    //TODO: do it again
+                    //TODO: do it again +1
                     if (decodedByte != null) {
-                        items.add(new Event(id, title, initDate, place, finishDate, "No", description, decodedByte));
+                        items.add(new Event(id, null, initDate, finishDate, place, title, description, decodedByte, true, 0, 0));
                     } else
-                        items.add(new Event(id, title, initDate, place, finishDate, "No", description, R.drawable.user_icon));
-
+                        items.add(new Event(id, null, initDate, finishDate, place, title, description, R.drawable.user_icon, true, 0, 0));
                 }
 
                 mAdapter = new EventAdapter(items, getActivity(), (v1, position) -> {
@@ -84,7 +83,7 @@ public class BoardFragment extends Fragment {
                     Event event = items.get(position);
 
                     bundle.putInt("id", event.getId());
-                    bundle.putByteArray("image", bitmapToByteArray(event.getImagen()));
+                    bundle.putByteArray("image", bitmapToByteArray(event.getImage()));
                     bundle.putString("title", event.getTitle());
                     bundle.putString("description", event.getDescription());
                     Fragment eventFragment = EventFragment.newInstance(bundle);
@@ -166,5 +165,7 @@ public class BoardFragment extends Fragment {
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
         return byteArrayOutputStream.toByteArray();
     }
+
+
 
 }

@@ -14,10 +14,10 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 
-public class ConvertAddressToCoordinatesTask extends AsyncTask<URL,Integer,LatLng > {
+public class ConvertAddressToCoordinatesTask extends AsyncTask<URL,Integer,EventLocation > {
     @Override
-    protected LatLng doInBackground(URL... urls) {
-        LatLng coordinates = null;
+    protected EventLocation doInBackground(URL... urls) {
+        EventLocation eventLocation = null;
         try {
 
             HttpURLConnection conn = (HttpURLConnection) urls[0].openConnection();
@@ -41,14 +41,16 @@ public class ConvertAddressToCoordinatesTask extends AsyncTask<URL,Integer,LatLn
             JSONObject json = new JSONObject(full);
 
 
-            JSONObject location = json.getJSONArray("results").getJSONObject(0).getJSONObject("geometry").getJSONObject("location");
-            String longitude = location.getString("lng");
-            String latitude = location.getString("lat");
+            JSONObject results = json.getJSONArray("results").getJSONObject(0);
+            String address = results.getString("formatted_address");
+            JSONObject coordinates = results.getJSONObject("geometry").getJSONObject("location");
+            String longitude = coordinates.getString("lng");
+            String latitude = coordinates.getString("lat");
 
             System.out.println(latitude);
 
-            coordinates = new LatLng(Double.parseDouble(latitude), Double.parseDouble(longitude));
-            return coordinates;
+            eventLocation = new EventLocation(address, Double.parseDouble(latitude), Double.parseDouble(longitude));
+            return eventLocation;
 
 
         } catch (IOException e) {
@@ -56,6 +58,6 @@ public class ConvertAddressToCoordinatesTask extends AsyncTask<URL,Integer,LatLn
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return coordinates;
+        return eventLocation;
     }
 }

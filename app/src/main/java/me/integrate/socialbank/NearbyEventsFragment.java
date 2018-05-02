@@ -34,15 +34,11 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
-import java.math.BigDecimal;
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.io.ByteArrayOutputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
 
 import static android.content.Context.LOCATION_SERVICE;
 
@@ -54,10 +50,10 @@ public class NearbyEventsFragment extends Fragment {
     private GoogleMap googleMap;
     private LatLng myPosition;
 
+    private Button buttonCreate;
     private EditText address;
     private Button searchButton;
-    //TODO: Change JSONObject to proper Event casting. Event needs to get remade.
-    private Map<Marker, JSONObject> eventsMap;
+    private Map<Marker, Event> eventsMap;
 
 
     @Override
@@ -65,6 +61,7 @@ public class NearbyEventsFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_nearby_events, container, false);
         address = (EditText) rootView.findViewById(R.id.editText);
         searchButton = (Button)rootView.findViewById(R.id.search_button);
+        buttonCreate = (Button) rootView.findViewById(R.id.buttonCreate);
         enableButton();
 
         mMapView = (MapView) rootView.findViewById(R.id.mapView);
@@ -77,7 +74,9 @@ public class NearbyEventsFragment extends Fragment {
         try {
             MapsInitializer.initialize(getActivity().getApplicationContext());
         } catch (Exception e) {
-            e.printStackTrace();
+            buttonCreate.setText("CREATE");
+            buttonCreate.setEnabled(true);
+            Toast.makeText(getActivity().getApplicationContext(), R.string.UnexpectedError, Toast.LENGTH_LONG).show();;
         }
 
 
@@ -89,22 +88,16 @@ public class NearbyEventsFragment extends Fragment {
                 // For showing a move to my location button
                 googleMap.setMyLocationEnabled(true);
                 googleMap.setOnInfoWindowClickListener(marker -> {
-                    JSONObject event = eventsMap.get(marker);
+                    Event event = eventsMap.get(marker);
                     Bundle bundle = new Bundle();
-                    try {
-                        bundle.putInt("id", event.getInt("id"));
-                        bundle.putByteArray("image",
-                                Base64.decode(
-                                        event.getString("image"),
-                                        event.getString("image").length()));
-                        bundle.putString("title", event.getString("title"));
-                        bundle.putString("description", event.getString("description"));
-                        Fragment eventFragment = EventFragment.newInstance(bundle);
-                        FragmentChangeListener fc = (FragmentChangeListener) getActivity();
-                        fc.replaceFragment(eventFragment);
-                    } catch (JSONException ex) {
-                        Toast.makeText(getActivity().getApplicationContext(), R.string.errorEventInfo, Toast.LENGTH_LONG).show();
-                    }
+                    bundle.putInt("id", event.getId());
+                    bundle.putByteArray("image", bitmapToByteArray(event.getImage()));
+                    bundle.putString("title", event.getTitle());
+                    bundle.putString("description", event.getDescription());
+                    Fragment eventFragment = EventFragment.newInstance(bundle);
+                    FragmentChangeListener fc = (FragmentChangeListener) getActivity();
+                    fc.replaceFragment(eventFragment);
+
                 });
 
                 LocationManager mLocationManager = (LocationManager) getActivity().getApplicationContext().getSystemService(LOCATION_SERVICE);
@@ -125,18 +118,16 @@ public class NearbyEventsFragment extends Fragment {
                 double longitude = bestLocation.getLongitude();
 
                 showNearbyEvents();
-                myPosition = new LatLng(latitude, longitude);
-
-
-
-
-                //For dropping a marker at a point on the Map
-                //LatLng sydney = new LatLng(-34, 151);
-                //googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker Title").snippet("Marker Description"));
-
-                // For zooming automatically to the location of the marker
-                CameraPosition cameraPosition = new CameraPosition.Builder().target(myPosition).zoom(12).build();
-                googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                if (myPosition == null) {
+                    buttonCreate.setText("CREATE");
+                    buttonCreate.setEnabled(true);
+                    Toast.makeText(getActivity().getApplicationContext(), R.string.AddressNotFound, Toast.LENGTH_LONG).show();
+                }
+                else {
+                    myPosition = new LatLng(latitude, longitude);
+                    CameraPosition cameraPosition = new CameraPosition.Builder().target(myPosition).zoom(12).build();
+                    googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                }
             }
         });
 
@@ -151,7 +142,8 @@ public class NearbyEventsFragment extends Fragment {
                 searchButton.setEnabled(false);
 
                 if (address.getText().toString().length() != 0) {
-                    myPosition = convertToCoordinates(address.getText().toString());
+                    EventLocation eventLocation = new EventLocation (address.getText().toString());
+                    myPosition = new LatLng(eventLocation.getLatitude(), eventLocation.getLongitude());
                     CameraPosition cameraPosition = new CameraPosition.Builder().target(myPosition).zoom(12).build();
                     googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
                 }
@@ -174,56 +166,43 @@ public class NearbyEventsFragment extends Fragment {
             try {
                 jsonArray = new JSONArray(response.response);
                 for (int i = 0; i < jsonArray.length(); i++) {
-                    JSONObject object = jsonArray.getJSONObject(i);
-                    LatLng eventPosition = new LatLng(object.getDouble("latitude"), object.getDouble("longitude"));
-                    Marker marker = googleMap.addMarker(new MarkerOptions().position(eventPosition).title(object.getString("title")).snippet(object.getString("description")));
-                    eventsMap.put(marker, object);
+                    Event event = new Event(jsonArray.getJSONObject(i));
+                    LatLng eventPosition = new LatLng(event.getLatitude(), event.getLongitude());
+                    Marker marker = googleMap.addMarker(new MarkerOptions().position(eventPosition).title(event.getTitle()).snippet(event.getDescription()));
+                    eventsMap.put(marker, event);
                 }
             } catch (JSONException e) {
-                e.printStackTrace();
+                buttonCreate.setText("CREATE");
+                buttonCreate.setEnabled(true);
+                Toast.makeText(getActivity().getApplicationContext(), R.string.JSONException, Toast.LENGTH_LONG).show();
             }
         };
         Response.ErrorListener errorListener = error -> {
-            Toast.makeText(getActivity().getApplicationContext(), "Something went wrong", Toast.LENGTH_LONG).show();
-            Fragment boardFragment = new BoardFragment();
-            FragmentChangeListener fc = (FragmentChangeListener) getActivity();
-            fc.replaceFragment(boardFragment);
+            buttonCreate.setText("CREATE");
+            buttonCreate.setEnabled(true);
+            String message;
+            int errorCode = error.networkResponse.statusCode;
+            if (errorCode == 401)
+                message = getString(R.string.Unauthorized);
+            else if(errorCode == 403)
+                message = getString(R.string.Forbidden);
+            else if(errorCode == 404)
+                message = getString(R.string.NotFound);
+            else
+                message = getString(R.string.UnexpectedError);
+
+            Toast.makeText(getActivity().getApplicationContext(), message, Toast.LENGTH_LONG).show();
         };
 
         apiCommunicator.getRequest(getActivity().getApplicationContext(), URL, responseListener, errorListener, null);
 
     }
 
-    private LatLng convertToCoordinates(String address) {
-        URL url = getUrlForAddress(address);
-
-        LatLng coordinates = null;
-        try {
-            coordinates = new ConvertAddressToCoordinatesTask().execute(url).get();
-        }catch (ExecutionException e1){
-            e1.printStackTrace();
-        }catch (InterruptedException e2) {
-            e2.printStackTrace();
-        }
-        return coordinates;
+    private byte[] bitmapToByteArray(Bitmap bitmap) {
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
+        return byteArrayOutputStream.toByteArray();
     }
-
-    private URL getUrlForAddress(String address) {
-
-        address = address.replace(' ', '+');
-        String urlString = "https://maps.googleapis.com/maps/api/geocode/json?address=" + address + "&sensor=true&key=AIzaSyBIeFwQVoHYg8xhtLU3bd7ujWNtY3wuTnw\n";
-
-        URL url = null;
-        try {
-            url = new URL(urlString);
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-        return url;
-    }
-
-
-
 
 
     @Override
@@ -254,7 +233,6 @@ public class NearbyEventsFragment extends Fragment {
         return !address.getText().toString().isEmpty();
     }
 
-    //Se extrae en función externa por si se quiere modificar el estilo
     private void enableButton() {
         searchButton.setEnabled(areFilled());
     }

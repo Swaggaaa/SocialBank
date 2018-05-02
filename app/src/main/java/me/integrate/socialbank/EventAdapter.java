@@ -8,6 +8,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.sql.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHolder> {
@@ -63,13 +66,18 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
     @Override
     public void onBindViewHolder(EventViewHolder viewHolder, int i) {
 
-        viewHolder.imagen.setImageBitmap(items.get(i).getImagen());
+        viewHolder.imagen.setImageBitmap(items.get(i).getImage());
         viewHolder.title.setText(items.get(i).getTitle());
-        viewHolder.initDate.setText(items.get(i).getInitDate());
-        viewHolder.finishDate.setText(items.get(i).getFinishDate());
-        viewHolder.place.setText(items.get(i).getPlace());
-        viewHolder.individual.setText(items.get(i).getIndividual());
+        viewHolder.initDate.setText(items.get(i).getIniDate());
+        viewHolder.finishDate.setText(items.get(i).getEndDate());
+        viewHolder.place.setText(items.get(i).getLocation());
+        //viewHolder.individual.setText(items.get(i).getIndividual());
 
+    }
 
+    public String dateToString(Date date) {
+        DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
+        String text = df.format(date);
+        return text;
     }
 }
