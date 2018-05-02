@@ -9,6 +9,14 @@
             android:icon="@drawable/ic_close"
             android:id="@+id/myProfile"
             android:title="@string/my_profile" />
+        <item
+            android:id="@+id/nearbyEvents"
+            android:title="@string/location" />
+
+        <item
+            android:icon="@drawable/ic_close"
+            android:id="@+id/newEvent"
+            android:title="@string/create_event_menu" />
 
         <item
             android:icon="@drawable/ic_close"

@@ -24,6 +24,7 @@ import android.widget.TableRow;
 import android.widget.Toast;
 
 import com.android.volley.Response;
+import com.google.android.gms.maps.model.LatLng;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -164,12 +165,16 @@ public class CreateEventFragment extends Fragment {
             String demand = "false";
             if(eventType == 1) demand = "true";
 
+            EventLocation eventLocation = new EventLocation(address.getText().toString());
+
             params.put("creatorEmail", emailUser);
             params.put("demand", demand);
             params.put("description", description.getText().toString());
             params.put("endDate", dataEnd);
             params.put("iniDate", dataIni);
-            params.put("location", address.getText().toString());
+            params.put("location", eventLocation.getAddress());
+            params.put("latitude", String.valueOf(eventLocation.getLatitude()));
+            params.put("longitude", String.valueOf(eventLocation.getLongitude()));
             params.put("title", name.getText().toString());
             params.put("image", thereisPic ? ImageCompressor.INSTANCE.compressAndEncodeAsBase64(
                     ((BitmapDrawable)imageView.getDrawable()).getBitmap())
@@ -440,7 +445,7 @@ public class CreateEventFragment extends Fragment {
                 if(!checkHours()) editTextEndHour.setText("");
                 enableButton();
             } else
-                Toast.makeText(getActivity(), "End date must be greater than Start date", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), R.string.endDateBigger, Toast.LENGTH_SHORT).show();
         });
         newFragment.show(getActivity().getSupportFragmentManager(), "datePicker");
     }

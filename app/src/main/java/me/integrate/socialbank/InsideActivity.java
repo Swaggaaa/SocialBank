@@ -48,6 +48,9 @@ public class InsideActivity extends AppCompatActivity implements FragmentChangeL
                             Fragment nextFragment = new RegisterFragment();  //we must put our fragment instead
                             replaceFragment(nextFragment);
                             break;
+                        case R.id.nearbyEvents:
+                            replaceFragment(new NearbyEventsFragment());
+                            break;
                         case R.id.logout:
                             logout();
                             break;
