@@ -49,8 +49,6 @@ public class NearbyEventsFragment extends Fragment {
     MapView mMapView;
     private GoogleMap googleMap;
     private LatLng myPosition;
-
-    private Button buttonCreate;
     private EditText address;
     private Button searchButton;
     private Map<Marker, Event> eventsMap;
@@ -61,7 +59,6 @@ public class NearbyEventsFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_nearby_events, container, false);
         address = (EditText) rootView.findViewById(R.id.editText);
         searchButton = (Button)rootView.findViewById(R.id.search_button);
-        buttonCreate = (Button) rootView.findViewById(R.id.buttonCreate);
         enableButton();
 
         mMapView = (MapView) rootView.findViewById(R.id.mapView);
@@ -74,8 +71,6 @@ public class NearbyEventsFragment extends Fragment {
         try {
             MapsInitializer.initialize(getActivity().getApplicationContext());
         } catch (Exception e) {
-            buttonCreate.setText("CREATE");
-            buttonCreate.setEnabled(true);
             Toast.makeText(getActivity().getApplicationContext(), R.string.UnexpectedError, Toast.LENGTH_LONG).show();;
         }
 
@@ -118,16 +113,9 @@ public class NearbyEventsFragment extends Fragment {
                 double longitude = bestLocation.getLongitude();
 
                 showNearbyEvents();
-                if (myPosition == null) {
-                    buttonCreate.setText("CREATE");
-                    buttonCreate.setEnabled(true);
-                    Toast.makeText(getActivity().getApplicationContext(), R.string.AddressNotFound, Toast.LENGTH_LONG).show();
-                }
-                else {
-                    myPosition = new LatLng(latitude, longitude);
-                    CameraPosition cameraPosition = new CameraPosition.Builder().target(myPosition).zoom(12).build();
-                    googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-                }
+                myPosition = new LatLng(latitude, longitude);
+                CameraPosition cameraPosition = new CameraPosition.Builder().target(myPosition).zoom(12).build();
+                googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
             }
         });
 
@@ -143,9 +131,14 @@ public class NearbyEventsFragment extends Fragment {
 
                 if (address.getText().toString().length() != 0) {
                     EventLocation eventLocation = new EventLocation (address.getText().toString());
-                    myPosition = new LatLng(eventLocation.getLatitude(), eventLocation.getLongitude());
-                    CameraPosition cameraPosition = new CameraPosition.Builder().target(myPosition).zoom(12).build();
-                    googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                    if (eventLocation.getAddress() == null) {
+                        Toast.makeText(getActivity().getApplicationContext(), R.string.AddressNotFound, Toast.LENGTH_LONG).show();
+                    }
+                    else {
+                        myPosition = new LatLng(eventLocation.getLatitude(), eventLocation.getLongitude());
+                        CameraPosition cameraPosition = new CameraPosition.Builder().target(myPosition).zoom(12).build();
+                        googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                    }
                 }
             }
         });
@@ -172,14 +165,10 @@ public class NearbyEventsFragment extends Fragment {
                     eventsMap.put(marker, event);
                 }
             } catch (JSONException e) {
-                buttonCreate.setText("CREATE");
-                buttonCreate.setEnabled(true);
                 Toast.makeText(getActivity().getApplicationContext(), R.string.JSONException, Toast.LENGTH_LONG).show();
             }
         };
         Response.ErrorListener errorListener = error -> {
-            buttonCreate.setText("CREATE");
-            buttonCreate.setEnabled(true);
             String message;
             int errorCode = error.networkResponse.statusCode;
             if (errorCode == 401)
