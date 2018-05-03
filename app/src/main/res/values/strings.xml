@@ -56,4 +56,5 @@
     <string name="JSONException">JSONException</string>
     <string name="AddressNotFound">Address not found</string>
     <string name="create_event_menu">Create event</string>
+    <string name="update">UPDATE</string>
 </resources>
