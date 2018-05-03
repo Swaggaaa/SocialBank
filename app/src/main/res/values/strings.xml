@@ -29,8 +29,8 @@
     <string name="settings">Settings</string>
     <string name="dashboard">Dashboard</string>
     <string name="loadingMessage">Loading. Please wait…</string>
-    <string name="notInitDate">There is no start date yet</string>
-    <string name="notFinishDate">There is no finish date yet</string>
+    <string name="notDate">There is no date yet</string>
+    <string name="notHour">There is no time yet</string>
     <string name="demand">Demand</string>
     <string name="offer">Offer</string>
 

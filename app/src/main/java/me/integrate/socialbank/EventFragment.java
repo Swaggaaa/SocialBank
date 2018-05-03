@@ -34,8 +34,10 @@ public class EventFragment extends Fragment {
         textEventDescription = (TextView)rootView.findViewById(R.id.textEventDescription);
 
         byte[] imageBytes = getArguments().getByteArray("image");
-        imageView.setImageBitmap(BitmapFactory.decodeByteArray(
-                imageBytes, 0, imageBytes.length));
+        if (imageBytes != null) {
+            imageView.setImageBitmap(BitmapFactory.decodeByteArray(
+                    imageBytes, 0, imageBytes.length));
+        }
 
         textEventTitle.setText(getArguments().getString("title"));
         textEventDescription.setText(getArguments().getString("description"));

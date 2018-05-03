@@ -34,17 +34,6 @@ public class BoardFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
 
-    private String creatorEmail;
-    private boolean demand;
-    private String title;
-    private Date initDate;
-    private String location;
-    private Date finishDate;
-    private int latitude;
-    private int longitude;
-    private String description;
-    private String photoEvent;
-    private int id;
     private ProgressDialog loadingDialog;
 
     @Override
@@ -74,21 +63,15 @@ public class BoardFragment extends Fragment {
                 System.out.println(String.valueOf(jsonArray.length()));
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
-
-                    getInfoEvent(jsonObject);
-                    Bitmap decodedByte = getImageFromString(photoEvent);
-
-                    items.add(new Event(creatorEmail,demand, description, finishDate, id, decodedByte, initDate, latitude, location, longitude, title, getContext()));
-
+                    items.add(new Event(jsonObject));
 
                 }
 
                 mAdapter = new EventAdapter(items, getActivity(), (v1, position) -> {
                     Bundle bundle = new Bundle();
                     Event event = items.get(position);
-
                     bundle.putInt("id", event.getId());
-                    bundle.putByteArray("image", bitmapToByteArray(event.getImagen()));
+                    bundle.putByteArray("image", bitmapToByteArray(event.getImage()));
                     bundle.putString("title", event.getTitle());
                     bundle.putString("description", event.getDescription());
                     Fragment eventFragment = EventFragment.newInstance(bundle);
@@ -121,71 +104,13 @@ public class BoardFragment extends Fragment {
         apiCommunicator.getRequest(getActivity().getApplicationContext(), URL, responseListener, errorListener, null);
     }
 
-    //Obtain info from the API, create Event and save in the list<Event>
-    private void getInfoEvent(JSONObject jsonObject) {
-
-        try {
-
-            id = jsonObject.getInt("id");
-
-            demand = jsonObject.getBoolean("demand");
-
-            title = jsonObject.getString("title");
-
-            latitude = jsonObject.getInt("latitude");
-            longitude = jsonObject.getInt("longitude");
-
-            creatorEmail = jsonObject.getString("creatorEmail");
-
-            String aux = jsonObject.getString("iniDate");
-            if(aux.equals("null")) initDate = null;
-            else {
-                try {
-                    SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
-                    initDate = sdf.parse(aux);
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            location = jsonObject.getString("location");
-
-            aux = jsonObject.getString("endDate");
-            if(aux.equals("null")) initDate = null;
-            else {
-                try {
-                    SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
-                    finishDate = sdf.parse(aux);
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-            }
-
-
-            description = jsonObject.getString("description");
-
-            photoEvent = jsonObject.getString("image");
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
-
-    //Transform and string base64 to bitmap
-    private Bitmap getImageFromString(String image) {
-
-        if (!image.equals("")) {
-            byte[] decodeString = Base64.decode(image, Base64.DEFAULT);
-            return BitmapFactory.decodeByteArray(decodeString, 0, decodeString.length);
-        }
-        return null;
-
-    }
-
     private byte[] bitmapToByteArray(Bitmap bitmap) {
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
-        return byteArrayOutputStream.toByteArray();
+        if (bitmap != null) {
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
+            return byteArrayOutputStream.toByteArray();
+        }
+        else return null;
     }
 
 }

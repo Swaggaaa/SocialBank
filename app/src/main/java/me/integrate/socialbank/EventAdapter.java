@@ -8,6 +8,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHolder> {
@@ -25,6 +28,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
         private TextView finishDate;
         private TextView location;
         private TextView demand;
+        private TextView hours;
 
             public EventViewHolder(View v) {
                 super(v);
@@ -34,6 +38,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
                 finishDate = (TextView) v.findViewById(R.id.finish_date_event);
                 location = (TextView) v.findViewById(R.id.place_event);
                 demand = (TextView) v.findViewById(R.id.demand);
+                hours = (TextView) v.findViewById(R.id.hours);
 
             }
     }
@@ -58,18 +63,35 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
         return eventViewHolder;
     }
 
-
-
     @Override
     public void onBindViewHolder(EventViewHolder viewHolder, int i) {
 
-        viewHolder.imagen.setImageBitmap(items.get(i).getImagen());
+        viewHolder.imagen.setImageBitmap(items.get(i).getImage());
         viewHolder.title.setText(items.get(i).getTitle());
-        viewHolder.initDate.setText(items.get(i).getInitString());
-        viewHolder.finishDate.setText(items.get(i).getFinishString());
+        viewHolder.initDate.setText(dateToString(items.get(i).getIniDate()));
+        viewHolder.finishDate.setText(dateToString(items.get(i).getEndDate()));
         viewHolder.location.setText(items.get(i).getLocation());
-        viewHolder.demand.setText(String.valueOf(items.get(i).getDemandOrOffer()));
+        viewHolder.demand.setText(getDemandOrOffer(items.get(i).getDemand()));
+     //   viewHolder.hours.setText(getHours(items.get(i).getIniDate(), items.get(i).getEndDate()));
+    }
 
+    /*public String getHours(Date hourIni, Date hourEnd) {
+        if (hourIni != null && hourEnd != null ) {
+           long hour = hourEnd.getTime() - hourIni.getTime();
+           return String.valueOf(hour);
+        } else return context.getResources().getString(R.string.notHour);
+    }*/
 
+    public String dateToString(Date date) {
+        if (date == null) return context.getResources().getString(R.string.notDate);
+        else{
+            DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+            return df.format(date);
+        }
+    }
+
+    public String getDemandOrOffer(boolean isDemand) {
+        if(isDemand) return context.getResources().getString(R.string.demand);
+        else return context.getResources().getString(R.string.offer);
     }
 }
