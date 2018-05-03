@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SeeMyProfileFragment">
+    tools:context=".ProfileFragment">
 
 
     <LinearLayout
@@ -47,15 +47,24 @@
                     android:maxHeight="42dp"
                     android:maxWidth="42dp"
                     android:scaleType="fitCenter"
-                    android:src="@drawable/ic_camera_alt_black_24dp" />
+                    android:src="@drawable/ic_camera_alt_black_24dp"
+                    android:visibility="gone"/>
 
             </LinearLayout>
-
             <TextView
-                android:id="@+id/userLocation"
+                android:id="@+id/userEmailToShow"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Location" />
+                android:text="Email" />
+
+            <TextView
+                android:id="@+id/address1"
+                android:inputType="textMultiLine"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:maxLines="4"
+                android:lines="4"
+                android:text=""/>
 
             <TextView
                 android:id="@+id/hoursBalance"
@@ -90,7 +99,8 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom|end"
                     android:layout_margin="16dp"
-                    android:src="@drawable/ic_edit_black_24dp" />
+                    android:src="@drawable/ic_edit_black_24dp"
+                    android:visibility="gone"/>
 
             </FrameLayout>
         </LinearLayout>
