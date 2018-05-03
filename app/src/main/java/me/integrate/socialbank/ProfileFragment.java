@@ -1,11 +1,10 @@
 package me.integrate.socialbank;
 
-import android.content.Intent;
 import android.graphics.Color;
 import android.support.annotation.Nullable;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,18 +18,15 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.math.BigDecimal;
-import java.text.DecimalFormat;
-import java.util.HashMap;
-import java.util.Map;
 
-public class SeeMyProfileFragment extends Fragment {
+public class ProfileFragment extends Fragment {
     private static final String URL = "/users";
     private ImageView userPicture;
     private TextView userName;
     private ImageView changePhoto;
-    private TextView userLocation;
+    private TextView userEmailToShow;
     private TextView userBalance;
-    private FloatingActionButton editProfile;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -40,22 +36,22 @@ public class SeeMyProfileFragment extends Fragment {
         userPicture = (ImageView) rootView.findViewById(R.id.myProfileImage);
         userName = (TextView) rootView.findViewById(R.id.myProfileName);
         changePhoto = (ImageView) rootView.findViewById(R.id.loadPicture);
-        userLocation = (TextView) rootView.findViewById(R.id.userLocation);
+        userEmailToShow = (TextView) rootView.findViewById(R.id.userEmailToShow);
         userBalance = (TextView) rootView.findViewById(R.id.hoursBalance);
-        editProfile = (FloatingActionButton) rootView.findViewById(R.id.editProfile);
+
         fillFields();
         return rootView;
     }
 
     private void fillFields() {
         String emailUser = SharedPreferencesManager.INSTANCE.read(getActivity(),"user_email");
-        askCredentials(emailUser);
+        getUserInfo(emailUser);
     }
 
-    private void askCredentials(String emailUser) {
+    private void getUserInfo(String emailUser) {
         APICommunicator apiCommunicator = new APICommunicator();
         Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response -> {
-            JSONObject jsonObject = null;
+            JSONObject jsonObject;
             Float balance = null;
             try{
                 jsonObject = new JSONObject(response.response);
@@ -63,6 +59,10 @@ public class SeeMyProfileFragment extends Fragment {
                 userName.setText(completeName);
                 balance = BigDecimal.valueOf(jsonObject.getDouble("balance")).floatValue();
                 userBalance.setText(balance.toString());
+                userEmailToShow.setText(jsonObject.getString("email"));
+                String image = jsonObject.getString("image");
+                Log.v("carregaImag", image);
+
             } catch (JSONException e) {
                 e.printStackTrace();
             }

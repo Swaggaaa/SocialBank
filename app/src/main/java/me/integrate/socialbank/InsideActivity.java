@@ -45,7 +45,7 @@ public class InsideActivity extends AppCompatActivity implements FragmentChangeL
                     int itemId = menuItem.getItemId();
                     switch (itemId){
                         case R.id.myProfile:
-                            Fragment nextFragment = new SeeMyProfileFragment();  //we must put our fragment instead
+                            Fragment nextFragment = new MyProfileFragment();  //we must put our fragment instead
                             replaceFragment(nextFragment);
                             break;
                         case R.id.nearbyEvents:
