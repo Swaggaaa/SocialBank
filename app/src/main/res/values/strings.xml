@@ -21,6 +21,22 @@
     <string name="update_password">Update your password\n Enter the token and update your password</string>
     <string name="i_have_token">I have a token</string>
     <string name="welcome">Welcome</string>
+    <string name="new_event">New event</string>
+    <string name="create_event">CREATE</string>
+    <string name="event_type">Event type</string>
+    <string name="ask">ASK</string>
+    <string name="offer">OFFER</string>
+    <string name="yes">YES</string>
+    <string name="no">NO</string>
+    <string name="event_group">Group service</string>
+    <string name="event_address">Add address</string>
+    <string name="event_name">Event name</string>
+    <string name="event_fixed">Fixed schedule?</string>
+    <string name="description">Add a description</string>
+    <string name="capacity">Capacity</string>
+    <string name="stick">|</string>
+    <string name="_0">0</string>
+    <string name="event_image">Event image</string>
     <string name="logout">Logout</string>
     <string name="nav_header_title">Android Studio</string>
     <string name="nav_header_subtitle">android.studio@android.com</string>
@@ -32,6 +48,6 @@
     <string name="notDate">There is no date yet</string>
     <string name="notHour">There is no time yet</string>
     <string name="demand">Demand</string>
-    <string name="offer">Offer</string>
+    <string name="offered">Offer</string>
 
 </resources>

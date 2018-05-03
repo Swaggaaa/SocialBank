@@ -10,10 +10,11 @@ import java.io.ByteArrayOutputStream
 
 object ImageCompressor {
 
-    private const val MAX_IMAGE_SIZE: Int = 700 * 1024
+    private const val MAX_IMAGE_SIZE: Int = 70 * 1024
+    private const val IMAGE_RESIZE: Int = 400
 
     fun compressAndEncodeAsBase64(bitmap: Bitmap): String {
-        return Base64.encodeToString(getBitmapAsByteArray(bitmap), Base64.DEFAULT)
+        return Base64.encodeToString(getBitmapAsByteArray(compress(bitmap)), Base64.DEFAULT)
     }
 
     fun compress(bitmap: Bitmap): Bitmap {
@@ -30,9 +31,9 @@ object ImageCompressor {
         options.inJustDecodeBounds = true
         BitmapFactory.decodeByteArray(targetArray, 0, targetArray.size, options)
 
-        // Calculate inSampleSize(First we are going to resize the image to 800x800 image, in order to not have a big but very low quality image.
+        // Calculate inSampleSize(First we are going to resize the image to 200x200 image, in order to not have a big but very low quality image.
         //resizing the image will already reduce the file size, but after resizing we will check the file size and start to compress image
-        options.inSampleSize = calculateInSampleSize(options, 800, 800)
+        options.inSampleSize = calculateInSampleSize(options, IMAGE_RESIZE, IMAGE_RESIZE)
 
         // Decode bitmap with inSampleSize set
         options.inJustDecodeBounds = false

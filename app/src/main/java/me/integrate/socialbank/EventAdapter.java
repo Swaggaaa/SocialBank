@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -62,6 +63,8 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
         v.setOnClickListener(view -> listener.onItemClick(view, eventViewHolder.getPosition()));
         return eventViewHolder;
     }
+
+
 
     @Override
     public void onBindViewHolder(EventViewHolder viewHolder, int i) {

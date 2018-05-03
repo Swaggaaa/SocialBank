@@ -13,22 +13,23 @@ import java.util.Date;
 
 public class Event {
 
+    private int id;
     private String creatorEmail;
-    private boolean isDemand;
-    private String title;
-    private Date iniDate;
+    private Date iniDate, endDate;
     private String location;
-    private Date endDate;
+    private String title;
+    private String description;
+    private Bitmap image;
+    private int picture;
+    private boolean isDemand;
     private double latitude;
     private double longitude;
-    private String description;
-    private int id;
-    private Bitmap image;
     private SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
 
 
-    Event(String creatorEmail, boolean demand, String description, Date finishDate, int id, Bitmap decodedByte, Date initDate, double latitude, String location, double longitude, String title) {
+
+    public Event(String creatorEmail, boolean demand, String description, Date finishDate, int id, Bitmap decodedByte, Date initDate, double latitude, String location, double longitude, String title) {
         this.id = id;
         this.title = title;
         this.iniDate = initDate;

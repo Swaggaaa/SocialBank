@@ -65,8 +65,9 @@ public class BoardFragment extends Fragment {
                 mAdapter = new EventAdapter(items, getActivity(), (v1, position) -> {
                     Bundle bundle = new Bundle();
                     Event event = items.get(position);
+
                     bundle.putInt("id", event.getId());
-                    bundle.putByteArray("image", bitmapToByteArray(event.getImage()));
+                    bundle.putByteArray("image", bitmapToByteArray(event.getImagen()));
                     bundle.putString("title", event.getTitle());
                     bundle.putString("description", event.getDescription());
                     Fragment eventFragment = EventFragment.newInstance(bundle);
