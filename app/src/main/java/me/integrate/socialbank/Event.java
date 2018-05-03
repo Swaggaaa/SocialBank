@@ -134,7 +134,6 @@ public class Event {
         this.location = location;
     }
 
-
     public void setTitle(String title) {
         this.title = title;
     }
@@ -144,7 +143,7 @@ public class Event {
     }
 
     public Bitmap getImage() {
-        return null;
+        return image;
     }
 
     public void setImage(Bitmap image) {

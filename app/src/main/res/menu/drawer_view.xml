@@ -10,6 +10,7 @@
             android:id="@+id/myProfile"
             android:title="@string/my_profile" />
         <item
+            android:icon="@drawable/ic_close"
             android:id="@+id/nearbyEvents"
             android:title="@string/location" />
 

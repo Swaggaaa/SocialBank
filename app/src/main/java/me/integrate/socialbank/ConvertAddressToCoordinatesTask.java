@@ -31,7 +31,6 @@ public class ConvertAddressToCoordinatesTask extends AsyncTask<URL,Integer,Event
 
             String output = "", full = "";
             while ((output = br.readLine()) != null) {
-                System.out.println(output);
                 full += output;
             }
 
@@ -47,7 +46,6 @@ public class ConvertAddressToCoordinatesTask extends AsyncTask<URL,Integer,Event
             String longitude = coordinates.getString("lng");
             String latitude = coordinates.getString("lat");
 
-            System.out.println(latitude);
 
             eventLocation = new EventLocation(address, Double.parseDouble(latitude), Double.parseDouble(longitude));
             return eventLocation;
