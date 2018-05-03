@@ -95,6 +95,6 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
 
     public String getDemandOrOffer(boolean isDemand) {
         if(isDemand) return context.getResources().getString(R.string.demand);
-        else return context.getResources().getString(R.string.offer);
+        else return context.getResources().getString(R.string.offered);
     }
 }

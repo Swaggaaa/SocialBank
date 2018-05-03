@@ -144,7 +144,7 @@ public class Event {
     }
 
     public Bitmap getImage() {
-        return image;
+        return null;
     }
 
     public void setImage(Bitmap image) {
