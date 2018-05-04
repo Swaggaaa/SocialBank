@@ -59,5 +59,6 @@
     <string name="notHour">There is no time yet</string>
     <string name="demand">Demand</string>
     <string name="offered">Offer</string>
+    <string name="about_description">About this event</string>
 
 </resources>

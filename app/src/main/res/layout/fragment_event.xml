@@ -1,41 +1,128 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/scrollView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_marginTop="20dp"
+    android:layout_marginStart="20dp"
+    android:layout_marginEnd="20dp">
 
     <ImageView
         android:id="@+id/imageViewEvent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/activity_horizontal_margin"
-        app:srcCompat="@drawable/account_group"/>
+        android:layout_marginBottom="12dp"
+        app:srcCompat="@drawable/user_icon"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="@dimen/nav_header_vertical_spacing"
         android:orientation="vertical">
 
         <TextView
             android:id="@+id/textEventTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="24sp"/>
+            android:textSize="24sp"
+            android:text="PRUEBVBAAAAAAAAA"
+            android:textStyle="bold|italic"
+            android:textColor="@color/colorNavigation"/>
 
         <TextView
             android:id="@+id/textEventOrganizer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@android:dimen/app_icon_size"
-            android:layout_marginStart="@dimen/nav_header_vertical_spacing"/>
+            android:text="AAAAAAAAAAAAAA"
+            android:layout_marginBottom="@dimen/activity_horizontal_margin"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+
+            <Button
+                android:id="@+id/join_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/colorTransparent"
+                android:textColor="@color/colorTextForgot"
+                android:layout_weight="1"
+                android:text="Join" />
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="@string/stick"
+                android:textAlignment="center"
+                android:textColor="@color/colorTextForgot"
+                android:textSize="30sp" />
+
+            <Button
+                android:id="@+id/invite_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/colorTransparent"
+                android:textColor="@color/colorTextForgot"
+                android:layout_weight="1"
+                android:text="Invite" />
+
+        </LinearLayout>
+
+
+        <TextView
+            android:id="@+id/start_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:drawablePadding="10dp"
+            android:drawableStart="@drawable/ic_event_date" />
+
+        <TextView
+            android:id="@+id/end_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:drawablePadding="10dp"
+            android:drawableStart="@drawable/ic_event_date" />
+
+        <TextView
+            android:id="@+id/location_event"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/activity_horizontal_margin"
+            android:drawablePadding="10dp"
+            android:drawableStart="@drawable/map_marker" />
+
+        <TextView
+            android:id="@+id/about_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/about_description"
+            android:textStyle="bold"
+            android:textSize="15sp"
+            android:textColor="@color/colorNavigation"/>
 
         <TextView
             android:id="@+id/textEventDescription"
             android:layout_width="match_parent"
+            android:text="oevwiengiejoibnebioenbeiobnebioenbiernbeiobnebioenbeiobenbioenbiobe"
             android:layout_height="wrap_content"/>
+
     </LinearLayout>
 
 </LinearLayout>
+</ScrollView>

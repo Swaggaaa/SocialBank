@@ -2,20 +2,20 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group android:checkableBehavior="single">
         <item
-            android:icon="@drawable/ic_close"
+            android:icon="@drawable/ic_dashboard"
             android:id="@+id/dashboard"
             android:title="@string/dashboard" />
         <item
-            android:icon="@drawable/ic_close"
+            android:icon="@drawable/ic_account_circle"
             android:id="@+id/myProfile"
             android:title="@string/my_profile" />
         <item
-            android:icon="@drawable/ic_close"
+            android:icon="@drawable/crosshairs_gps"
             android:id="@+id/nearbyEvents"
             android:title="@string/location" />
 
         <item
-            android:icon="@drawable/ic_close"
+            android:icon="@drawable/calendar_plus"
             android:id="@+id/newEvent"
             android:title="@string/create_event_menu" />
 
@@ -23,7 +23,7 @@
     <item android:title="@string/settings">
         <menu>
             <item
-                android:icon="@drawable/ic_close"
+                android:icon="@drawable/ic_exit_to_app"
                 android:id="@+id/logout"
                 android:title="@string/logout" />
         </menu>
