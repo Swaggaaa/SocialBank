@@ -21,8 +21,7 @@
         android:id="@+id/imageViewEvent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="12dp"
-        app:srcCompat="@drawable/user_icon"/>
+        android:layout_marginBottom="12dp" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -34,7 +33,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="24sp"
-            android:text="PRUEBVBAAAAAAAAA"
             android:textStyle="bold|italic"
             android:textColor="@color/colorNavigation"/>
 
@@ -42,7 +40,6 @@
             android:id="@+id/textEventOrganizer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="AAAAAAAAAAAAAA"
             android:layout_marginBottom="@dimen/activity_horizontal_margin"/>
 
         <LinearLayout
@@ -58,10 +55,10 @@
                 android:background="@color/colorTransparent"
                 android:textColor="@color/colorTextForgot"
                 android:layout_weight="1"
-                android:text="Join" />
+                android:text="@string/join" />
 
             <TextView
-                android:id="@+id/textView2"
+                android:id="@+id/textView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
@@ -77,7 +74,7 @@
                 android:background="@color/colorTransparent"
                 android:textColor="@color/colorTextForgot"
                 android:layout_weight="1"
-                android:text="Invite" />
+                android:text="@string/invite" />
 
         </LinearLayout>
 
@@ -86,16 +83,16 @@
             android:id="@+id/start_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
+            android:layout_marginTop="@dimen/activity_horizontal_margin"
+            android:layout_marginBottom="10dp"
             android:drawablePadding="10dp"
-            android:drawableStart="@drawable/ic_event_date" />
+            android:drawableStart="@drawable/ic_today" />
 
         <TextView
             android:id="@+id/end_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
+            android:layout_marginBottom="10dp"
             android:drawablePadding="10dp"
             android:drawableStart="@drawable/ic_event_date" />
 
@@ -103,9 +100,56 @@
             android:id="@+id/location_event"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/activity_horizontal_margin"
+            android:layout_marginBottom="10dp"
             android:drawablePadding="10dp"
             android:drawableStart="@drawable/map_marker" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="10dp">
+
+            <TextView
+                android:id="@+id/demand_event"
+                android:layout_width="160dp"
+                android:layout_height="wrap_content"
+                android:drawablePadding="10dp"
+                android:drawableStart="@drawable/demand_or_offer" />
+
+
+            <TextView
+                android:id="@+id/hours"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawablePadding="10dp"
+                android:drawableStart="@drawable/ic_timelapse" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="10dp">
+
+            <TextView
+                android:id="@+id/individual_or_group"
+                android:layout_width="160dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/activity_horizontal_margin"
+                android:drawablePadding="10dp"
+                android:drawableStart="@drawable/account_group"/>
+
+
+            <TextView
+                android:id="@+id/number_person"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawablePadding="10dp"
+                android:drawableStart="@drawable/account_plus" />
+
+        </LinearLayout>
 
         <TextView
             android:id="@+id/about_description"
@@ -119,7 +163,6 @@
         <TextView
             android:id="@+id/textEventDescription"
             android:layout_width="match_parent"
-            android:text="oevwiengiejoibnebioenbeiobnebioenbiernbeiobnebioenbeiobenbioenbiobe"
             android:layout_height="wrap_content"/>
 
     </LinearLayout>

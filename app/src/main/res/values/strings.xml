@@ -60,5 +60,7 @@
     <string name="demand">Demand</string>
     <string name="offered">Offer</string>
     <string name="about_description">About this event</string>
+    <string name="join">Join</string>
+    <string name="invite">Invite</string>
 
 </resources>

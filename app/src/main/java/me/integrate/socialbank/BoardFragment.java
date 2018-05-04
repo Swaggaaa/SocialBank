@@ -67,6 +67,9 @@ public class BoardFragment extends Fragment {
                     Event event = items.get(position);
 
                     bundle.putInt("id", event.getId());
+                    bundle.putBoolean("isDemand", event.getDemand());
+                    bundle.putString("creator", event.getCreatorEmail());
+                    bundle.putString("location", event.getLocation());
                     bundle.putByteArray("image", bitmapToByteArray(event.getImage()));
                     bundle.putString("title", event.getTitle());
                     bundle.putString("description", event.getDescription());

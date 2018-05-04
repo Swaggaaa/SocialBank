@@ -48,7 +48,7 @@
                 android:layout_marginEnd="5dp"
                 android:layout_marginStart="7dp"
                 android:drawablePadding="10dp"
-                android:drawableStart="@drawable/ic_event_date" />
+                android:drawableStart="@drawable/ic_today" />
 
             <TextView
                 android:id="@+id/finish_date_event"
@@ -83,7 +83,7 @@
                     android:layout_marginEnd="1dp"
                     android:layout_marginStart="7dp"
                     android:drawablePadding="10dp"
-                    android:drawableStart="@drawable/account_group" />
+                    android:drawableStart="@drawable/demand_or_offer" />
 
 
                 <TextView
