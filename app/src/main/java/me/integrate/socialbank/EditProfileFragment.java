@@ -105,7 +105,7 @@ public class EditProfileFragment extends Fragment {
             Toast.makeText(getActivity().getApplicationContext(), R.string.updateAccount, Toast.LENGTH_LONG).show();
             SharedPreferencesManager.INSTANCE.store(getActivity(), "user_name", params.get("name"));
         };
-        Response.ErrorListener errorListener = error -> Toast.makeText(getActivity().getApplicationContext(), "Something went wrong PUT", Toast.LENGTH_LONG).show();
+        Response.ErrorListener errorListener = error -> Toast.makeText(getActivity().getApplicationContext(), "Something went wrong", Toast.LENGTH_LONG).show();
 
 
         apiCommunicator.putRequest(getActivity().getApplicationContext(), URL + '/' + emailUser + "/update", responseListener, errorListener, params);

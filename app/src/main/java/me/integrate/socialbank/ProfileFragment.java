@@ -24,11 +24,12 @@ import java.math.BigDecimal;
 
 public class ProfileFragment extends Fragment {
     private static final String URL = "/users";
-    private ImageView userPicture;
+    protected ImageView userPicture;
     private TextView userName;
     private ImageView changePhoto;
     private TextView userEmailToShow;
     private TextView userBalance;
+    protected String emailUser;
 
 
     @Override
@@ -47,7 +48,7 @@ public class ProfileFragment extends Fragment {
     }
 
     private void fillFields() {
-        String emailUser = SharedPreferencesManager.INSTANCE.read(getActivity(),"user_email");
+        emailUser = SharedPreferencesManager.INSTANCE.read(getActivity(),"user_email");
         getUserInfo(emailUser);
     }
 
