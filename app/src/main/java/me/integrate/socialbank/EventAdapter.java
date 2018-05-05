@@ -8,9 +8,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.sql.Date;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHolder> {
@@ -26,8 +27,9 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
         private TextView title;
         private TextView initDate;
         private TextView finishDate;
-        private TextView place;
-        private TextView individual;
+        private TextView location;
+        private TextView demand;
+        private TextView hours;
 
             public EventViewHolder(View v) {
                 super(v);
@@ -35,8 +37,9 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
                 title = (TextView) v.findViewById(R.id.title_event);
                 initDate = (TextView) v.findViewById(R.id.init_date_event);
                 finishDate = (TextView) v.findViewById(R.id.finish_date_event);
-                place = (TextView) v.findViewById(R.id.place_event);
-                individual = (TextView) v.findViewById(R.id.individual_or_group);
+                location = (TextView) v.findViewById(R.id.place_event);
+                demand = (TextView) v.findViewById(R.id.demand);
+                hours = (TextView) v.findViewById(R.id.hours);
 
             }
     }
@@ -68,16 +71,30 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
 
         viewHolder.imagen.setImageBitmap(items.get(i).getImage());
         viewHolder.title.setText(items.get(i).getTitle());
-        viewHolder.initDate.setText(items.get(i).getIniDate());
-        viewHolder.finishDate.setText(items.get(i).getEndDate());
-        viewHolder.place.setText(items.get(i).getLocation());
-        //viewHolder.individual.setText(items.get(i).getIndividual());
-
+        viewHolder.initDate.setText(dateToString(items.get(i).getIniDate()));
+        viewHolder.finishDate.setText(dateToString(items.get(i).getEndDate()));
+        viewHolder.location.setText(items.get(i).getLocation());
+        viewHolder.demand.setText(getDemandOrOffer(items.get(i).getDemand()));
+     //   viewHolder.hours.setText(getHours(items.get(i).getIniDate(), items.get(i).getEndDate()));
     }
 
+    /*public String getHours(Date hourIni, Date hourEnd) {
+        if (hourIni != null && hourEnd != null ) {
+           long hour = hourEnd.getTime() - hourIni.getTime();
+           return String.valueOf(hour);
+        } else return context.getResources().getString(R.string.notHour);
+    }*/
+
     public String dateToString(Date date) {
-        DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
-        String text = df.format(date);
-        return text;
+        if (date == null) return context.getResources().getString(R.string.notDate);
+        else{
+            DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+            return df.format(date);
+        }
+    }
+
+    public String getDemandOrOffer(boolean isDemand) {
+        if(isDemand) return context.getResources().getString(R.string.demand);
+        else return context.getResources().getString(R.string.offered);
     }
 }

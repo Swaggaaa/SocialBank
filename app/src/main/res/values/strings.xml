@@ -58,4 +58,12 @@
     <string name="create_event_menu">Create event</string>
     <string name="update">UPDATE</string>
     <string name="updateAccount">Account updated!</string>
+    <string name="notDate">There is no date yet</string>
+    <string name="notHour">There is no time yet</string>
+    <string name="demand">Demand</string>
+    <string name="offered">Offer</string>
+    <string name="about_description">About this event</string>
+    <string name="join">Join</string>
+    <string name="invite">Invite</string>
+
 </resources>

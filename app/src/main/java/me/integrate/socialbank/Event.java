@@ -7,12 +7,15 @@ import android.util.Base64;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class Event {
 
     private int id;
     private String creatorEmail;
-    private String iniDate, endDate;
+    private Date iniDate, endDate;
     private String location;
     private String title;
     private String description;
@@ -21,40 +24,28 @@ public class Event {
     private boolean isDemand;
     private double latitude;
     private double longitude;
+    private SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
-    public Event(int id, String creatorEmail, String iniDate, String endDate, String location, String title, String description, Bitmap image, boolean isDemand, double latitude, double longitude) {
+
+
+
+    public Event(String creatorEmail, boolean demand, String description, Date finishDate, int id, Bitmap decodedByte, Date initDate, double latitude, String location, double longitude, String title) {
         this.id = id;
-        this.creatorEmail = creatorEmail;
-        this.iniDate = iniDate;
-        this.endDate = endDate;
-        this.location = location;
         this.title = title;
+        this.iniDate = initDate;
+        this.image = decodedByte;
+        this.location = location;
         this.description = description;
-        this.image = image;
-        this.isDemand = isDemand;
-        this.latitude = latitude;
+        this.endDate = finishDate;
+        this.isDemand = demand;
         this.longitude = longitude;
+        this.latitude = latitude;
+        this.creatorEmail = creatorEmail;
     }
 
-    public Event(int id, String creatorEmail, String iniDate, String endDate, String location, String title, String description, int picture, boolean isDemand, double latitude, double longitude) {
-        this.id = id;
-        this.creatorEmail = creatorEmail;
-        this.iniDate = iniDate;
-        this.endDate = endDate;
-        this.location = location;
-        this.title = title;
-        this.description = description;
-        this.picture = picture;
-        this.isDemand = isDemand;
-        this.latitude = latitude;
-        this.longitude = longitude;
-    }
-
-    public Event(JSONObject object) throws JSONException{
+    public Event(JSONObject object) throws JSONException {
         this.id = object.getInt("id");
         this.creatorEmail = object.getString("creatorEmail");
-        this.iniDate = object.getString("iniDate");
-        this.endDate = object.getString("endDate");
         this.location = object.getString("location");
         this.title = object.getString("title");
         this.description = object.getString("description");
@@ -62,17 +53,52 @@ public class Event {
         this.isDemand = object.getBoolean("demand");
         this.latitude = object.getDouble("latitude");
         this.longitude = object.getDouble("longitude");
+        getDates(object);
     }
 
-    private Bitmap getImageFromString(String image) {
-
-        //TODO quitar
-        if (!image.equals("")) {
-            byte[] decodeString = Base64.decode(image, Base64.DEFAULT);
-            return BitmapFactory.decodeByteArray(decodeString, 0, decodeString.length);
+    public void getDates(JSONObject object) throws JSONException {
+        String aux = object.getString("iniDate");
+        if ( aux.equals("null")) iniDate = null;
+        else {
+            try {
+                iniDate = sdf.parse(aux);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
         }
-        return null;
+        aux = object.getString("endDate");
+        if (aux.equals("null")) endDate = null;
+        else {
+            try {
+                endDate = sdf.parse(aux);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
+    public String getCreatorEmail() { return creatorEmail; }
+
+    public double getLatitude() {return latitude; }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public boolean getDemand() {
+        return isDemand;
+    }
+
+    public String getDescription() {
+        return description;
     }
 
     public int getId() {
@@ -83,48 +109,33 @@ public class Event {
         this.id = id;
     }
 
-    public String getCreatorEmail() {
-        return creatorEmail;
-    }
 
     public void setCreatorEmail(String creatorEmail) {
         this.creatorEmail = creatorEmail;
     }
 
-    public String getIniDate() {
+    public Date getIniDate() {
         return iniDate;
     }
 
-    public void setIniDate(String iniDate) {
+    public void setIniDate(Date iniDate) {
         this.iniDate = iniDate;
     }
 
-    public String getEndDate() {
+    public Date getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(String endDate) {
+    public void setEndDate(Date endDate) {
         this.endDate = endDate;
-    }
-
-    public String getLocation() {
-        return location;
     }
 
     public void setLocation(String location) {
         this.location = location;
     }
 
-    public String getTitle() {
-        return title;
-    }
-
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public String getDescription() {
-        return description;
     }
 
     public void setDescription(String description) {
@@ -147,21 +158,21 @@ public class Event {
         isDemand = demand;
     }
 
-    public Double getLatitude() {
-        return latitude;
-    }
-
     public void setLatitude(Double latitude) {
         this.latitude = latitude;
-    }
-
-    public Double getLongitude() {
-        return longitude;
     }
 
     public void setLongitude(Double longitude) {
         this.longitude = longitude;
     }
 
+    private Bitmap getImageFromString(String image) {
 
+        if (!image.equals("")) {
+            byte[] decodeString = Base64.decode(image, Base64.DEFAULT);
+            return BitmapFactory.decodeByteArray(decodeString, 0, decodeString.length);
+        }
+        return null;
+
+    }
 }
