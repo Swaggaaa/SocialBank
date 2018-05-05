@@ -30,6 +30,11 @@ public class ProfileFragment extends Fragment {
     private TextView userEmailToShow;
     private TextView userBalance;
     protected String emailUser;
+    protected String nameUser;
+    protected String lastNameUser;
+    protected String dateUser;
+    protected String genderUser;
+    protected String descriptionUser;
 
 
     @Override
@@ -59,7 +64,12 @@ public class ProfileFragment extends Fragment {
             Float balance = null;
             try{
                 jsonObject = new JSONObject(response.response);
-                String completeName = jsonObject.getString("name") + " " + jsonObject.getString("surname");
+                nameUser = jsonObject.getString("name");
+                lastNameUser = jsonObject.getString("surname");
+                dateUser = jsonObject.getString("birthdate");
+                genderUser = jsonObject.getString("gender");
+                descriptionUser = jsonObject.getString("description");
+                String completeName = nameUser + " " + lastNameUser;
                 userName.setText(completeName);
                 balance = BigDecimal.valueOf(jsonObject.getDouble("balance")).floatValue();
                 userBalance.setText(balance.toString());

@@ -1,6 +1,7 @@
 package me.integrate.socialbank;
 
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -34,6 +35,8 @@ public class EditProfileFragment extends Fragment {
     private Button update;
     private String bornDate;
     private String emailUser;
+    private Boolean thereisPic;
+    private String image;
 
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -63,6 +66,8 @@ public class EditProfileFragment extends Fragment {
                 newDescription.setText(jsonObject.getString("description"));
                 bornDate = jsonObject.getString("birthdate");
                 newBirthdate.setText(bornDate);
+                image = jsonObject.getString("image");
+
 
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -83,6 +88,7 @@ public class EditProfileFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        thereisPic = false;
         newBirthdate.setOnClickListener(view1 -> chooseDate());
         update.setOnClickListener(v -> {
             HashMap<String, String> params = new HashMap<>();
@@ -92,6 +98,8 @@ public class EditProfileFragment extends Fragment {
             params.put("gender", newGender.getSelectedItem().toString().toUpperCase());
             params.put("description", newDescription.getText().toString());
             params.put("email", emailUser);
+            params.put("image", image);
+
             //TODO: remove email when API fixed
 
             putCredentials(params);

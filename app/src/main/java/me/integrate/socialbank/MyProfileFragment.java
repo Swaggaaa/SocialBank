@@ -57,10 +57,16 @@ public class MyProfileFragment extends ProfileFragment {
 
     private void updateProfile() {
         HashMap<String, String> params = new HashMap<>();
+        params.put("name", nameUser);
+        params.put("surname", lastNameUser);
+        params.put("birthdate", dateUser);
+        params.put("gender", genderUser);
+        params.put("description", descriptionUser);
+        params.put("email", emailUser);
         params.put("image", thereisPic ? ImageCompressor.INSTANCE.compressAndEncodeAsBase64(
                 ((BitmapDrawable)userPicture.getDrawable()).getBitmap())
                 : "");
-        params.put("email",emailUser);
+
         putCredentials(params);
     }
 

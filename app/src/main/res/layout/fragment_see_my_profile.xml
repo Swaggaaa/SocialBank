@@ -68,6 +68,11 @@
                 android:text=""/>
 
             <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="About me" />
+
+            <TextView
                 android:id="@+id/hoursBalance"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
