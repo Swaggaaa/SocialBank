@@ -1,11 +1,14 @@
 package me.integrate.socialbank;
 
+import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.support.annotation.Nullable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,10 +20,15 @@ import android.widget.Toast;
 
 import com.android.volley.Response;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class ProfileFragment extends Fragment {
     private static final String URL = "/users";
@@ -29,12 +37,17 @@ public class ProfileFragment extends Fragment {
     private ImageView changePhoto;
     private TextView userEmailToShow;
     private TextView userBalance;
+    private TextView userDescription;
     protected String emailUser;
     protected String nameUser;
     protected String lastNameUser;
     protected String dateUser;
     protected String genderUser;
     protected String descriptionUser;
+    private RecyclerView mRecyclerView;
+    private RecyclerView.Adapter mAdapter;
+
+    private ProgressDialog loadingDialog;
 
 
     @Override
@@ -47,10 +60,18 @@ public class ProfileFragment extends Fragment {
         changePhoto = (ImageView) rootView.findViewById(R.id.loadPicture);
         userEmailToShow = (TextView) rootView.findViewById(R.id.userEmailToShow);
         userBalance = (TextView) rootView.findViewById(R.id.hoursBalance);
-
+        userDescription = (TextView) rootView.findViewById(R.id.aboutMe);
+        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.my_recycler_view_user_profile);
+        mRecyclerView.setHasFixedSize(true);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        loadingDialog = ProgressDialog.show(getActivity(), "",
+                getString(R.string.loadingMessage), true);
         fillFields();
+        getUserEvents();
         return rootView;
     }
+
 
     private void fillFields() {
         emailUser = SharedPreferencesManager.INSTANCE.read(getActivity(),"user_email");
@@ -74,6 +95,7 @@ public class ProfileFragment extends Fragment {
                 balance = BigDecimal.valueOf(jsonObject.getDouble("balance")).floatValue();
                 userBalance.setText(balance.toString());
                 userEmailToShow.setText(jsonObject.getString("email"));
+                userDescription.setText(descriptionUser);
                 String image = jsonObject.getString("image");
                 if (!image.equals("")) {
                     byte[] decodeString = Base64.decode(image, Base64.DEFAULT);
@@ -101,5 +123,77 @@ public class ProfileFragment extends Fragment {
 
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+    }
+
+    private void getUserEvents() {
+        HashMap<String, String> params = new HashMap<>();
+        params.put("email", emailUser);
+        getAllEvents(params);
+    }
+
+    //Call to the API
+    public void getAllEvents(HashMap<String, String> params) {
+
+        APICommunicator apiCommunicator = new APICommunicator();
+        Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response -> {
+            List<Event> items = new ArrayList<>();
+            JSONArray jsonArray;
+            try {
+                jsonArray = new JSONArray(response.response);
+                System.out.println(String.valueOf(jsonArray.length()));
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+                    items.add(new Event(jsonObject));
+
+                }
+
+                mAdapter = new EventAdapter(items, getActivity(), (v1, position) -> {
+                    Bundle bundle = new Bundle();
+                    Event event = items.get(position);
+
+                    bundle.putInt("id", event.getId());
+                    bundle.putBoolean("isDemand", event.getDemand());
+                    bundle.putString("creator", event.getCreatorEmail());
+                    bundle.putString("location", event.getLocation());
+                    bundle.putByteArray("image", bitmapToByteArray(event.getImage()));
+                    bundle.putString("title", event.getTitle());
+                    bundle.putString("description", event.getDescription());
+                    Fragment eventFragment = EventFragment.newInstance(bundle);
+                    FragmentChangeListener fc = (FragmentChangeListener) getActivity();
+                    fc.replaceFragment(eventFragment);
+                });
+
+                mRecyclerView.setAdapter(mAdapter);
+                loadingDialog.dismiss();
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        };
+        Response.ErrorListener errorListener = error -> {
+            String message;
+            int errorCode = error.networkResponse.statusCode;
+            if (errorCode == 401)
+                message = "Unauthorized";
+            else if (errorCode == 403)
+                message = "Forbidden";
+            else if (errorCode == 404)
+                message = "Not Found";
+            else
+                message = "Unexpected error";
+
+            loadingDialog.dismiss();
+            Toast.makeText(getActivity().getApplicationContext(), message, Toast.LENGTH_LONG).show();
+        };
+        apiCommunicator.getRequest(getActivity().getApplicationContext(), URL +'/'+ emailUser + "/events", responseListener, errorListener, params);
+    }
+
+    private byte[] bitmapToByteArray(Bitmap bitmap) {
+        if (bitmap != null) {
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
+            return byteArrayOutputStream.toByteArray();
+        }
+        else return null;
     }
 }

@@ -58,19 +58,18 @@
                 android:layout_height="wrap_content"
                 android:text="Email" />
 
-            <TextView
-                android:id="@+id/address1"
-                android:inputType="textMultiLine"
-                android:layout_height="wrap_content"
-                android:layout_width="match_parent"
-                android:maxLines="4"
-                android:lines="4"
-                android:text=""/>
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="About me" />
+            <TextView
+                android:id="@+id/aboutMe"
+                android:inputType="textMultiLine"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:maxLines="5"
+                android:text=""/>
 
             <TextView
                 android:id="@+id/hoursBalance"
@@ -97,7 +96,8 @@
 
                 <android.support.v7.widget.RecyclerView
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    android:layout_height="match_parent"
+                    android:id="@+id/my_recycler_view_user_profile"/>
 
                 <android.support.design.widget.FloatingActionButton
                     android:id="@+id/editProfile"
