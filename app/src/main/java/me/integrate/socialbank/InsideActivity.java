@@ -44,6 +44,10 @@ public class InsideActivity extends AppCompatActivity implements FragmentChangeL
                     // For example, swap UI fragments here
                     int itemId = menuItem.getItemId();
                     switch (itemId){
+                        case R.id.dashboard:
+                            Fragment nextFragment3 = new BoardFragment();
+                            replaceFragment(nextFragment3);
+                            break;
                         case R.id.myProfile:
                             Fragment nextFragment = new RegisterFragment();  //we must put our fragment instead
                             replaceFragment(nextFragment);

@@ -3,12 +3,10 @@ package me.integrate.socialbank;
 
 import android.app.ProgressDialog;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,13 +29,6 @@ public class BoardFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
 
-    private String title;
-    private String initDate;
-    private String place;
-    private String finishDate;
-    private String description;
-    private String photoEvent;
-    private int id;
     private ProgressDialog loadingDialog;
 
     @Override
@@ -67,15 +58,8 @@ public class BoardFragment extends Fragment {
                 System.out.println(String.valueOf(jsonArray.length()));
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
+                    items.add(new Event(jsonObject));
 
-                    getInfoEvent(jsonObject);
-                    Bitmap decodedByte = getImageFromString(photoEvent);
-
-                    //TODO: do it again +1
-                    if (decodedByte != null) {
-                        items.add(new Event(id, null, initDate, finishDate, place, title, description, decodedByte, true, 0, 0));
-                    } else
-                        items.add(new Event(id, null, initDate, finishDate, place, title, description, R.drawable.user_icon, true, 0, 0));
                 }
 
                 mAdapter = new EventAdapter(items, getActivity(), (v1, position) -> {
@@ -83,6 +67,9 @@ public class BoardFragment extends Fragment {
                     Event event = items.get(position);
 
                     bundle.putInt("id", event.getId());
+                    bundle.putBoolean("isDemand", event.getDemand());
+                    bundle.putString("creator", event.getCreatorEmail());
+                    bundle.putString("location", event.getLocation());
                     bundle.putByteArray("image", bitmapToByteArray(event.getImage()));
                     bundle.putString("title", event.getTitle());
                     bundle.putString("description", event.getDescription());
@@ -116,56 +103,13 @@ public class BoardFragment extends Fragment {
         apiCommunicator.getRequest(getActivity().getApplicationContext(), URL, responseListener, errorListener, null);
     }
 
-    //Obtain info from the API, create Event and save in the list<Event>
-    private void getInfoEvent(JSONObject jsonObject) {
-
-        try {
-
-            id = jsonObject.getInt("id");
-
-            title = jsonObject.getString("title");
-
-            initDate = jsonObject.getString("iniDate");
-            if (!initDate.equals("null")) {
-                initDate = initDate.substring(8, 10) + "-" + initDate.substring(5, 7) + "-" +
-                        initDate.substring(0, 4);
-            } else initDate = "No hay fecha";
-
-
-            place = jsonObject.getString("location");
-
-            finishDate = jsonObject.getString("endDate");
-            if (!finishDate.equals("null")) {
-                finishDate = finishDate.substring(8, 10) + "-" + finishDate.substring(5, 7) + "-" + finishDate.substring(0, 4);
-            } else finishDate = "No hay fecha";
-
-            description = jsonObject.getString("description");
-
-            photoEvent = jsonObject.getString("image");
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
-
-    //Transform and string base64 to bitmap
-    private Bitmap getImageFromString(String image) {
-
-        //TODO quitar
-        if (!image.equals("")) {
-            byte[] decodeString = Base64.decode(image, Base64.DEFAULT);
-            return BitmapFactory.decodeByteArray(decodeString, 0, decodeString.length);
-        }
-        return null;
-
-    }
-
     private byte[] bitmapToByteArray(Bitmap bitmap) {
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
-        return byteArrayOutputStream.toByteArray();
+        if (bitmap != null) {
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
+            return byteArrayOutputStream.toByteArray();
+        }
+        else return null;
     }
-
-
 
 }
