@@ -57,4 +57,5 @@
     <string name="AddressNotFound">Address not found</string>
     <string name="create_event_menu">Create event</string>
     <string name="update">UPDATE</string>
+    <string name="updateAccount">Account updated!</string>
 </resources>
