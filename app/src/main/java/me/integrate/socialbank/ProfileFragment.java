@@ -38,6 +38,7 @@ public class ProfileFragment extends Fragment {
     private TextView userEmailToShow;
     private TextView userBalance;
     private TextView userDescription;
+    private TextView myEvents;
     protected String emailUser;
     protected String nameUser;
     protected String lastNameUser;
@@ -61,6 +62,7 @@ public class ProfileFragment extends Fragment {
         userEmailToShow = (TextView) rootView.findViewById(R.id.userEmailToShow);
         userBalance = (TextView) rootView.findViewById(R.id.hoursBalance);
         userDescription = (TextView) rootView.findViewById(R.id.aboutMe);
+        myEvents = (TextView)rootView.findViewById(R.id.events);
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.my_recycler_view_user_profile);
         mRecyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
@@ -86,6 +88,7 @@ public class ProfileFragment extends Fragment {
             try{
                 jsonObject = new JSONObject(response.response);
                 nameUser = jsonObject.getString("name");
+                myEvents.setText(nameUser+"'s events");
                 lastNameUser = jsonObject.getString("surname");
                 dateUser = jsonObject.getString("birthdate");
                 genderUser = jsonObject.getString("gender");

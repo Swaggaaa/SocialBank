@@ -65,5 +65,8 @@
     <string name="about_description">About this event</string>
     <string name="join">Join</string>
     <string name="invite">Invite</string>
+    <string name="hours">+- hours</string>
+    <string name="about_me">About me</string>
+    <string name="user_name">User name</string>
 
 </resources>

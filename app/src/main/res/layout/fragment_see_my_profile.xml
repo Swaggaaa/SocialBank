@@ -25,6 +25,7 @@
             android:layout_marginEnd="20dp"
             android:layout_marginStart="20dp"
             android:layout_marginTop="20dp"
+            android:backgroundTint="@android:color/background_light"
             android:orientation="vertical">
 
             <LinearLayout
@@ -37,9 +38,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="User name"
-                    android:textStyle="bold"
-                    tools:textSize="24sp" />
+                    android:text="@string/user_name"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
 
                 <ImageView
                     android:id="@+id/loadPicture"
@@ -49,33 +50,36 @@
                     android:maxWidth="42dp"
                     android:scaleType="fitCenter"
                     android:src="@drawable/ic_camera_alt_black_24dp"
-                    android:visibility="gone"/>
+                    android:visibility="gone" />
 
             </LinearLayout>
+
             <TextView
                 android:id="@+id/userEmailToShow"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Email" />
+                android:text="@string/email" />
 
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="About me" />
+                android:text="@string/about_me"
+                android:textStyle="bold"/>
+
             <TextView
                 android:id="@+id/aboutMe"
-                android:inputType="textMultiLine"
-                android:layout_height="wrap_content"
                 android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textMultiLine"
                 android:maxLines="5"
-                android:text=""/>
+                android:text="" />
 
             <TextView
                 android:id="@+id/hoursBalance"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="+3 hours"
+                android:text="@string/hours"
                 android:textSize="24sp"
                 android:textStyle="bold" />
 
@@ -86,18 +90,20 @@
                 android:background="?android:attr/listDivider" />
 
             <TextView
+                android:id="@+id/events"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/my_events" />
+                android:text="@string/my_events"
+                android:textStyle="bold"/>
 
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
                 <android.support.v7.widget.RecyclerView
+                    android:id="@+id/my_recycler_view_user_profile"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:id="@+id/my_recycler_view_user_profile"/>
+                    android:layout_height="match_parent" />
 
                 <android.support.design.widget.FloatingActionButton
                     android:id="@+id/editProfile"
@@ -106,7 +112,7 @@
                     android:layout_gravity="bottom|end"
                     android:layout_margin="16dp"
                     android:src="@drawable/ic_edit_black_24dp"
-                    android:visibility="gone"/>
+                    android:visibility="gone" />
 
             </FrameLayout>
         </LinearLayout>
