@@ -1,5 +1,6 @@
 package me.integrate.socialbank;
 
+import android.app.ProgressDialog;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.support.annotation.Nullable;
@@ -38,6 +39,7 @@ public class EditProfileFragment extends Fragment {
     private Boolean thereisPic;
     private String image;
 
+    private ProgressDialog loadingDialog;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
@@ -49,6 +51,8 @@ public class EditProfileFragment extends Fragment {
         newDescription = (EditText) rootView.findViewById(R.id.updateDescription);
         update = (Button) rootView.findViewById(R.id.buttonRegister);
         emailUser = SharedPreferencesManager.INSTANCE.read(getActivity(), "user_email");
+        loadingDialog = ProgressDialog.show(getActivity(), "",
+                getString(R.string.loadingMessage), true);
         getUserInfo(emailUser);
         return rootView;
     }
@@ -67,17 +71,18 @@ public class EditProfileFragment extends Fragment {
                 bornDate = jsonObject.getString("birthdate");
                 newBirthdate.setText(bornDate);
                 image = jsonObject.getString("image");
-
+                loadingDialog.dismiss();
 
             } catch (JSONException e) {
                 e.printStackTrace();
+                loadingDialog.dismiss();
             }
 
 
         };
         Response.ErrorListener errorListener = error -> {
             Toast.makeText(getActivity().getApplicationContext(), "Something went wrong", Toast.LENGTH_LONG).show();
-            Fragment boardFragment = new BoardFragment();
+            Fragment boardFragment = new MyProfileFragment();
             FragmentChangeListener fc = (FragmentChangeListener) getActivity();
             fc.replaceFragment(boardFragment);
         };
@@ -112,6 +117,9 @@ public class EditProfileFragment extends Fragment {
         Response.Listener responseListener = response -> {
             Toast.makeText(getActivity().getApplicationContext(), R.string.updateAccount, Toast.LENGTH_LONG).show();
             SharedPreferencesManager.INSTANCE.store(getActivity(), "user_name", params.get("name"));
+            Fragment boardFragment = new MyProfileFragment();
+            FragmentChangeListener fc = (FragmentChangeListener) getActivity();
+            fc.replaceFragment(boardFragment);
         };
         Response.ErrorListener errorListener = error -> Toast.makeText(getActivity().getApplicationContext(), "Something went wrong", Toast.LENGTH_LONG).show();
 
