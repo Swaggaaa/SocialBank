@@ -49,7 +49,7 @@ public class InsideActivity extends AppCompatActivity implements FragmentChangeL
                             replaceFragment(nextFragment3);
                             break;
                         case R.id.myProfile:
-                            Fragment nextFragment = new RegisterFragment();  //we must put our fragment instead
+                            Fragment nextFragment = new MyProfileFragment();  //we must put our fragment instead
                             replaceFragment(nextFragment);
                             break;
                         case R.id.nearbyEvents:

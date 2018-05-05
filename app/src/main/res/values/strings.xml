@@ -44,6 +44,7 @@
     <string name="my_profile">My Profile</string>
     <string name="settings">Settings</string>
     <string name="dashboard">Dashboard</string>
+    <string name="my_events">My events</string>
     <string name="loadingMessage">Loading. Please wait…</string>
     <string name="location">Location</string>
     <string name="errorEventInfo">Error getting event info</string>
@@ -55,6 +56,8 @@
     <string name="JSONException">JSONException</string>
     <string name="AddressNotFound">Address not found</string>
     <string name="create_event_menu">Create event</string>
+    <string name="update">UPDATE</string>
+    <string name="updateAccount">Account updated!</string>
     <string name="notDate">There is no date yet</string>
     <string name="notHour">There is no time yet</string>
     <string name="demand">Demand</string>
@@ -62,5 +65,8 @@
     <string name="about_description">About this event</string>
     <string name="join">Join</string>
     <string name="invite">Invite</string>
+    <string name="hours">+- hours</string>
+    <string name="about_me">About me</string>
+    <string name="user_name">User name</string>
 
 </resources>
