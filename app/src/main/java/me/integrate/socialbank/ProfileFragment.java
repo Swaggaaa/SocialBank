@@ -1,9 +1,12 @@
 package me.integrate.socialbank;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.support.annotation.Nullable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -61,7 +64,11 @@ public class ProfileFragment extends Fragment {
                 userBalance.setText(balance.toString());
                 userEmailToShow.setText(jsonObject.getString("email"));
                 String image = jsonObject.getString("image");
-                Log.v("carregaImag", image);
+                if (!image.equals("")) {
+                    byte[] decodeString = Base64.decode(image, Base64.DEFAULT);
+                    userPicture.setImageBitmap(BitmapFactory.decodeByteArray(
+                            decodeString, 0, decodeString.length));
+                }
 
             } catch (JSONException e) {
                 e.printStackTrace();

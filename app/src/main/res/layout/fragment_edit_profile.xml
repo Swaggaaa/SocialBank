@@ -81,7 +81,8 @@
             android:inputType="textMultiLine"
             android:selectAllOnFocus="false"
             android:singleLine="false"
-            android:textSize="15sp" />
+            android:textSize="15sp"
+            android:maxLength="200"/>
 
 
         <Button
