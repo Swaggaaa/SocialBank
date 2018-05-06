@@ -1,12 +1,9 @@
 package me.integrate.socialbank;
 
 import android.app.ProgressDialog;
-import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
+import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,10 +17,8 @@ import com.android.volley.Response;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 
 public class EditProfileFragment extends Fragment {
@@ -124,7 +119,7 @@ public class EditProfileFragment extends Fragment {
         Response.ErrorListener errorListener = error -> Toast.makeText(getActivity().getApplicationContext(), "Something went wrong", Toast.LENGTH_LONG).show();
 
 
-        apiCommunicator.putRequest(getActivity().getApplicationContext(), URL + '/' + emailUser + "/update", responseListener, errorListener, params);
+        apiCommunicator.putRequest(getActivity().getApplicationContext(), URL + '/' + emailUser, responseListener, errorListener, params);
     }
 
     private void chooseDate(){
