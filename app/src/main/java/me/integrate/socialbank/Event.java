@@ -24,7 +24,7 @@ public class Event {
     private boolean isDemand;
     private double latitude;
     private double longitude;
-    private SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+    private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 
 
 
@@ -57,20 +57,20 @@ public class Event {
     }
 
     public void getDates(JSONObject object) throws JSONException {
-        String aux = object.getString("iniDate");
-        if ( aux.equals("null")) iniDate = null;
+        String iniDate = object.getString("iniDate");
+        if (iniDate.equals("null")) this.iniDate = null;
         else {
             try {
-                iniDate = sdf.parse(aux);
+                this.iniDate = sdf.parse(iniDate);
             } catch (ParseException e) {
                 e.printStackTrace();
             }
         }
-        aux = object.getString("endDate");
-        if (aux.equals("null")) endDate = null;
+        String endDate = object.getString("endDate");
+        if (endDate.equals("null")) this.endDate = null;
         else {
             try {
-                endDate = sdf.parse(aux);
+                this.endDate = sdf.parse(endDate);
             } catch (ParseException e) {
                 e.printStackTrace();
             }

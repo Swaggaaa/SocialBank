@@ -10,8 +10,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
 public class EventFragment extends Fragment {
 
     private ImageView imageView;
@@ -23,10 +21,10 @@ public class EventFragment extends Fragment {
     private TextView textIndividualOrGroup;
     private TextView textViewNumberPersonsEvent;
 
-    public static EventFragment newInstance (Bundle params) {
-       EventFragment eventFragment = new EventFragment();
-       eventFragment.setArguments(params);
-       return eventFragment;
+    public static EventFragment newInstance(Bundle params) {
+        EventFragment eventFragment = new EventFragment();
+        eventFragment.setArguments(params);
+        return eventFragment;
     }
 
     @Override
@@ -34,10 +32,10 @@ public class EventFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_event, container, false);
-        imageView = (ImageView)rootView.findViewById(R.id.imageViewEvent);
-        textEventTitle = (TextView)rootView.findViewById(R.id.textEventTitle);
-        textEventOrganizer = (TextView)rootView.findViewById(R.id.textEventOrganizer);
-        textEventDescription = (TextView)rootView.findViewById(R.id.textEventDescription);
+        imageView = (ImageView) rootView.findViewById(R.id.imageViewEvent);
+        textEventTitle = (TextView) rootView.findViewById(R.id.textEventTitle);
+        textEventOrganizer = (TextView) rootView.findViewById(R.id.textEventOrganizer);
+        textEventDescription = (TextView) rootView.findViewById(R.id.textEventDescription);
         textDemandEvent = (TextView) rootView.findViewById(R.id.demand_event);
         textLocation = (TextView) rootView.findViewById(R.id.location_event);
         textIndividualOrGroup = (TextView) rootView.findViewById(R.id.individual_or_group);
@@ -52,16 +50,17 @@ public class EventFragment extends Fragment {
         textEventOrganizer.setText(getArguments().getString("creator"));
         textEventDescription.setText(getArguments().getString("description"));
         textLocation.setText(getArguments().getString("location"));
-        textDemandEvent.setText(getDemandOrOffer(getArguments().getBoolean("isDemand")));
+        textDemandEvent.setText(getResources().getString(getArguments().getBoolean("isDemand") ? R.string.demand : R.string.offer));
         textIndividualOrGroup.setText("Individual");
         textViewNumberPersonsEvent.setText("1/1");
+
+        TextView startDate = (TextView) rootView.findViewById(R.id.start_date);
+        startDate.setText(getArguments().getString("startDate"));
+        TextView endDate = (TextView) rootView.findViewById(R.id.end_date);
+        endDate.setText(getArguments().getString("endDate"));
 
 
         return rootView;
     }
 
-    public String getDemandOrOffer(boolean isDemand) {
-        if(isDemand) return getResources().getString(R.string.demand);
-        else return getResources().getString(R.string.offered);
-    }
 }

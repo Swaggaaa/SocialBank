@@ -1,7 +1,6 @@
 package me.integrate.socialbank;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -10,7 +9,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,9 +22,7 @@ import android.widget.TableRow;
 import android.widget.Toast;
 
 import com.android.volley.Response;
-import com.google.android.gms.maps.model.LatLng;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -83,9 +79,9 @@ public class CreateEventFragment extends Fragment {
             int errorCode = error.networkResponse.statusCode;
             if (errorCode == 401)
                 message = "Unauthorized";
-            else if(errorCode == 403)
+            else if (errorCode == 403)
                 message = "Forbidden";
-            else if(errorCode == 404)
+            else if (errorCode == 404)
                 message = "Not Found";
             else
                 message = "Unexpected error";
@@ -129,7 +125,7 @@ public class CreateEventFragment extends Fragment {
         eventType = -1;
         eventFixed = -1;
 
-        if( !isVerified() )
+        if (!isVerified())
             groupTable.setVisibility(View.GONE);
 
         //Fixed schedule disabled by default
@@ -157,13 +153,13 @@ public class CreateEventFragment extends Fragment {
             //TODO: Change them to null when API accepts it
             String dataIni = null;
             String dataEnd = null;
-            if(eventFixed == 1) {
-                dataIni = strStartDate.concat("T").concat(editTextEndHour.getText().toString()).concat(":00:00Z");
+            if (eventFixed == 1) {
+                dataIni = strStartDate.concat("T").concat(editTextStartHour.getText().toString()).concat(":00:00Z");
                 dataEnd = strEndDate.concat("T").concat(editTextEndHour.getText().toString()).concat(":00:00Z");
             }
-            String emailUser = SharedPreferencesManager.INSTANCE.read(getActivity(),"user_email");
+            String emailUser = SharedPreferencesManager.INSTANCE.read(getActivity(), "user_email");
             String demand = "false";
-            if(eventType == 1) demand = "true";
+            if (eventType == 1) demand = "true";
 
             EventLocation eventLocation = new EventLocation(address.getText().toString());
 
@@ -177,7 +173,7 @@ public class CreateEventFragment extends Fragment {
             params.put("longitude", String.valueOf(eventLocation.getLongitude()));
             params.put("title", name.getText().toString());
             params.put("image", thereisPic ? ImageCompressor.INSTANCE.compressAndEncodeAsBase64(
-                    ((BitmapDrawable)imageView.getDrawable()).getBitmap())
+                    ((BitmapDrawable) imageView.getDrawable()).getBitmap())
                     : "");
 
             buttonCreate.setText("LOADING");
@@ -246,24 +242,42 @@ public class CreateEventFragment extends Fragment {
             enableButton();
         });
         name.addTextChangedListener(new TextWatcher() {
-            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
             @Override
             public void afterTextChanged(Editable s) {
                 enableButton();
             }
         });
         address.addTextChangedListener(new TextWatcher() {
-            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
             @Override
             public void afterTextChanged(Editable s) {
                 enableButton();
             }
         });
         description.addTextChangedListener(new TextWatcher() {
-            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
             @Override
             public void afterTextChanged(Editable s) {
                 enableButton();
@@ -271,11 +285,10 @@ public class CreateEventFragment extends Fragment {
         });
         view.findViewById(R.id.editTextStartHour).setOnFocusChangeListener((view110, b) ->
         {
-            if(b) {
+            if (b) {
                 editTextStartHour.setText("");
-            }
-            else {
-                if(editTextStartHour.getText().length()==1) {
+            } else {
+                if (editTextStartHour.getText().length() == 1) {
                     String hora = editTextStartHour.getText().toString();
                     editTextStartHour.setText("0".concat(hora));
                 }
@@ -286,17 +299,21 @@ public class CreateEventFragment extends Fragment {
             }
         });
         editTextStartHour.addTextChangedListener(new TextWatcher() {
-            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(editTextStartHour.getText().length()>0) {
+                if (editTextStartHour.getText().length() > 0) {
                     int num = Integer.parseInt(editTextStartHour.getText().toString());
-                    if (!(num>=0 && num<=23)) {
-                        Toast.makeText(getActivity(),"Please enter the code in the range of 0-23",Toast.LENGTH_SHORT).show();
+                    if (!(num >= 0 && num <= 23)) {
+                        Toast.makeText(getActivity(), "Please enter the code in the range of 0-23", Toast.LENGTH_SHORT).show();
                         editTextStartHour.setText("");
                     }
                 }
             }
+
             @Override
             public void afterTextChanged(Editable s) {
                 enableButton();
@@ -304,11 +321,10 @@ public class CreateEventFragment extends Fragment {
         });
         view.findViewById(R.id.editTextEndHour).setOnFocusChangeListener((view111, b) ->
         {
-            if(b) {
+            if (b) {
                 editTextEndHour.setText("");
-            }
-            else {
-                if(editTextEndHour.getText().length()==1) {
+            } else {
+                if (editTextEndHour.getText().length() == 1) {
                     String hora = editTextEndHour.getText().toString();
                     editTextEndHour.setText("0".concat(hora));
                 }
@@ -325,16 +341,18 @@ public class CreateEventFragment extends Fragment {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
+
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(editTextEndHour.getText().length()>0) {
+                if (editTextEndHour.getText().length() > 0) {
                     int num = Integer.parseInt(editTextEndHour.getText().toString());
-                    if (!(num>=0 && num<=23)) {
-                        Toast.makeText(getActivity(),"Please enter the code in the range of 0-23",Toast.LENGTH_SHORT).show();
+                    if (!(num >= 0 && num <= 23)) {
+                        Toast.makeText(getActivity(), "Please enter the code in the range of 0-23", Toast.LENGTH_SHORT).show();
                         editTextEndHour.setText("");
                     }
                 }
             }
+
             @Override
             public void afterTextChanged(Editable s) {
                 enableButton();
@@ -354,11 +372,11 @@ public class CreateEventFragment extends Fragment {
                 && (eventFixed == 0 || (eventFixed == 1 && !editTextEndDate.getText().toString().isEmpty()
                 && !editTextStartDate.getText().toString().isEmpty()
                 && !editTextEndHour.getText().toString().isEmpty()
-                && !editTextStartHour.getText().toString().isEmpty() ) ));
+                && !editTextStartHour.getText().toString().isEmpty())));
     }
 
     private void enableButton() {
-        buttonCreate.setEnabled( areFilled() );
+        buttonCreate.setEnabled(areFilled());
     }
 
     private void readGallery() {
@@ -374,8 +392,8 @@ public class CreateEventFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(resultCode == RESULT_OK){
-            if(requestCode == 2 ) {
+        if (resultCode == RESULT_OK) {
+            if (requestCode == 2) {
                 thereisPic = true;
                 data.getData();
                 Uri selectedImage = data.getData();
@@ -383,9 +401,8 @@ public class CreateEventFragment extends Fragment {
                 Log.v(TAG, String.valueOf(selectedImage));
                 loadImageFromUri(selectedImage);
             }
-        }
-        else{
-            Log.v("Result","Something happened when tried to get the image");
+        } else {
+            Log.v("Result", "Something happened when tried to get the image");
         }
     }
 
@@ -414,11 +431,11 @@ public class CreateEventFragment extends Fragment {
 
             dateStart = calendar.getTime();
 
-            if( ( dateEnd == null || dateStart.before(dateEnd) ) && dateStart.after(Calendar.getInstance().getTime()) ) {
+            if ((dateEnd == null || dateStart.before(dateEnd)) && dateStart.after(Calendar.getInstance().getTime())) {
                 SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
                 strStartDate = format.format(calendar.getTime());
                 editTextStartDate.setText(selectedDate);
-                if(!checkHours()) editTextEndHour.setText("");
+                if (!checkHours()) editTextEndHour.setText("");
                 enableButton();
             } else
                 Toast.makeText(getActivity(), "Start date must be minor than End date and greater than current date", Toast.LENGTH_SHORT).show();
@@ -438,11 +455,11 @@ public class CreateEventFragment extends Fragment {
 
             dateEnd = calendar.getTime();
 
-            if( dateEnd.after(dateStart) ) {
+            if (dateEnd.after(dateStart)) {
                 SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-                strEndDate = format.format( dateEnd );
+                strEndDate = format.format(dateEnd);
                 editTextEndDate.setText(selectedDate);
-                if(!checkHours()) editTextEndHour.setText("");
+                if (!checkHours()) editTextEndHour.setText("");
                 enableButton();
             } else
                 Toast.makeText(getActivity(), R.string.endDateBigger, Toast.LENGTH_SHORT).show();
@@ -450,8 +467,7 @@ public class CreateEventFragment extends Fragment {
         newFragment.show(getActivity().getSupportFragmentManager(), "datePicker");
     }
 
-    private boolean checkHours()
-    {
+    private boolean checkHours() {
         String hourStart = editTextStartHour.getText().toString();
         String hourEnd = editTextEndHour.getText().toString();
         return !(dateStart != null && dateEnd != null && !hourStart.isEmpty() && !hourEnd.isEmpty()
