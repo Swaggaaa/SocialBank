@@ -1,26 +1,29 @@
 package me.integrate.socialbank
 
-import android.app.Activity
 import android.content.Context
 
 object SharedPreferencesManager {
 
-    fun store(activity: Activity, key: String, value: String) {
-        val sharedPref = activity.getPreferences(Context.MODE_PRIVATE) ?: return
-        with (sharedPref.edit()) {
+    private const val PREFERENCES_FILE: String = "me.integrate.socialbank.PREFERENCE_FILE_KEY"
+
+    fun store(context: Context, key: String, value: String) {
+        val sharedPref = context.getSharedPreferences(PREFERENCES_FILE, Context.MODE_PRIVATE)
+                ?: return
+        with(sharedPref.edit()) {
             putString(key, value)
             apply()
         }
     }
 
-    fun read(activity: Activity, key: String): String? {
-        val sharedPref = activity.getPreferences(Context.MODE_PRIVATE)
+    fun read(context: Context, key: String): String? {
+        val sharedPref = context.getSharedPreferences(PREFERENCES_FILE, Context.MODE_PRIVATE)
         return sharedPref.getString(key, null)
     }
 
-    fun remove(activity: Activity, key: String) {
-        val sharedPref = activity.getPreferences(Context.MODE_PRIVATE) ?: return
-        with (sharedPref.edit()) {
+    fun remove(context: Context, key: String) {
+        val sharedPref = context.getSharedPreferences(PREFERENCES_FILE, Context.MODE_PRIVATE)
+                ?: return
+        with(sharedPref.edit()) {
             remove(key)
             apply()
         }
