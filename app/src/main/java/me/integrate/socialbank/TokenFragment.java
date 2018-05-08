@@ -13,7 +13,6 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.android.volley.Response;
-import com.android.volley.VolleyError;
 
 public class TokenFragment extends Fragment {
 
@@ -39,14 +38,11 @@ public class TokenFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        changeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if ( passwordMatch() ) {
-                    postCredentials(pass1.getText().toString(), tokenEditText.getText().toString());
-                }
-
+        changeButton.setOnClickListener(v -> {
+            if (passwordMatch()) {
+                postCredentials(pass1.getText().toString(), tokenEditText.getText().toString());
             }
+
         });
         tokenEditText.addTextChangedListener(new TextWatcher() {
             @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -76,29 +72,23 @@ public class TokenFragment extends Fragment {
 
     private void postCredentials(String newPassword, String token) {
         APICommunicator apiCommunicator = new APICommunicator();
-        Response.Listener responseListener = new Response.Listener<CustomRequest.CustomResponse>() {
-            @Override
-            public void onResponse(CustomRequest.CustomResponse response) {
-                Toast.makeText(getActivity().getApplicationContext(), "Password successfully changed ", Toast.LENGTH_LONG).show();
-                loginSelected();
-            }
+        Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response -> {
+            Toast.makeText(getActivity().getApplicationContext(), "Password successfully changed ", Toast.LENGTH_LONG).show();
+            loginSelected();
         };
-        Response.ErrorListener errorListener = new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                String message;
-                int errorCode = error.networkResponse.statusCode;
-                if (errorCode >= 500  &&  errorCode <= 511)
-                    message = "Server error";
-                else if(errorCode == 400)
-                    message = "Bad request";
-                else if(errorCode == 404)
-                    message = "Wrong token";
-                else
-                    message = "Unexpected error";
-                Toast.makeText(getActivity().getApplicationContext(), message, Toast.LENGTH_LONG).show();
-                tokenEditText.getText().clear();
-            }
+        Response.ErrorListener errorListener = error -> {
+            String message;
+            int errorCode = error.networkResponse.statusCode;
+            if (errorCode >= 500 && errorCode <= 511)
+                message = "Server error";
+            else if (errorCode == 400)
+                message = "Bad request";
+            else if (errorCode == 404)
+                message = "Wrong token";
+            else
+                message = "Unexpected error";
+            Toast.makeText(getActivity().getApplicationContext(), message, Toast.LENGTH_LONG).show();
+            tokenEditText.getText().clear();
         };
 
         apiCommunicator.putRequest(getActivity().getApplicationContext(), URL.concat("/".concat(token)), responseListener, errorListener, newPassword);

@@ -14,9 +14,12 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.android.volley.Response;
-import com.android.volley.VolleyError;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class LoginFragment extends Fragment {
     private static final String URL = "/login";
@@ -40,29 +43,18 @@ public class LoginFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        loginButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                loginButton.setEnabled(false);
-                loginButton.setText(R.string.loading);
+        loginButton.setOnClickListener(view1 -> {
+            loginButton.setEnabled(false);
+            loginButton.setText(R.string.loading);
+            user.setEnabled(false);
+            password.setEnabled(false);
 
-                if (user.getText().toString().length() != 0 && password.getText().toString().length() != 0) {
-                    postCredentials(user.getText().toString(), password.getText().toString());
-                }
+            if (user.getText().toString().length() != 0 && password.getText().toString().length() != 0) {
+                postCredentials(user.getText().toString(), password.getText().toString());
             }
         });
-        view.findViewById(R.id.register_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                registerSelected();
-            }
-        });
-        getView().findViewById(R.id.forgot_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                forgotPasswordSelected();
-            }
-        });
+        view.findViewById(R.id.register_button).setOnClickListener(v -> registerSelected());
+        view.findViewById(R.id.forgot_button).setOnClickListener(v -> forgotPasswordSelected());
         user.addTextChangedListener(new TextWatcher() {
             @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
@@ -94,25 +86,33 @@ public class LoginFragment extends Fragment {
     private void postCredentials(String user, String password) {
 
         APICommunicator apiCommunicator = new APICommunicator();
-        Response.Listener responseListener = new Response.Listener<CustomRequest.CustomResponse>() {
-            @Override
-            public void onResponse(CustomRequest.CustomResponse response) {
-                String token = response.headers.get("Authorization");
-                SharedPreferencesManager.INSTANCE.store(getActivity(),"token",token);
-                startActivity(new Intent(getActivity().getApplicationContext(), InsideActivity.class));
-                getActivity().finish();
+        Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response -> {
+            String token = response.headers.get("Authorization");
+            JSONObject jsonObject = null;
+            String email = null;
+            String name = null;
+            try {
+                jsonObject = new JSONObject(response.response);
+                email = jsonObject.getString("email");
+                name = jsonObject.getString("name");
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
+            SharedPreferencesManager.INSTANCE.store(getActivity(), "token", token);
+            SharedPreferencesManager.INSTANCE.store(getActivity(), "user_email", email);
+            SharedPreferencesManager.INSTANCE.store(getActivity(), "user_name", name);
+            startActivity(new Intent(getActivity().getApplicationContext(), InsideActivity.class));
+            getActivity().finish();
         };
-        Response.ErrorListener errorListener = new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                cleanPassword();
-                loginButton.setEnabled(true);
-                loginButton.setText(R.string.login);
-                Toast.makeText(getActivity().getApplicationContext(), "Email or password incorrect", Toast.LENGTH_LONG).show();
-            }
+        Response.ErrorListener errorListener = error -> {
+            cleanPassword();
+            loginButton.setEnabled(true);
+            this.user.setEnabled(true);
+            this.password.setEnabled(true);
+            loginButton.setText(R.string.login);
+            Toast.makeText(getActivity().getApplicationContext(), "Email or password incorrect", Toast.LENGTH_LONG).show();
         };
-        HashMap<String, String> params = new HashMap<>();
+        Map<String, String> params = new HashMap<>();
         params.put("email", user);
         params.put("password", password);
 
