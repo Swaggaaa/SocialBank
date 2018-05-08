@@ -79,7 +79,7 @@ public class MyProfileFragment extends ProfileFragment {
         Response.ErrorListener errorListener = error -> Toast.makeText(getActivity().getApplicationContext(), "Something went wrong", Toast.LENGTH_LONG).show();
 
 
-        apiCommunicator.putRequest(getActivity().getApplicationContext(), URL + '/' + emailUser + "/update", responseListener, errorListener, params);
+        apiCommunicator.putRequest(getActivity().getApplicationContext(), URL + '/' + emailUser, responseListener, errorListener, params);
     }
 
     private void readGallery() {
