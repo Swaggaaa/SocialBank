@@ -31,7 +31,6 @@ public class EditProfileFragment extends Fragment {
     private Button update;
     private String bornDate;
     private String emailUser;
-    private Boolean thereisPic;
     private String image;
 
     private ProgressDialog loadingDialog;
@@ -88,7 +87,6 @@ public class EditProfileFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        thereisPic = false;
         newBirthdate.setOnClickListener(view1 -> chooseDate());
         update.setOnClickListener(v -> {
             HashMap<String, String> params = new HashMap<>();

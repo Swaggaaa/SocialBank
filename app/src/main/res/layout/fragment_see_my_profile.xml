@@ -16,8 +16,7 @@
             android:id="@+id/myProfileImage"
             android:layout_width="match_parent"
             android:layout_height="200dp"
-            app:srcCompat="@android:drawable/ic_menu_camera"
-            android:contentDescription="TODO" />
+            app:srcCompat="@android:drawable/ic_menu_camera" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -65,13 +64,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/about_me"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/aboutMe"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textMultiLine"
                 android:maxLines="5"
                 android:text="" />
 
@@ -95,7 +93,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/my_events"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
             <FrameLayout
                 android:layout_width="match_parent"
