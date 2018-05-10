@@ -73,7 +73,13 @@ public class EventFragment extends Fragment {
         {
             Bundle b = new Bundle();
             b.putString("email", creator);
-            Fragment profileFragment = new ProfileFragment();
+            Fragment profileFragment = null;
+            if (!creator.equals(SharedPreferencesManager.INSTANCE.read(getActivity(),"user_email"))){
+                 profileFragment = new ProfileFragment();
+            }
+            else {
+                profileFragment = new MyProfileFragment();
+            }
             profileFragment.setArguments(b);
             FragmentChangeListener fc = (FragmentChangeListener) getActivity();
             fc.replaceFragment(profileFragment);
