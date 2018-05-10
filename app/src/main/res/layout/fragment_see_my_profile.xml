@@ -81,7 +81,8 @@
                 android:layout_height="wrap_content"
                 android:text="@string/hours"
                 android:textSize="24sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:visibility="gone"/>
 
             <View
                 android:id="@+id/divider"

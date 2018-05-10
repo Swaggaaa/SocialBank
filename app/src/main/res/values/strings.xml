@@ -68,5 +68,6 @@
     <string name="hours">+- hours</string>
     <string name="about_me">About me</string>
     <string name="user_name">User name</string>
+    <string name="personal_events">\'s events</string>
 
 </resources>

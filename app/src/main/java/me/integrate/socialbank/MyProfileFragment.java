@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Response;
@@ -27,6 +28,7 @@ public class MyProfileFragment extends ProfileFragment {
     private static final String URL = "/users";
     private ImageView changeUserPhoto;
     private FloatingActionButton editProfile;
+    private TextView userBalance;
     private boolean thereisPic;
 
     @Override
@@ -36,6 +38,8 @@ public class MyProfileFragment extends ProfileFragment {
         changeUserPhoto = (ImageView) view.findViewById(R.id.loadPicture);
         editProfile.setVisibility(View.VISIBLE);
         changeUserPhoto.setVisibility(View.VISIBLE);
+        userBalance = (TextView) view.findViewById(R.id.hoursBalance);
+        userBalance.setVisibility(View.VISIBLE);
         return view;
     }
 
