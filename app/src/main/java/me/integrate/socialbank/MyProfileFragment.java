@@ -25,15 +25,13 @@ import static android.content.ContentValues.TAG;
 
 public class MyProfileFragment extends ProfileFragment {
     private static final String URL = "/users";
-    private ImageView changeUserPhoto;
-    private FloatingActionButton editProfile;
     private boolean thereisPic;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
-        editProfile = (FloatingActionButton) view.findViewById(R.id.editProfile);
-        changeUserPhoto = (ImageView) view.findViewById(R.id.loadPicture);
+        FloatingActionButton editProfile = (FloatingActionButton) view.findViewById(R.id.editProfile);
+        ImageView changeUserPhoto = (ImageView) view.findViewById(R.id.loadPicture);
         editProfile.setVisibility(View.VISIBLE);
         changeUserPhoto.setVisibility(View.VISIBLE);
         return view;

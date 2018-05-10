@@ -52,11 +52,9 @@ public class CreateEventFragment extends Fragment {
     private EditText editTextEndHour;
     private EditText description;
     private LinearLayout layoutDate;
-    private TableLayout groupTable;
     private TableRow capacityRow;
     private int eventType;
     private int eventFixed;
-    private int eventGroup;
 
     private boolean thereisPic;
     private String strStartDate;
@@ -117,7 +115,7 @@ public class CreateEventFragment extends Fragment {
 
         layoutDate = (LinearLayout) rootView.findViewById(R.id.layoutDate);
 
-        groupTable = (TableLayout) rootView.findViewById(R.id.groupTable);
+        TableLayout groupTable = (TableLayout) rootView.findViewById(R.id.groupTable);
         capacityRow = (TableRow) rootView.findViewById(R.id.capacityRow);
 
         thereisPic = false;
@@ -136,7 +134,6 @@ public class CreateEventFragment extends Fragment {
         //Group Service disabled by default
         buttonNoGroup.setTextColor(getResources().getColor(R.color.colorPrimary));
         capacityRow.setVisibility(View.GONE);
-        eventGroup = 0;
 
         editTextEndDate.setEnabled(false);
         buttonCreate.setEnabled(false);
@@ -220,7 +217,6 @@ public class CreateEventFragment extends Fragment {
             buttonYesGroup.setTextColor(getResources().getColor(R.color.colorPrimary));
             buttonNoGroup.setTextColor(getResources().getColor(R.color.colorTextButton));
             capacityRow.setVisibility(View.VISIBLE);
-            eventGroup = 1;
             enableButton();
         });
         view.findViewById(R.id.buttonNoGroup).setOnClickListener(view17 ->
@@ -228,7 +224,6 @@ public class CreateEventFragment extends Fragment {
             buttonNoGroup.setTextColor(getResources().getColor(R.color.colorPrimary));
             buttonYesGroup.setTextColor(getResources().getColor(R.color.colorTextButton));
             capacityRow.setVisibility(View.GONE);
-            eventGroup = 0;
             enableButton();
         });
         view.findViewById(R.id.editTextStartDate).setOnClickListener(view18 ->

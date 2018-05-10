@@ -4,13 +4,12 @@ import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.support.annotation.Nullable;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Base64;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,19 +31,19 @@ import java.util.List;
 
 public class ProfileFragment extends Fragment {
     private static final String URL = "/users";
-    protected ImageView userPicture;
+    ImageView userPicture;
     private TextView userName;
     private ImageView changePhoto;
     private TextView userEmailToShow;
     private TextView userBalance;
     private TextView userDescription;
     private TextView myEvents;
-    protected String emailUser;
-    protected String nameUser;
-    protected String lastNameUser;
-    protected String dateUser;
-    protected String genderUser;
-    protected String descriptionUser;
+    String emailUser;
+    String nameUser;
+    String lastNameUser;
+    String dateUser;
+    String genderUser;
+    String descriptionUser;
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
 
@@ -135,7 +134,7 @@ public class ProfileFragment extends Fragment {
     }
 
     //Call to the API
-    public void getAllEvents(HashMap<String, String> params) {
+    private void getAllEvents(HashMap<String, String> params) {
 
         APICommunicator apiCommunicator = new APICommunicator();
         Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response -> {
