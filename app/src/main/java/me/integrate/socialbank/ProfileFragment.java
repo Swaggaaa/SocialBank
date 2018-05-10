@@ -74,7 +74,13 @@ public class ProfileFragment extends Fragment {
 
 
     private void fillFields() {
-        emailUser = SharedPreferencesManager.INSTANCE.read(getActivity(),"user_email");
+        Bundle b = this.getArguments();
+        if(b != null){
+            emailUser = b.getString("email");
+        }
+        else {
+            emailUser = SharedPreferencesManager.INSTANCE.read(getActivity(),"user_email");
+        }
         getUserInfo(emailUser);
     }
 

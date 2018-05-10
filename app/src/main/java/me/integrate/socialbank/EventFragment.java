@@ -3,6 +3,7 @@ package me.integrate.socialbank;
 
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +21,7 @@ public class EventFragment extends Fragment {
     private TextView textLocation;
     private TextView textIndividualOrGroup;
     private TextView textViewNumberPersonsEvent;
+    private String creator;
 
     public static EventFragment newInstance(Bundle params) {
         EventFragment eventFragment = new EventFragment();
@@ -47,7 +49,8 @@ public class EventFragment extends Fragment {
                     imageBytes, 0, imageBytes.length));
         }
         textEventTitle.setText(getArguments().getString("title"));
-        textEventOrganizer.setText(getArguments().getString("creator"));
+        creator = getArguments().getString("creator");
+        textEventOrganizer.setText(creator);
         textEventDescription.setText(getArguments().getString("description"));
         textLocation.setText(getArguments().getString("location"));
         textDemandEvent.setText(getResources().getString(getArguments().getBoolean("isDemand") ? R.string.demand : R.string.offer));
@@ -63,4 +66,17 @@ public class EventFragment extends Fragment {
         return rootView;
     }
 
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        view.findViewById(R.id.textEventOrganizer).setOnClickListener(v ->
+        {
+            Bundle b = new Bundle();
+            b.putString("email", creator);
+            Fragment profileFragment = new ProfileFragment();
+            profileFragment.setArguments(b);
+            FragmentChangeListener fc = (FragmentChangeListener) getActivity();
+            fc.replaceFragment(profileFragment);
+        });
+    }
 }
