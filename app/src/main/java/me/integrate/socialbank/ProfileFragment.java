@@ -33,7 +33,6 @@ public class ProfileFragment extends Fragment {
     private static final String URL = "/users";
     ImageView userPicture;
     private TextView userName;
-    private ImageView changePhoto;
     private TextView userEmailToShow;
     private TextView userBalance;
     private TextView userDescription;
@@ -57,7 +56,6 @@ public class ProfileFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_see_my_profile, container, false);
         userPicture = (ImageView) rootView.findViewById(R.id.myProfileImage);
         userName = (TextView) rootView.findViewById(R.id.myProfileName);
-        changePhoto = (ImageView) rootView.findViewById(R.id.loadPicture);
         userEmailToShow = (TextView) rootView.findViewById(R.id.userEmailToShow);
         userBalance = (TextView) rootView.findViewById(R.id.hoursBalance);
         userDescription = (TextView) rootView.findViewById(R.id.aboutMe);
@@ -75,7 +73,13 @@ public class ProfileFragment extends Fragment {
 
 
     private void fillFields() {
-        emailUser = SharedPreferencesManager.INSTANCE.read(getActivity(),"user_email");
+        Bundle b = this.getArguments();
+        if(b != null){
+            emailUser = b.getString("email");
+        }
+        else {
+            emailUser = SharedPreferencesManager.INSTANCE.read(getActivity(),"user_email");
+        }
         getUserInfo(emailUser);
     }
 
@@ -87,7 +91,8 @@ public class ProfileFragment extends Fragment {
             try{
                 jsonObject = new JSONObject(response.response);
                 nameUser = jsonObject.getString("name");
-                myEvents.setText(nameUser+"'s events");
+                String events = getString(R.string.personal_events);
+                myEvents.setText(nameUser+events);
                 lastNameUser = jsonObject.getString("surname");
                 dateUser = jsonObject.getString("birthdate");
                 genderUser = jsonObject.getString("gender");
