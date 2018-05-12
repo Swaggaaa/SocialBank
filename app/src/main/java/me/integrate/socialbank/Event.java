@@ -20,11 +20,10 @@ public class Event {
     private String title;
     private String description;
     private Bitmap image;
-    private int picture;
     private boolean isDemand;
     private double latitude;
     private double longitude;
-    private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+    private SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
 
 
@@ -56,7 +55,7 @@ public class Event {
         getDates(object);
     }
 
-    public void getDates(JSONObject object) throws JSONException {
+    private void getDates(JSONObject object) throws JSONException {
         String iniDate = object.getString("iniDate");
         if (iniDate.equals("null")) this.iniDate = null;
         else {
