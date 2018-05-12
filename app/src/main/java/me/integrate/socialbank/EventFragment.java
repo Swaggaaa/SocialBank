@@ -11,9 +11,18 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class EventFragment extends Fragment {
 
     private String creator;
+    private Event event;
 
     public static EventFragment newInstance(Bundle params) {
         EventFragment eventFragment = new EventFragment();
@@ -34,7 +43,6 @@ public class EventFragment extends Fragment {
         TextView textLocation = (TextView) rootView.findViewById(R.id.location_event);
         TextView textIndividualOrGroup = (TextView) rootView.findViewById(R.id.individual_or_group);
         TextView textViewNumberPersonsEvent = (TextView) rootView.findViewById(R.id.number_person);
-
         byte[] imageBytes = getArguments().getByteArray("image");
         if (imageBytes != null) {
             imageView.setImageBitmap(BitmapFactory.decodeByteArray(
@@ -46,6 +54,8 @@ public class EventFragment extends Fragment {
         textEventDescription.setText(getArguments().getString("description"));
         textLocation.setText(getArguments().getString("location"));
         textDemandEvent.setText(getResources().getString(getArguments().getBoolean("isDemand") ? R.string.demand : R.string.offer));
+
+        //TODO not harcoded this values
         textIndividualOrGroup.setText("Individual");
         textViewNumberPersonsEvent.setText("1/1");
 
@@ -53,9 +63,25 @@ public class EventFragment extends Fragment {
         startDate.setText(getArguments().getString("startDate"));
         TextView endDate = (TextView) rootView.findViewById(R.id.end_date);
         endDate.setText(getArguments().getString("endDate"));
-
-
         return rootView;
+    }
+
+    private String getHours(Date hourIni, Date hourEnd) {
+        if (hourIni != null && hourEnd != null ) {
+            long diff = hourEnd.getTime() - hourIni.getTime();
+            long seconds = diff/1000;
+            long minutes = seconds/60;
+            long hours = minutes/60;
+            return String.valueOf(hours);
+        } else return getResources().getString(R.string.notHour);
+    }
+
+    private String dateToString(Date date) {
+        if (date == null) return getResources().getString(R.string.notDate);
+        else{
+            DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+            return df.format(date);
+        }
     }
 
     @Override

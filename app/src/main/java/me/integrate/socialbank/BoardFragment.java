@@ -76,8 +76,8 @@ public class BoardFragment extends Fragment {
                     bundle.putByteArray("image", bitmapToByteArray(event.getImage()));
                     bundle.putString("title", event.getTitle());
                     bundle.putString("description", event.getDescription());
-                    bundle.putString("startDate", event.getIniDate().toString());
-                    bundle.putString("endDate", event.getEndDate().toString());
+                    bundle.putString("startDate", dateToString(event.getIniDate()));
+                    bundle.putString("endDate", dateToString(event.getEndDate()));
                     Fragment eventFragment = EventFragment.newInstance(bundle);
                     FragmentChangeListener fc = (FragmentChangeListener) getActivity();
                     fc.replaceFragment(eventFragment);
@@ -115,6 +115,14 @@ public class BoardFragment extends Fragment {
             return byteArrayOutputStream.toByteArray();
         }
         else return null;
+    }
+
+    private String dateToString(Date date) {
+        if (date == null) return getResources().getString(R.string.notDate);
+        else{
+            DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+            return df.format(date);
+        }
     }
 
 }
