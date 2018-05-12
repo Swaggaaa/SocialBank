@@ -30,7 +30,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
         private TextView demand;
         private TextView hours;
 
-            public EventViewHolder(View v) {
+            private EventViewHolder(View v) {
                 super(v);
                 imagen = (ImageView) v.findViewById(R.id.event_photo);
                 title = (TextView) v.findViewById(R.id.title_event);
@@ -74,17 +74,20 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
         viewHolder.finishDate.setText(dateToString(items.get(i).getEndDate()));
         viewHolder.location.setText(items.get(i).getLocation());
         viewHolder.demand.setText(getDemandOrOffer(items.get(i).getDemand()));
-     //   viewHolder.hours.setText(getHours(items.get(i).getIniDate(), items.get(i).getEndDate()));
+        viewHolder.hours.setText(getHours(items.get(i).getIniDate(), items.get(i).getEndDate()));
     }
 
-    /*public String getHours(Date hourIni, Date hourEnd) {
+    private String getHours(Date hourIni, Date hourEnd) {
         if (hourIni != null && hourEnd != null ) {
-           long hour = hourEnd.getTime() - hourIni.getTime();
-           return String.valueOf(hour);
+           long diff = hourEnd.getTime() - hourIni.getTime();
+           long seconds = diff/1000;
+           long minutes = seconds/60;
+           long hours = minutes/60;
+           return String.valueOf(hours);
         } else return context.getResources().getString(R.string.notHour);
-    }*/
+    }
 
-    public String dateToString(Date date) {
+    private String dateToString(Date date) {
         if (date == null) return context.getResources().getString(R.string.notDate);
         else{
             DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
@@ -92,7 +95,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
         }
     }
 
-    public String getDemandOrOffer(boolean isDemand) {
+    private String getDemandOrOffer(boolean isDemand) {
         if(isDemand) return context.getResources().getString(R.string.demand);
         else return context.getResources().getString(R.string.offered);
     }
