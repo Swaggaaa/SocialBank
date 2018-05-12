@@ -63,5 +63,10 @@
     <string name="about_me">About me</string>
     <string name="user_name">User name</string>
     <string name="personal_events">\'s events</string>
+    <string name="unauthorized">Unauthorized</string>
+    <string name="forbidden">Forbidden</string>
+    <string name="unexpectedError">Unexpected error</string>
+    <string name="search_users">Search users</string>
+    <string name="input_name">Input Name Here</string>
 
 </resources>

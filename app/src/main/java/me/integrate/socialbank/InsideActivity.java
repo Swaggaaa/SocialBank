@@ -45,12 +45,10 @@ public class InsideActivity extends AppCompatActivity implements FragmentChangeL
                     int itemId = menuItem.getItemId();
                     switch (itemId){
                         case R.id.dashboard:
-                            Fragment nextFragment3 = new BoardFragment();
-                            replaceFragment(nextFragment3);
+                            replaceFragment(new BoardFragment());
                             break;
                         case R.id.myProfile:
-                            Fragment nextFragment = new MyProfileFragment();  //we must put our fragment instead
-                            replaceFragment(nextFragment);
+                            replaceFragment(new MyProfileFragment());
                             break;
                         case R.id.nearbyEvents:
                             replaceFragment(new NearbyEventsFragment());
@@ -59,8 +57,10 @@ public class InsideActivity extends AppCompatActivity implements FragmentChangeL
                             logout();
                             break;
                         case R.id.newEvent:
-                            Fragment nextFragment2 = new CreateEventFragment();  //we must put our fragment instead
-                            replaceFragment(nextFragment2);
+                            replaceFragment(new CreateEventFragment());
+                            break;
+                        case R.id.searchUsers:
+                            replaceFragment(new UserSearchFragment());
                             break;
                     }
 
