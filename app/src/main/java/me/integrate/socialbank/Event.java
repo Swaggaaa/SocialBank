@@ -26,7 +26,6 @@ public class Event {
     private double latitude;
     private double longitude;
     private Category category;
-    //private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ssZ");
 
     public Event(JSONObject object) throws JSONException {
         this.id = object.getInt("id");
