@@ -8,6 +8,7 @@ import android.util.Base64;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -25,7 +26,7 @@ public class Event {
     private double latitude;
     private double longitude;
     private Category category;
-    private SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+    //private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ssZ");
 
     public Event(JSONObject object) throws JSONException {
         this.id = object.getInt("id");
@@ -62,10 +63,11 @@ public class Event {
 
     private void getDates(JSONObject object) throws JSONException {
         String iniDate = object.getString("iniDate");
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss.SSS");
         if (iniDate.equals("null")) this.iniDate = null;
         else {
             try {
-                this.iniDate = sdf.parse(iniDate);
+                this.iniDate = df.parse(iniDate);
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -74,7 +76,7 @@ public class Event {
         if (endDate.equals("null")) this.endDate = null;
         else {
             try {
-                this.endDate = sdf.parse(endDate);
+                this.endDate = df.parse(endDate);
             } catch (ParseException e) {
                 e.printStackTrace();
             }
