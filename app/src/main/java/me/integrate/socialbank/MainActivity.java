@@ -15,7 +15,7 @@ import android.support.v7.widget.Toolbar;
 
 public class MainActivity extends AppCompatActivity implements FragmentChangeListener {
 
-    public static final int REQUEST_PERMISSIONS = 1;
+    private static final int REQUEST_PERMISSIONS = 1;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

@@ -1,10 +1,10 @@
 package me.integrate.socialbank;
 
 
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.EventLog;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,14 +13,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Response;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class EventFragment extends Fragment {
@@ -30,13 +28,17 @@ public class EventFragment extends Fragment {
     private ImageView imageView;
     private TextView textEventTitle;
     private TextView textEventOrganizer;
+    private TextView textEventCategory;
     private TextView textEventDescription;
     private TextView textDemandEvent;
     private TextView textLocation;
     private TextView textIndividualOrGroup;
     private TextView textViewNumberPersonsEvent;
+    private TextView textEventHours;
     private TextView textStartDate;
     private TextView textEndDate;
+
+    private String creator;
 
     public static EventFragment newInstance(Bundle params) {
         EventFragment eventFragment = new EventFragment();
@@ -52,22 +54,19 @@ public class EventFragment extends Fragment {
         imageView = (ImageView) rootView.findViewById(R.id.imageViewEvent);
         textEventTitle = (TextView) rootView.findViewById(R.id.textEventTitle);
         textEventOrganizer = (TextView) rootView.findViewById(R.id.textEventOrganizer);
+        textEventCategory = (TextView) rootView.findViewById(R.id.textEventCategory);
         textEventDescription = (TextView) rootView.findViewById(R.id.textEventDescription);
         textDemandEvent = (TextView) rootView.findViewById(R.id.demand_event);
         textLocation = (TextView) rootView.findViewById(R.id.location_event);
         textIndividualOrGroup = (TextView) rootView.findViewById(R.id.individual_or_group);
         textViewNumberPersonsEvent = (TextView) rootView.findViewById(R.id.number_person);
+        textEventHours = (TextView) rootView.findViewById(R.id.hours);
         textStartDate = (TextView) rootView.findViewById(R.id.start_date);
         textEndDate = (TextView) rootView.findViewById(R.id.end_date);
 
-        byte[] imageBytes = getArguments().getByteArray("image");
-        if (imageBytes != null) {
-            imageView.setImageBitmap(BitmapFactory.decodeByteArray(
-                    imageBytes, 0, imageBytes.length));
-        }
+
 
         showEventInformation(getArguments().getInt("id"));
-
         return rootView;
     }
 
@@ -77,17 +76,23 @@ public class EventFragment extends Fragment {
             try {
                 Event event = new Event(new JSONObject(response.response));
                 textEventTitle.setText(event.getTitle());
-                textEventOrganizer.setText(event.getCreatorEmail());
+                creator = event.getCreatorEmail();
+                textEventOrganizer.setText(creator);
+                textEventCategory.setText(event.getCategory().toString());
                 textEventDescription.setText(event.getDescription());
                 textLocation.setText(event.getLocation());
                 textDemandEvent.setText(event.getDemand() ? R.string.demand : R.string.offer);
+                imageView.setImageBitmap(event.getImage());
+
+                //TODO not harcoded this values
                 textIndividualOrGroup.setText("Individual");
                 textViewNumberPersonsEvent.setText("1/1");
 
-                String iniDate = ((event.getIniDate() == null) ? "There is no date yet" : event.getIniDate().toString());
-                textStartDate.setText(iniDate);
-                String endDate = ((event.getIniDate() == null) ? "There is no date yet" : event.getEndDate().toString());
-                textEndDate.setText(endDate);
+                Date iniDate = event.getIniDate();
+                Date endDate = event.getEndDate();
+                textEventHours.setText(getHours(iniDate, endDate));
+                textStartDate.setText(dateToString(iniDate));
+                textEndDate.setText(dateToString(endDate));
 
             } catch (JSONException e) {
                 Toast.makeText(EventFragment.this.getActivity().getApplicationContext(), R.string.JSONException, Toast.LENGTH_LONG).show();
@@ -112,4 +117,41 @@ public class EventFragment extends Fragment {
 
     }
 
+    private String getHours(Date hourIni, Date hourEnd) {
+        if (hourIni != null && hourEnd != null ) {
+            long diff = hourEnd.getTime() - hourIni.getTime();
+            long seconds = diff/1000;
+            long minutes = seconds/60;
+            long hours = minutes/60;
+            return String.valueOf(hours);
+        } else return getResources().getString(R.string.notHour);
+    }
+
+    private String dateToString(Date date) {
+        if (date == null) return getResources().getString(R.string.notDate);
+        else{
+            DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+            return df.format(date);
+        }
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        view.findViewById(R.id.textEventOrganizer).setOnClickListener(v ->
+        {
+            Bundle b = new Bundle();
+            b.putString("email", creator);
+            Fragment profileFragment;
+            if (!creator.equals(SharedPreferencesManager.INSTANCE.read(getActivity(),"user_email"))){
+                 profileFragment = new ProfileFragment();
+            }
+            else {
+                profileFragment = new MyProfileFragment();
+            }
+            profileFragment.setArguments(b);
+            FragmentChangeListener fc = (FragmentChangeListener) getActivity();
+            fc.replaceFragment(profileFragment);
+        });
+    }
 }

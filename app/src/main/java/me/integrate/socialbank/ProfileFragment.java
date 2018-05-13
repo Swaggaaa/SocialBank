@@ -4,13 +4,12 @@ import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.support.annotation.Nullable;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Base64;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,19 +31,18 @@ import java.util.List;
 
 public class ProfileFragment extends Fragment {
     private static final String URL = "/users";
-    protected ImageView userPicture;
+    ImageView userPicture;
     private TextView userName;
-    private ImageView changePhoto;
     private TextView userEmailToShow;
     private TextView userBalance;
     private TextView userDescription;
     private TextView myEvents;
-    protected String emailUser;
-    protected String nameUser;
-    protected String lastNameUser;
-    protected String dateUser;
-    protected String genderUser;
-    protected String descriptionUser;
+    String emailUser;
+    String nameUser;
+    String lastNameUser;
+    String dateUser;
+    String genderUser;
+    String descriptionUser;
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
 
@@ -58,7 +56,6 @@ public class ProfileFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_see_my_profile, container, false);
         userPicture = (ImageView) rootView.findViewById(R.id.myProfileImage);
         userName = (TextView) rootView.findViewById(R.id.myProfileName);
-        changePhoto = (ImageView) rootView.findViewById(R.id.loadPicture);
         userEmailToShow = (TextView) rootView.findViewById(R.id.userEmailToShow);
         userBalance = (TextView) rootView.findViewById(R.id.hoursBalance);
         userDescription = (TextView) rootView.findViewById(R.id.aboutMe);
@@ -76,7 +73,13 @@ public class ProfileFragment extends Fragment {
 
 
     private void fillFields() {
-        emailUser = SharedPreferencesManager.INSTANCE.read(getActivity(),"user_email");
+        Bundle b = this.getArguments();
+        if(b != null){
+            emailUser = b.getString("email");
+        }
+        else {
+            emailUser = SharedPreferencesManager.INSTANCE.read(getActivity(),"user_email");
+        }
         getUserInfo(emailUser);
     }
 
@@ -88,7 +91,8 @@ public class ProfileFragment extends Fragment {
             try{
                 jsonObject = new JSONObject(response.response);
                 nameUser = jsonObject.getString("name");
-                myEvents.setText(nameUser+"'s events");
+                String events = getString(R.string.personal_events);
+                myEvents.setText(nameUser+events);
                 lastNameUser = jsonObject.getString("surname");
                 dateUser = jsonObject.getString("birthdate");
                 genderUser = jsonObject.getString("gender");
@@ -135,7 +139,7 @@ public class ProfileFragment extends Fragment {
     }
 
     //Call to the API
-    public void getAllEvents(HashMap<String, String> params) {
+    private void getAllEvents(HashMap<String, String> params) {
 
         APICommunicator apiCommunicator = new APICommunicator();
         Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response -> {
