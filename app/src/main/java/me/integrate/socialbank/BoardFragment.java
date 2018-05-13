@@ -65,16 +65,7 @@ public class BoardFragment extends Fragment {
                 mAdapter = new EventAdapter(items, getActivity(), (v1, position) -> {
                     Bundle bundle = new Bundle();
                     Event event = items.get(position);
-
                     bundle.putInt("id", event.getId());
-                    bundle.putBoolean("isDemand", event.getDemand());
-                    bundle.putString("creator", event.getCreatorEmail());
-                    bundle.putString("location", event.getLocation());
-                    bundle.putByteArray("image", bitmapToByteArray(event.getImage()));
-                    bundle.putString("title", event.getTitle());
-                    bundle.putString("description", event.getDescription());
-                    bundle.putString("startDate", event.getIniDate().toString());
-                    bundle.putString("endDate", event.getEndDate().toString());
                     Fragment eventFragment = EventFragment.newInstance(bundle);
                     FragmentChangeListener fc = (FragmentChangeListener) getActivity();
                     fc.replaceFragment(eventFragment);

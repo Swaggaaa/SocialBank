@@ -86,9 +86,6 @@ public class NearbyEventsFragment extends Fragment {
                     Event event = eventsMap.get(marker);
                     Bundle bundle = new Bundle();
                     bundle.putInt("id", event.getId());
-                    bundle.putByteArray("image", bitmapToByteArray(event.getImage()));
-                    bundle.putString("title", event.getTitle());
-                    bundle.putString("description", event.getDescription());
                     Fragment eventFragment = EventFragment.newInstance(bundle);
                     FragmentChangeListener fc = (FragmentChangeListener) getActivity();
                     fc.replaceFragment(eventFragment);
