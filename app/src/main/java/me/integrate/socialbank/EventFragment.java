@@ -90,7 +90,8 @@ public class EventFragment extends Fragment {
 
                 Date iniDate = event.getIniDate();
                 Date endDate = event.getEndDate();
-                textEventHours.setText(getHours(iniDate, endDate));
+                String hours = getHours(iniDate, endDate) + " " + getResources().getString(R.string.time_hours);
+                textEventHours.setText(hours);
                 textStartDate.setText(dateToString(iniDate));
                 textEndDate.setText(dateToString(endDate));
 
