@@ -90,7 +90,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
     private String dateToString(Date date) {
         if (date == null) return context.getResources().getString(R.string.notDate);
         else{
-            DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+            DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm");
             return df.format(date);
         }
     }

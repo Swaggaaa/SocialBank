@@ -130,7 +130,7 @@ public class EventFragment extends Fragment {
     private String dateToString(Date date) {
         if (date == null) return getResources().getString(R.string.notDate);
         else{
-            DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+            DateFormat df = new SimpleDateFormat("dd/MM/yyyy        HH:mm");
             return df.format(date);
         }
     }
