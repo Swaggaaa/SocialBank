@@ -11,11 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -38,6 +34,7 @@ public class EventFragment extends Fragment {
         ImageView imageView = (ImageView) rootView.findViewById(R.id.imageViewEvent);
         TextView textEventTitle = (TextView) rootView.findViewById(R.id.textEventTitle);
         TextView textEventOrganizer = (TextView) rootView.findViewById(R.id.textEventOrganizer);
+        TextView textEventCategory = (TextView) rootView.findViewById(R.id.textEventCategory);
         TextView textEventDescription = (TextView) rootView.findViewById(R.id.textEventDescription);
         TextView textDemandEvent = (TextView) rootView.findViewById(R.id.demand_event);
         TextView textLocation = (TextView) rootView.findViewById(R.id.location_event);
@@ -51,6 +48,7 @@ public class EventFragment extends Fragment {
         textEventTitle.setText(getArguments().getString("title"));
         creator = getArguments().getString("creator");
         textEventOrganizer.setText(creator);
+        textEventCategory.setText(getArguments().getString("category"));
         textEventDescription.setText(getArguments().getString("description"));
         textLocation.setText(getArguments().getString("location"));
         textDemandEvent.setText(getResources().getString(getArguments().getBoolean("isDemand") ? R.string.demand : R.string.offer));

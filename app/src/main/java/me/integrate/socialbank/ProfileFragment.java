@@ -165,6 +165,7 @@ public class ProfileFragment extends Fragment {
                     bundle.putByteArray("image", bitmapToByteArray(event.getImage()));
                     bundle.putString("title", event.getTitle());
                     bundle.putString("description", event.getDescription());
+                    bundle.putString("category", event.getCategory().toString());
                     Fragment eventFragment = EventFragment.newInstance(bundle);
                     FragmentChangeListener fc = (FragmentChangeListener) getActivity();
                     fc.replaceFragment(eventFragment);

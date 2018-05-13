@@ -2,6 +2,7 @@ package me.integrate.socialbank;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.support.annotation.StringRes;
 import android.util.Base64;
 
 import org.json.JSONException;
@@ -23,9 +24,22 @@ public class Event {
     private boolean isDemand;
     private double latitude;
     private double longitude;
+    private Category category;
     private SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
-
+    public Event(JSONObject object) throws JSONException {
+        this.id = object.getInt("id");
+        this.creatorEmail = object.getString("creatorEmail");
+        this.location = object.getString("location");
+        this.title = object.getString("title");
+        this.description = object.getString("description");
+        this.image = getImageFromString(object.getString("image"));
+        this.isDemand = object.getBoolean("demand");
+        this.latitude = object.getDouble("latitude");
+        this.longitude = object.getDouble("longitude");
+        this.category = Category.valueOf(object.getString("category"));
+        getDates(object);
+    }
 
 
     public Event(String creatorEmail, boolean demand, String description, Date finishDate, int id, Bitmap decodedByte, Date initDate, double latitude, String location, double longitude, String title) {
@@ -42,17 +56,8 @@ public class Event {
         this.creatorEmail = creatorEmail;
     }
 
-    public Event(JSONObject object) throws JSONException {
-        this.id = object.getInt("id");
-        this.creatorEmail = object.getString("creatorEmail");
-        this.location = object.getString("location");
-        this.title = object.getString("title");
-        this.description = object.getString("description");
-        this.image = getImageFromString(object.getString("image"));
-        this.isDemand = object.getBoolean("demand");
-        this.latitude = object.getDouble("latitude");
-        this.longitude = object.getDouble("longitude");
-        getDates(object);
+    public Category getCategory() {
+        return category;
     }
 
     private void getDates(JSONObject object) throws JSONException {
@@ -163,6 +168,32 @@ public class Event {
 
     public void setLongitude(Double longitude) {
         this.longitude = longitude;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+
+    enum Category {
+        LANGUAGE(R.string.category_language),
+        CULTURE(R.string.category_culture),
+        WORKSHOPS(R.string.category_workshops),
+        SPORTS(R.string.category_sports),
+        GASTRONOMY(R.string.category_gastronomy),
+        LEISURE(R.string.category_leisure),
+        OTHER(R.string.category_other);
+
+        private @StringRes
+        int label;
+
+        Category(@StringRes int label) {
+            this.label = label;
+        }
+
+        @Override
+        public String toString() {
+            return App.getContext().getResources().getString(label);
+        }
     }
 
     private Bitmap getImageFromString(String image) {

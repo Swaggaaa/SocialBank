@@ -78,6 +78,7 @@ public class BoardFragment extends Fragment {
                     bundle.putString("description", event.getDescription());
                     bundle.putString("startDate", dateToString(event.getIniDate()));
                     bundle.putString("endDate", dateToString(event.getEndDate()));
+                    bundle.putString("category", event.getCategory().toString());
                     Fragment eventFragment = EventFragment.newInstance(bundle);
                     FragmentChangeListener fc = (FragmentChangeListener) getActivity();
                     fc.replaceFragment(eventFragment);

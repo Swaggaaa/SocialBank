@@ -1,5 +1,6 @@
 package me.integrate.socialbank;
 
+import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.location.Location;
 import android.location.LocationManager;
@@ -20,7 +21,6 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
-import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -48,6 +48,7 @@ public class NearbyEventsFragment extends Fragment {
     private Map<Marker, Event> eventsMap;
 
 
+    @SuppressLint("MissingPermission")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_nearby_events, container, false);
@@ -69,48 +70,46 @@ public class NearbyEventsFragment extends Fragment {
         }
 
 
-        mMapView.getMapAsync(new OnMapReadyCallback() {
-            @Override
-            public void onMapReady(GoogleMap mMap) {
-                googleMap = mMap;
+        mMapView.getMapAsync(mMap -> {
+            googleMap = mMap;
 
-                // For showing a move to my location button
-                googleMap.setMyLocationEnabled(true);
-                googleMap.setOnInfoWindowClickListener(marker -> {
-                    Event event = eventsMap.get(marker);
-                    Bundle bundle = new Bundle();
-                    bundle.putInt("id", event.getId());
-                    bundle.putByteArray("image", bitmapToByteArray(event.getImage()));
-                    bundle.putString("title", event.getTitle());
-                    bundle.putString("description", event.getDescription());
-                    Fragment eventFragment = EventFragment.newInstance(bundle);
-                    FragmentChangeListener fc = (FragmentChangeListener) getActivity();
-                    fc.replaceFragment(eventFragment);
+            // For showing a move to my location button
+            googleMap.setMyLocationEnabled(true);
+            googleMap.setOnInfoWindowClickListener(marker -> {
+                Event event = eventsMap.get(marker);
+                Bundle bundle = new Bundle();
+                bundle.putInt("id", event.getId());
+                bundle.putByteArray("image", bitmapToByteArray(event.getImage()));
+                bundle.putString("title", event.getTitle());
+                bundle.putString("description", event.getDescription());
+                bundle.putString("category", event.getCategory().toString());
+                Fragment eventFragment = EventFragment.newInstance(bundle);
+                FragmentChangeListener fc = (FragmentChangeListener) getActivity();
+                fc.replaceFragment(eventFragment);
 
-                });
+            });
 
-                LocationManager mLocationManager = (LocationManager) getActivity().getApplicationContext().getSystemService(LOCATION_SERVICE);
-                List<String> providers = mLocationManager.getProviders(true);
-                Location bestLocation = null;
-                for (String provider : providers) {
-                    Location l = mLocationManager.getLastKnownLocation(provider);
-                    if (l == null) {
-                        continue;
-                    }
-                    if (bestLocation == null || l.getAccuracy() < bestLocation.getAccuracy()) {
-                        // Found best last known location: %s", l);
-                        bestLocation = l;
-                    }
+            LocationManager mLocationManager = (LocationManager) getActivity().getApplicationContext().getSystemService(LOCATION_SERVICE);
+            List<String> providers = mLocationManager.getProviders(true);
+            Location bestLocation = null;
+            for (String provider : providers) {
+                Location l = mLocationManager.getLastKnownLocation(provider);
+                if (l == null) {
+                    continue;
                 }
-
-                double latitude = bestLocation.getLatitude();
-                double longitude = bestLocation.getLongitude();
-
-                showNearbyEvents();
-                myPosition = new LatLng(latitude, longitude);
-                CameraPosition cameraPosition = new CameraPosition.Builder().target(myPosition).zoom(12).build();
-                googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                if (bestLocation == null || l.getAccuracy() < bestLocation.getAccuracy()) {
+                    // Found best last known location: %s", l);
+                    bestLocation = l;
+                }
             }
+
+            double latitude = bestLocation.getLatitude();
+            double longitude = bestLocation.getLongitude();
+
+            showNearbyEvents();
+            myPosition = new LatLng(latitude, longitude);
+            CameraPosition cameraPosition = new CameraPosition.Builder().target(myPosition).zoom(12).build();
+            googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
         });
 
         return rootView;
@@ -118,21 +117,17 @@ public class NearbyEventsFragment extends Fragment {
 
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        searchButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                searchButton.setEnabled(false);
+        searchButton.setOnClickListener(view1 -> {
+            searchButton.setEnabled(false);
 
-                if (address.getText().toString().length() != 0) {
-                    EventLocation eventLocation = new EventLocation (address.getText().toString());
-                    if (eventLocation.getAddress() == null){
-                        Toast.makeText(getActivity().getApplicationContext(), R.string.AddressNotFound, Toast.LENGTH_LONG).show();
-                    }
-                    else {
-                        myPosition = new LatLng(eventLocation.getLatitude(), eventLocation.getLongitude());
-                        CameraPosition cameraPosition = new CameraPosition.Builder().target(myPosition).zoom(12).build();
-                        googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-                    }
+            if (address.getText().toString().length() != 0) {
+                EventLocation eventLocation = new EventLocation(address.getText().toString());
+                if (eventLocation.getAddress() == null) {
+                    Toast.makeText(getActivity().getApplicationContext(), R.string.AddressNotFound, Toast.LENGTH_LONG).show();
+                } else {
+                    myPosition = new LatLng(eventLocation.getLatitude(), eventLocation.getLongitude());
+                    CameraPosition cameraPosition = new CameraPosition.Builder().target(myPosition).zoom(12).build();
+                    googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
                 }
             }
         });

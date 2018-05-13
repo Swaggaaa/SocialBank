@@ -63,5 +63,12 @@
     <string name="about_me">About me</string>
     <string name="user_name">User name</string>
     <string name="personal_events">\'s events</string>
+    <string name="category_language">Language</string>
+    <string name="category_culture">Culture</string>
+    <string name="category_workshops">Workshops</string>
+    <string name="category_sports">Sports</string>
+    <string name="category_gastronomy">Gastronomy</string>
+    <string name="category_leisure">Leisure</string>
+    <string name="category_other">Other</string>
 
 </resources>
