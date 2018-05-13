@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -38,6 +39,7 @@ public class EventFragment extends Fragment {
     private TextView textStartDate;
     private TextView textEndDate;
 
+    private Button delete;
     private String creator;
 
     public static EventFragment newInstance(Bundle params) {
@@ -64,10 +66,21 @@ public class EventFragment extends Fragment {
         textStartDate = (TextView) rootView.findViewById(R.id.start_date);
         textEndDate = (TextView) rootView.findViewById(R.id.end_date);
 
+        delete = (Button) rootView.findViewById(R.id.delete_event);
 
 
+
+        enablebutton(getArguments().getString("creator"));
         showEventInformation(getArguments().getInt("id"));
         return rootView;
+    }
+
+    private void enablebutton (String creator) {
+        if (creator.equals(SharedPreferencesManager.INSTANCE.read(getActivity(),"user_email"))) {
+            delete.setVisibility(View.VISIBLE);
+            delete.setOnClickListener(v->{
+                Toast.makeText(getActivity().getApplicationContext(), "Pressed deleted button", Toast.LENGTH_LONG).show();            });
+        }
     }
 
     void showEventInformation(int id) {
@@ -138,6 +151,8 @@ public class EventFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        delete.setVisibility(View.INVISIBLE);
+
         view.findViewById(R.id.textEventOrganizer).setOnClickListener(v ->
         {
             Bundle b = new Bundle();
