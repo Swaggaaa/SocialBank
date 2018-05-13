@@ -1,7 +1,6 @@
 package me.integrate.socialbank;
 
 import android.annotation.SuppressLint;
-import android.graphics.Bitmap;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -29,7 +28,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import org.json.JSONArray;
 import org.json.JSONException;
 
-import java.io.ByteArrayOutputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -69,35 +67,31 @@ public class NearbyEventsFragment extends Fragment {
             Toast.makeText(getActivity().getApplicationContext(), R.string.UnexpectedError, Toast.LENGTH_LONG).show();
         }
 
-        mMapView.getMapAsync(new OnMapReadyCallback() {
-            @Override
-            public void onMapReady(GoogleMap mMap) {
-                googleMap = mMap;
+        mMapView.getMapAsync(mMap -> {
+            googleMap = mMap;
 
-                // For showing a move to my location button
-                googleMap.setMyLocationEnabled(true);
-                googleMap.setOnInfoWindowClickListener(marker -> {
-                    Event event = eventsMap.get(marker);
-                    Bundle bundle = new Bundle();
-                    bundle.putInt("id", event.getId());
-                    Fragment eventFragment = EventFragment.newInstance(bundle);
-                    FragmentChangeListener fc = (FragmentChangeListener) getActivity();
-                    fc.replaceFragment(eventFragment);
+            googleMap.setMyLocationEnabled(true);
+            googleMap.setOnInfoWindowClickListener(marker -> {
+                Event event = eventsMap.get(marker);
+                Bundle bundle = new Bundle();
+                bundle.putInt("id", event.getId());
+                Fragment eventFragment = EventFragment.newInstance(bundle);
+                FragmentChangeListener fc = (FragmentChangeListener) getActivity();
+                fc.replaceFragment(eventFragment);
 
-                });
+            });
 
-                LocationManager mLocationManager = (LocationManager) getActivity().getApplicationContext().getSystemService(LOCATION_SERVICE);
-                List<String> providers = mLocationManager.getProviders(true);
-                Location bestLocation = null;
-                for (String provider : providers) {
-                    Location l = mLocationManager.getLastKnownLocation(provider);
-                    if (l == null) {
-                        continue;
-                    }
-                    if (bestLocation == null || l.getAccuracy() < bestLocation.getAccuracy()) {
-                        // Found best last known location: %s", l);
-                        bestLocation = l;
-                    }
+            LocationManager mLocationManager = (LocationManager) getActivity().getApplicationContext().getSystemService(LOCATION_SERVICE);
+            List<String> providers = mLocationManager.getProviders(true);
+            Location bestLocation = null;
+            for (String provider : providers) {
+                Location l = mLocationManager.getLastKnownLocation(provider);
+                if (l == null) {
+                    continue;
+                }
+                if (bestLocation == null || l.getAccuracy() < bestLocation.getAccuracy()) {
+                    // Found best last known location: %s", l);
+                    bestLocation = l;
                 }
             }
 
@@ -142,7 +136,7 @@ public class NearbyEventsFragment extends Fragment {
     private void showNearbyEvents() {
         APICommunicator apiCommunicator = new APICommunicator();
         Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response -> {
-            JSONArray jsonArray = null;
+            JSONArray jsonArray;
             try {
                 jsonArray = new JSONArray(response.response);
                 for (int i = 0; i < jsonArray.length(); i++) {
@@ -172,12 +166,6 @@ public class NearbyEventsFragment extends Fragment {
 
         apiCommunicator.getRequest(getActivity().getApplicationContext(), URL, responseListener, errorListener, null);
 
-    }
-
-    private byte[] bitmapToByteArray(Bitmap bitmap) {
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
-        return byteArrayOutputStream.toByteArray();
     }
 
 

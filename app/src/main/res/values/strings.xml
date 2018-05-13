@@ -20,6 +20,8 @@
     <string name="loading">Loading</string>
     <string name="update_password">Update your password\n Enter the token and update your password</string>
     <string name="i_have_token">I have a token</string>
+    <string name="welcome">Welcome</string>
+    <string name="new_event">New event</string>
     <string name="create_event">CREATE</string>
     <string name="event_type">Event type</string>
     <string name="ask">ASK</string>
@@ -34,7 +36,10 @@
     <string name="capacity">Capacity</string>
     <string name="stick">|</string>
     <string name="_0">0</string>
+    <string name="event_image">Event image</string>
     <string name="logout">Logout</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="my_profile">My Profile</string>
     <string name="settings">Settings</string>
@@ -42,6 +47,7 @@
     <string name="my_events">My events</string>
     <string name="loadingMessage">Loading. Please wait…</string>
     <string name="location">Location</string>
+    <string name="errorEventInfo">Error getting event info</string>
     <string name="endDateBigger">End date must be greater than Start date</string>
     <string name="Unauthorized">Unauthorized</string>
     <string name="Forbidden">Forbidden</string>
