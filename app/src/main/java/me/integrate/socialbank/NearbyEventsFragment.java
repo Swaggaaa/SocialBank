@@ -69,37 +69,35 @@ public class NearbyEventsFragment extends Fragment {
             Toast.makeText(getActivity().getApplicationContext(), R.string.UnexpectedError, Toast.LENGTH_LONG).show();
         }
 
+        mMapView.getMapAsync(new OnMapReadyCallback() {
+            @Override
+            public void onMapReady(GoogleMap mMap) {
+                googleMap = mMap;
 
-        mMapView.getMapAsync(mMap -> {
-            googleMap = mMap;
+                // For showing a move to my location button
+                googleMap.setMyLocationEnabled(true);
+                googleMap.setOnInfoWindowClickListener(marker -> {
+                    Event event = eventsMap.get(marker);
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("id", event.getId());
+                    Fragment eventFragment = EventFragment.newInstance(bundle);
+                    FragmentChangeListener fc = (FragmentChangeListener) getActivity();
+                    fc.replaceFragment(eventFragment);
 
-            // For showing a move to my location button
-            googleMap.setMyLocationEnabled(true);
-            googleMap.setOnInfoWindowClickListener(marker -> {
-                Event event = eventsMap.get(marker);
-                Bundle bundle = new Bundle();
-                bundle.putInt("id", event.getId());
-                bundle.putByteArray("image", bitmapToByteArray(event.getImage()));
-                bundle.putString("title", event.getTitle());
-                bundle.putString("description", event.getDescription());
-                bundle.putString("category", event.getCategory().toString());
-                Fragment eventFragment = EventFragment.newInstance(bundle);
-                FragmentChangeListener fc = (FragmentChangeListener) getActivity();
-                fc.replaceFragment(eventFragment);
+                });
 
-            });
-
-            LocationManager mLocationManager = (LocationManager) getActivity().getApplicationContext().getSystemService(LOCATION_SERVICE);
-            List<String> providers = mLocationManager.getProviders(true);
-            Location bestLocation = null;
-            for (String provider : providers) {
-                Location l = mLocationManager.getLastKnownLocation(provider);
-                if (l == null) {
-                    continue;
-                }
-                if (bestLocation == null || l.getAccuracy() < bestLocation.getAccuracy()) {
-                    // Found best last known location: %s", l);
-                    bestLocation = l;
+                LocationManager mLocationManager = (LocationManager) getActivity().getApplicationContext().getSystemService(LOCATION_SERVICE);
+                List<String> providers = mLocationManager.getProviders(true);
+                Location bestLocation = null;
+                for (String provider : providers) {
+                    Location l = mLocationManager.getLastKnownLocation(provider);
+                    if (l == null) {
+                        continue;
+                    }
+                    if (bestLocation == null || l.getAccuracy() < bestLocation.getAccuracy()) {
+                        // Found best last known location: %s", l);
+                        bestLocation = l;
+                    }
                 }
             }
 
