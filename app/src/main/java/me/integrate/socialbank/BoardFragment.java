@@ -69,7 +69,6 @@ public class BoardFragment extends Fragment {
                     Bundle bundle = new Bundle();
                     Event event = items.get(position);
                     bundle.putInt("id", event.getId());
-                    bundle.putString ("creator", event.getCreatorEmail());
                     Fragment eventFragment = EventFragment.newInstance(bundle);
                     FragmentChangeListener fc = (FragmentChangeListener) getActivity();
                     fc.replaceFragment(eventFragment);
