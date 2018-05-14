@@ -159,6 +159,7 @@ public class ProfileFragment extends Fragment {
                     Event event = items.get(position);
 
                     bundle.putInt("id", event.getId());
+                    bundle.putInt("fragment" , 1);
 
                     Fragment eventFragment = EventFragment.newInstance(bundle);
                     FragmentChangeListener fc = (FragmentChangeListener) getActivity();

@@ -81,7 +81,8 @@ public class EventFragment extends Fragment {
             delete.setOnClickListener(v->{
                 //TODO Call to the api
                 //deleteEvent();
-                boardSelected();
+                if (getArguments().getInt("fragment") == 1) profileSelected();
+                else boardSelected();
                 //TODO move to deleteEvent()
                 Toast.makeText(getActivity().getApplicationContext(), "Pressed deleted button", Toast.LENGTH_LONG).show();            });
         }
@@ -91,7 +92,8 @@ public class EventFragment extends Fragment {
     void deleteEvent() {
         APICommunicator apiCommunicator = new APICommunicator();
         Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response -> {
-            boardSelected();
+            if (getArguments().getInt("fragment") == 1) profileSelected();
+            else boardSelected();
         };
         Response.ErrorListener errorListener = error -> {
             String message;
@@ -186,6 +188,12 @@ public class EventFragment extends Fragment {
         Fragment boardFragment = new BoardFragment();
         FragmentChangeListener fc = (FragmentChangeListener) getActivity();
         fc.replaceFragment(boardFragment);
+    }
+
+    private void profileSelected() {
+        Fragment profileFragment = new ProfileFragment();
+        FragmentChangeListener fc = (FragmentChangeListener) getActivity();
+        fc.replaceFragment(profileFragment);
     }
 
     @Override
