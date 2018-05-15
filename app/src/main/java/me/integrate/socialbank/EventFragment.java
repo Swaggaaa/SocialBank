@@ -39,9 +39,8 @@ public class EventFragment extends Fragment {
     private TextView textStartDate;
     private TextView textEndDate;
 
-    private Button delete;
     private String creator;
-    private int id;
+    protected int id;
 
     public static EventFragment newInstance(Bundle params) {
         EventFragment eventFragment = new EventFragment();
@@ -67,7 +66,6 @@ public class EventFragment extends Fragment {
         textStartDate = (TextView) rootView.findViewById(R.id.start_date);
         textEndDate = (TextView) rootView.findViewById(R.id.end_date);
 
-        delete = (Button) rootView.findViewById(R.id.delete_event);
 
 
         id = getArguments().getInt("id");
@@ -75,46 +73,7 @@ public class EventFragment extends Fragment {
         return rootView;
     }
 
-    private void enableButton () {
-        if (creator.equals(SharedPreferencesManager.INSTANCE.read(getActivity(),"user_email"))) {
-            delete.setVisibility(View.VISIBLE);
-            delete.setOnClickListener(v->{
-                //TODO Call to the api
-                //deleteEvent();
-                if (getArguments().getInt("fragment") == 1) profileSelected();
-                else boardSelected();
-                //TODO move to deleteEvent()
-                Toast.makeText(getActivity().getApplicationContext(), "Pressed deleted button", Toast.LENGTH_LONG).show();            });
-        }
-    }
-
-    //Call API for delete an event
-    void deleteEvent() {
-        APICommunicator apiCommunicator = new APICommunicator();
-        Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response -> {
-            if (getArguments().getInt("fragment") == 1) profileSelected();
-            else boardSelected();
-        };
-        Response.ErrorListener errorListener = error -> {
-            String message;
-            int errorCode = error.networkResponse.statusCode;
-            if (errorCode == 401)
-                message = getString(R.string.Unauthorized);
-            else if(errorCode == 403)
-                message = getString(R.string.Forbidden);
-            else if(errorCode == 404)
-                message = getString(R.string.NotFound);
-            else
-                message = getString(R.string.UnexpectedError);
-
-            Toast.makeText(getActivity().getApplicationContext(), message, Toast.LENGTH_LONG).show();
-        };
-
-        apiCommunicator.deleteRequest(getActivity().getApplicationContext(), URL +'/'+ id, responseListener, errorListener, null);
-
-    }
-
-    //Call API to obtain event's information
+        //Call API to obtain event's information
     void showEventInformation() {
         APICommunicator apiCommunicator = new APICommunicator();
         Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response -> {
@@ -123,7 +82,6 @@ public class EventFragment extends Fragment {
                 textEventTitle.setText(event.getTitle());
 
                 creator = event.getCreatorEmail();
-                enableButton();
 
                 textEventOrganizer.setText(creator);
                 textEventCategory.setText(event.getCategory().toString());
@@ -184,22 +142,9 @@ public class EventFragment extends Fragment {
         }
     }
 
-    private void boardSelected() {
-        Fragment boardFragment = new BoardFragment();
-        FragmentChangeListener fc = (FragmentChangeListener) getActivity();
-        fc.replaceFragment(boardFragment);
-    }
-
-    private void profileSelected() {
-        Fragment profileFragment = new ProfileFragment();
-        FragmentChangeListener fc = (FragmentChangeListener) getActivity();
-        fc.replaceFragment(profileFragment);
-    }
-
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        delete.setVisibility(View.INVISIBLE);
         view.findViewById(R.id.textEventOrganizer).setOnClickListener(v ->
         {
             Bundle b = new Bundle();

@@ -78,5 +78,6 @@
     <string name="category_other">Other</string>
     <string name="time_hours">Hours</string>
     <string name="delete">Delete</string>
+    <string name="delete_event">Event delete</string>
 
 </resources>
