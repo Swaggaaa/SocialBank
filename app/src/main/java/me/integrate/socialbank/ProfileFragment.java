@@ -13,6 +13,7 @@ import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -43,6 +44,7 @@ public class ProfileFragment extends Fragment {
     String dateUser;
     String genderUser;
     String descriptionUser;
+    Button reportUser;
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
 
@@ -61,6 +63,7 @@ public class ProfileFragment extends Fragment {
         userDescription = (TextView) rootView.findViewById(R.id.aboutMe);
         myEvents = (TextView)rootView.findViewById(R.id.events);
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.my_recycler_view_user_profile);
+        reportUser = (Button)rootView.findViewById(R.id.buttonReportUser);
         mRecyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
@@ -130,6 +133,12 @@ public class ProfileFragment extends Fragment {
 
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        view.findViewById(R.id.buttonReportUser).setOnClickListener(v ->
+        {
+            Fragment boardFragment = new EditProfileFragment();
+            FragmentChangeListener fc = (FragmentChangeListener) getActivity();
+            fc.replaceFragment(boardFragment);
+        });
     }
 
     private void getUserEvents() {

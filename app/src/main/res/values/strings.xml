@@ -82,5 +82,6 @@
     <string name="category_leisure">Leisure</string>
     <string name="category_other">Other</string>
     <string name="time_hours">Hours</string>
+    <string name="report_user">Report user</string>
 
 </resources>
