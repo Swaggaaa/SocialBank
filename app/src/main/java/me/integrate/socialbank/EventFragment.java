@@ -29,7 +29,7 @@ public class EventFragment extends Fragment {
     private TextView textEventTitle;
     private TextView textEventOrganizer;
     private TextView textEventCategory;
-    private TextView textEventDescription;
+    protected TextView textEventDescription;
     private TextView textDemandEvent;
     private TextView textLocation;
     private TextView textIndividualOrGroup;
@@ -38,7 +38,9 @@ public class EventFragment extends Fragment {
     private TextView textStartDate;
     private TextView textEndDate;
 
-    private String creator;
+
+    protected String creator;
+    protected String descriptionEvent;
 
     public static EventFragment newInstance(Bundle params) {
         EventFragment eventFragment = new EventFragment();
@@ -79,7 +81,8 @@ public class EventFragment extends Fragment {
                 creator = event.getCreatorEmail();
                 textEventOrganizer.setText(creator);
                 textEventCategory.setText(event.getCategory().toString());
-                textEventDescription.setText(event.getDescription());
+                descriptionEvent = event.getDescription();
+                textEventDescription.setText(descriptionEvent);
                 textLocation.setText(event.getLocation());
                 textDemandEvent.setText(event.getDemand() ? R.string.demand : R.string.offer);
                 imageView.setImageBitmap(event.getImage());
