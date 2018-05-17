@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -39,6 +40,7 @@ public class EventFragment extends Fragment {
     private TextView textEndDate;
 
     private String creator;
+    protected int id;
 
     public static EventFragment newInstance(Bundle params) {
         EventFragment eventFragment = new EventFragment();
@@ -66,17 +68,21 @@ public class EventFragment extends Fragment {
 
 
 
-        showEventInformation(getArguments().getInt("id"));
+        id = getArguments().getInt("id");
+        showEventInformation();
         return rootView;
     }
 
-    void showEventInformation(int id) {
+        //Call API to obtain event's information
+    void showEventInformation() {
         APICommunicator apiCommunicator = new APICommunicator();
         Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response -> {
             try {
                 Event event = new Event(new JSONObject(response.response));
                 textEventTitle.setText(event.getTitle());
+
                 creator = event.getCreatorEmail();
+
                 textEventOrganizer.setText(creator);
                 textEventCategory.setText(event.getCategory().toString());
                 textEventDescription.setText(event.getDescription());
