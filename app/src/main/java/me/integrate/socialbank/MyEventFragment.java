@@ -35,9 +35,7 @@ public class MyEventFragment extends  EventFragment{
         super.onViewCreated(view, savedInstanceState);
         delete_button.setVisibility(View.VISIBLE);
         delete_button.setOnClickListener(v -> {
-
-            //TODO Call to the api
-            // deleteEvent();
+            deleteEvent();
             Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.delete_event), Toast.LENGTH_LONG).show();
         });
     }
