@@ -38,7 +38,7 @@ public class EventFragment extends Fragment {
     private TextView textStartDate;
     private TextView textEndDate;
 
-
+    protected int id;
     protected String creator;
     protected String descriptionEvent;
 
@@ -67,8 +67,8 @@ public class EventFragment extends Fragment {
         textEndDate = (TextView) rootView.findViewById(R.id.end_date);
 
 
-
-        showEventInformation(getArguments().getInt("id"));
+        id = getArguments().getInt("id");
+        showEventInformation(id);
         return rootView;
     }
 

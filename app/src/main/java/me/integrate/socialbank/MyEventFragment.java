@@ -37,8 +37,8 @@ public class MyEventFragment extends EventFragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
-        EditText editDescription = (EditText) view.findViewById(R.id.editDescription);
-        Button updateButton = (Button) view.findViewById(R.id.buttonUpdate);
+        editDescription = (EditText) view.findViewById(R.id.editDescription);
+        updateButton = (Button) view.findViewById(R.id.buttonUpdate);
         FloatingActionButton editEvent = (FloatingActionButton) view.findViewById(R.id.editEvent);
         editEvent.setVisibility(View.VISIBLE);
         ImageView changeUserPhoto = (ImageView) view.findViewById(R.id.loadPicture);
@@ -59,12 +59,25 @@ public class MyEventFragment extends EventFragment{
         {
             editDescription.setVisibility(View.VISIBLE);
             updateButton.setVisibility(View.VISIBLE);
-            
+            textEventDescription.setVisibility(View.GONE);
+
+        });
+        view.findViewById(R.id.buttonUpdate).setOnClickListener(v ->
+        {
+            updateButton.setEnabled(false);
+
+            if (editDescription.getText().toString().length() != 0) {
+                descriptionEvent = editDescription.getText().toString();
+
+
+            }
         });
     }
 
+
     private void updateProfile() {
         HashMap<String, String> params = new HashMap<>();
+        params.put("description", descriptionEvent);
         params.put("image", thereisPic ? ImageCompressor.INSTANCE.compressAndEncodeAsBase64(
                 ((BitmapDrawable)eventPicture.getDrawable()).getBitmap())
                 : "");
@@ -81,7 +94,7 @@ public class MyEventFragment extends EventFragment{
         Response.ErrorListener errorListener = error -> Toast.makeText(getActivity().getApplicationContext(), "Something went wrong", Toast.LENGTH_LONG).show();
 
 
-        apiCommunicator.putRequest(getActivity().getApplicationContext(), URL + '/' + emailUser, responseListener, errorListener, params);
+        apiCommunicator.putRequest(getActivity().getApplicationContext(), "event/" + id, responseListener, errorListener, params);
     }
 
 
