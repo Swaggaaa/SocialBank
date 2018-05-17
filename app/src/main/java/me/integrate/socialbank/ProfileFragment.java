@@ -1,6 +1,8 @@
 package me.integrate.socialbank;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -140,21 +142,24 @@ public class ProfileFragment extends Fragment {
 
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        view.findViewById(R.id.buttonReportUser).setOnClickListener(v ->
-        {
-            reportUser.setVisibility(View.GONE);
-            confirmReport.setVisibility(View.VISIBLE);
-            discardReport.setVisibility(View.VISIBLE);
-        });
-        view.findViewById(R.id.discardReport).setOnClickListener(v ->
-        {
-            reportUser.setVisibility(View.VISIBLE);
-            confirmReport.setVisibility(View.GONE);
-            discardReport.setVisibility(View.GONE);
-        });
-        view.findViewById(R.id.confirmReport).setOnClickListener(v ->
-        {
-            //TODO: report user
+        reportUser.setOnClickListener(v -> {
+            AlertDialog.Builder dialogDelete = new AlertDialog.Builder(getContext());
+            dialogDelete.setTitle(getResources().getString(R.string.are_sure));
+            dialogDelete.setMessage(getResources().getString(R.string.confirm_report_user));
+            dialogDelete.setCancelable(false);
+            dialogDelete.setPositiveButton(getResources().getString(R.string.confirm), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    //reportUserAPI();
+                    Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.user_reported), Toast.LENGTH_LONG).show();
+                }
+            });
+            dialogDelete.setNegativeButton(getResources().getString(R.string.discard), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                }
+            });
+            dialogDelete.show();
         });
     }
 
