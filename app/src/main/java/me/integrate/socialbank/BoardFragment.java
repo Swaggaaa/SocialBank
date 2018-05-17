@@ -8,6 +8,8 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -41,6 +43,7 @@ public class BoardFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_board, container, false);
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.my_recycler_view);
         mRecyclerView.setHasFixedSize(true);
+        setHasOptionsMenu(true);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
         loadingDialog = ProgressDialog.show(getActivity(), "",
@@ -48,6 +51,14 @@ public class BoardFragment extends Fragment {
         getAllEvents();
         return rootView;
     }
+
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.filter_options, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
 
     //Call to the API
     public void getAllEvents() {

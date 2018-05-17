@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item android:id="@+id/item1"
+        android:title="Item"
+        android:icon="@drawable/ic_filter"
+        app:showAsAction="always">
+
+        <menu>
+            <item android:id="@+id/subitem1"
+                android:title="sub"
+                app:showAsAction="never"
+                android:checkable="true"/>
+
+            <item android:id="@+id/subitem2"
+                android:title="sub2"
+                app:showAsAction="never"
+                android:checkable="true"/>
+        </menu>
+    </item>
+
+</menu>
