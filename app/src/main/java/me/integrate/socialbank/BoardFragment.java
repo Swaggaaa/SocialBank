@@ -69,7 +69,12 @@ public class BoardFragment extends Fragment {
                     Bundle bundle = new Bundle();
                     Event event = items.get(position);
                     bundle.putInt("id", event.getId());
-                    Fragment eventFragment = EventFragment.newInstance(bundle);
+                    Fragment eventFragment;
+                    if (event.getCreatorEmail().equals(SharedPreferencesManager.INSTANCE.read(getActivity(),"user_email"))
+                            && correctDate(event.getIniDate())) {
+                        eventFragment = MyEventFragment.newInstance(bundle);
+                    }
+                    else eventFragment = EventFragment.newInstance(bundle);
                     FragmentChangeListener fc = (FragmentChangeListener) getActivity();
                     fc.replaceFragment(eventFragment);
                 });
@@ -97,6 +102,16 @@ public class BoardFragment extends Fragment {
             Toast.makeText(getActivity().getApplicationContext(), message, Toast.LENGTH_LONG).show();
         };
         apiCommunicator.getRequest(getActivity().getApplicationContext(), URL, responseListener, errorListener, null);
+    }
+
+    private boolean correctDate(Date iniDate) {
+        if (iniDate == null) return true;
+        else {
+            Date currentDate = new Date();
+            long hours = iniDate.getTime() - currentDate.getTime();
+            hours = hours/ 1000 / 60 / 60;
+            return hours >= 24;
+        }
     }
 
     private byte[] bitmapToByteArray(Bitmap bitmap) {
