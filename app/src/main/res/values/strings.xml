@@ -83,5 +83,7 @@
     <string name="category_other">Other</string>
     <string name="time_hours">Hours</string>
     <string name="report_user">Report user</string>
+    <string name="confirm">Confirm</string>
+    <string name="discard">Discard</string>
 
 </resources>

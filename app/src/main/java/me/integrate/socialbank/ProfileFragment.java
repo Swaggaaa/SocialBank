@@ -45,6 +45,8 @@ public class ProfileFragment extends Fragment {
     String genderUser;
     String descriptionUser;
     Button reportUser;
+    Button confirmReport;
+    Button discardReport;
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
 
@@ -64,6 +66,10 @@ public class ProfileFragment extends Fragment {
         myEvents = (TextView)rootView.findViewById(R.id.events);
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.my_recycler_view_user_profile);
         reportUser = (Button)rootView.findViewById(R.id.buttonReportUser);
+        confirmReport = (Button)rootView.findViewById(R.id.confirmReport);
+        confirmReport.setVisibility(View.GONE);
+        discardReport = (Button)rootView.findViewById(R.id.discardReport);
+        discardReport.setVisibility(View.GONE);
         mRecyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
@@ -135,9 +141,19 @@ public class ProfileFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         view.findViewById(R.id.buttonReportUser).setOnClickListener(v ->
         {
-            Fragment boardFragment = new EditProfileFragment();
-            FragmentChangeListener fc = (FragmentChangeListener) getActivity();
-            fc.replaceFragment(boardFragment);
+            reportUser.setVisibility(View.GONE);
+            confirmReport.setVisibility(View.VISIBLE);
+            discardReport.setVisibility(View.VISIBLE);
+        });
+        view.findViewById(R.id.discardReport).setOnClickListener(v ->
+        {
+            reportUser.setVisibility(View.VISIBLE);
+            confirmReport.setVisibility(View.GONE);
+            discardReport.setVisibility(View.GONE);
+        });
+        view.findViewById(R.id.confirmReport).setOnClickListener(v ->
+        {
+            //TODO: report user
         });
     }
 
