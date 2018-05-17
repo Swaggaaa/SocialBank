@@ -26,6 +26,7 @@ import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -159,8 +160,12 @@ public class ProfileFragment extends Fragment {
                     Event event = items.get(position);
 
                     bundle.putInt("id", event.getId());
-
-                    Fragment eventFragment = EventFragment.newInstance(bundle);
+                    bundle.putBoolean("MyProfile", true);
+                    Fragment eventFragment;
+                    if (event.getCreatorEmail().equals(emailUser) && correctDate(event.getIniDate())) {
+                        eventFragment = MyEventFragment.newInstance(bundle);
+                    }
+                    else eventFragment = EventFragment.newInstance(bundle);
                     FragmentChangeListener fc = (FragmentChangeListener) getActivity();
                     fc.replaceFragment(eventFragment);
                 });
@@ -188,6 +193,16 @@ public class ProfileFragment extends Fragment {
             Toast.makeText(getActivity().getApplicationContext(), message, Toast.LENGTH_LONG).show();
         };
         apiCommunicator.getRequest(getActivity().getApplicationContext(), URL +'/'+ emailUser + "/events", responseListener, errorListener, params);
+    }
+
+    private boolean correctDate(Date iniDate) {
+        if (iniDate == null) return true;
+        else {
+            Date currentDate = new Date();
+            long hours = iniDate.getTime() - currentDate.getTime();
+            hours = hours/ 1000 / 60 / 60;
+            return hours >= 24;
+        }
     }
 
     private byte[] bitmapToByteArray(Bitmap bitmap) {

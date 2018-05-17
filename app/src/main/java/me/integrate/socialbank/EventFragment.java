@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -38,8 +39,8 @@ public class EventFragment extends Fragment {
     private TextView textStartDate;
     private TextView textEndDate;
 
+    private String creator;
     protected int id;
-    protected String creator;
     protected String descriptionEvent;
 
     public static EventFragment newInstance(Bundle params) {
@@ -67,12 +68,14 @@ public class EventFragment extends Fragment {
         textEndDate = (TextView) rootView.findViewById(R.id.end_date);
 
 
+
         id = getArguments().getInt("id");
-        showEventInformation(id);
+        showEventInformation();
         return rootView;
     }
 
-    void showEventInformation(int id) {
+        //Call API to obtain event's information
+    void showEventInformation() {
         APICommunicator apiCommunicator = new APICommunicator();
         Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response -> {
             try {
@@ -93,7 +96,8 @@ public class EventFragment extends Fragment {
 
                 Date iniDate = event.getIniDate();
                 Date endDate = event.getEndDate();
-                textEventHours.setText(getHours(iniDate, endDate));
+                String hours = getHours(iniDate, endDate) + " " + getResources().getString(R.string.time_hours);
+                textEventHours.setText(hours);
                 textStartDate.setText(dateToString(iniDate));
                 textEndDate.setText(dateToString(endDate));
 
@@ -133,7 +137,7 @@ public class EventFragment extends Fragment {
     private String dateToString(Date date) {
         if (date == null) return getResources().getString(R.string.notDate);
         else{
-            DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+            DateFormat df = new SimpleDateFormat("dd/MM/yyyy        HH:mm");
             return df.format(date);
         }
     }

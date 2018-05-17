@@ -74,7 +74,8 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
         viewHolder.finishDate.setText(dateToString(items.get(i).getEndDate()));
         viewHolder.location.setText(items.get(i).getLocation());
         viewHolder.demand.setText(getDemandOrOffer(items.get(i).getDemand()));
-        viewHolder.hours.setText(getHours(items.get(i).getIniDate(), items.get(i).getEndDate()));
+        String hours = getHours(items.get(i).getIniDate(), items.get(i).getEndDate()) + " " + context.getResources().getString(R.string.time_hours);
+        viewHolder.hours.setText(hours);
     }
 
     private String getHours(Date hourIni, Date hourEnd) {
@@ -90,7 +91,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
     private String dateToString(Date date) {
         if (date == null) return context.getResources().getString(R.string.notDate);
         else{
-            DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+            DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm");
             return df.format(date);
         }
     }

@@ -19,6 +19,11 @@
             android:id="@+id/newEvent"
             android:title="@string/create_event_menu" />
 
+        <item
+            android:icon="@drawable/user_icon"
+            android:id="@+id/searchUsers"
+            android:title="@string/search_users" />
+
     </group>
     <item android:title="@string/settings">
         <menu>

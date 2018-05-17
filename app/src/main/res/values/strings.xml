@@ -69,6 +69,11 @@
     <string name="about_me">About me</string>
     <string name="user_name">User name</string>
     <string name="personal_events">\'s events</string>
+    <string name="unauthorized">Unauthorized</string>
+    <string name="forbidden">Forbidden</string>
+    <string name="unexpectedError">Unexpected error</string>
+    <string name="search_users">Search users</string>
+    <string name="input_name">Input Name Here</string>
     <string name="category_language">Language</string>
     <string name="category_culture">Culture</string>
     <string name="category_workshops">Workshops</string>
@@ -76,5 +81,12 @@
     <string name="category_gastronomy">Gastronomy</string>
     <string name="category_leisure">Leisure</string>
     <string name="category_other">Other</string>
+    <string name="time_hours">Hours</string>
+    <string name="delete">Delete</string>
+    <string name="delete_event">Event delete</string>
+    <string name="are_sure">Are you sure?</string>
+    <string name="confirm_delete_event">Do you want delete this event?</string>
+    <string name="discard">Discard</string>
+    <string name="confirm">Confirm</string>
 
 </resources>
