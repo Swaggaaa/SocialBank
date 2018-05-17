@@ -1,5 +1,7 @@
 package me.integrate.socialbank;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -35,8 +37,24 @@ public class MyEventFragment extends  EventFragment{
         super.onViewCreated(view, savedInstanceState);
         delete_button.setVisibility(View.VISIBLE);
         delete_button.setOnClickListener(v -> {
-            deleteEvent();
-            Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.delete_event), Toast.LENGTH_LONG).show();
+
+            AlertDialog.Builder dialogDelete = new AlertDialog.Builder(getContext());
+            dialogDelete.setTitle(getResources().getString(R.string.are_sure));
+            dialogDelete.setMessage(getResources().getString(R.string.confirm_delete_event));
+            dialogDelete.setCancelable(false);
+            dialogDelete.setPositiveButton(getResources().getString(R.string.confirm), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    deleteEvent();
+                    Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.delete_event), Toast.LENGTH_LONG).show();
+                }
+            });
+            dialogDelete.setNegativeButton(getResources().getString(R.string.discard), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                }
+            });
+            dialogDelete.show();
         });
     }
 
