@@ -37,7 +37,6 @@ public class BoardFragment extends Fragment {
 
     private List<Event> items;
     private List<Event> allItems;
-    private List<Event> aux;
 
     private boolean language;
     private boolean culture;
@@ -75,7 +74,6 @@ public class BoardFragment extends Fragment {
                 getString(R.string.loadingMessage), true);
         items = new ArrayList<>();
         allItems = new ArrayList<>();
-        aux = new ArrayList<>();
         demand = other = offer = language = culture = workshops = sports = gastronomy = leisure = false;
         getAllEvents();
         return rootView;
@@ -157,32 +155,31 @@ public class BoardFragment extends Fragment {
 
     }
 
+    private void check(Event event) {
+        if (offer || demand) {
+            if (offer && !event.isDemand()) items.add(event);
+            else if (demand && event.isDemand()) items.add(event);
+        } else items.add(event);
+    }
+
     private void update() {
-        aux.clear();
+        items.clear();
         boolean category = language || culture || workshops || sports || gastronomy || leisure || other;
         if (category || offer || demand) {
             for (Event event: allItems) {
-                if ((language &&  event.getCategory() == Event.Category.LANGUAGE)) aux.add(event);
-                else if (culture && event.getCategory() == Event.Category.CULTURE ) aux.add(event);
-                else if (workshops && event.getCategory() == Event.Category.WORKSHOPS ) aux.add(event);
-                else if (sports && event.getCategory() == Event.Category.SPORTS ) aux.add(event);
-                else if (gastronomy && event.getCategory() == Event.Category.GASTRONOMY ) aux.add(event);
-                else if (leisure && event.getCategory() == Event.Category.LEISURE) aux.add(event);
-                else if (other && event.getCategory() == Event.Category.OTHER ) aux.add(event);
+                if (language &&  event.getCategory() == Event.Category.LANGUAGE) check(event);
+                else if (culture && event.getCategory() == Event.Category.CULTURE ) check(event);
+                else if (workshops && event.getCategory() == Event.Category.WORKSHOPS ) check(event);
+                else if (sports && event.getCategory() == Event.Category.SPORTS ) check(event);
+                else if (gastronomy && event.getCategory() == Event.Category.GASTRONOMY ) check(event);
+                else if (leisure && event.getCategory() == Event.Category.LEISURE) check(event);
+                else if (other && event.getCategory() == Event.Category.OTHER ) check(event);
                 else if (!category && (offer || demand )) {
-                    if ((offer && !event.isDemand()) || (demand && event.isDemand()) ) aux.add(event);
+                    if (offer && !event.isDemand()) items.add(event);
+                    else if (demand && event.isDemand()) items.add(event);
                 }
             }
-            items.clear();
-            items.addAll(aux);
-            for (Event event : items) {
-                if (offer && event.isDemand()) aux.remove(event);
-                else if (demand && !event.isDemand()) aux.remove(event);
-            }
-            items.clear();
-            items.addAll(aux);
         } else {
-            items.clear();
             items.addAll(allItems);
         }
         mAdapter.notifyDataSetChanged();
