@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -34,6 +35,30 @@ public class BoardFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
 
+    private List<Event> items;
+    private List<Event> allItems;
+    private List<Event> aux;
+
+    private boolean language;
+    private boolean culture;
+    private boolean workshops;
+    private boolean sports;
+    private boolean gastronomy;
+    private boolean leisure;
+    private boolean other;
+    private boolean offer;
+    private boolean demand;
+
+    private MenuItem itemLanguage;
+    private MenuItem itemCulture;
+    private MenuItem itemWorkshops;
+    private MenuItem itemSports;
+    private MenuItem itemGastronomy;
+    private MenuItem itemLeisure;
+    private MenuItem itemOther;
+    private MenuItem itemOffer;
+    private MenuItem itemDemand;
+
     private ProgressDialog loadingDialog;
 
     @Override
@@ -48,6 +73,10 @@ public class BoardFragment extends Fragment {
         mRecyclerView.setLayoutManager(mLayoutManager);
         loadingDialog = ProgressDialog.show(getActivity(), "",
                 getString(R.string.loadingMessage), true);
+        items = new ArrayList<>();
+        allItems = new ArrayList<>();
+        aux = new ArrayList<>();
+        demand = other = offer = language = culture = workshops = sports = gastronomy = leisure = false;
         getAllEvents();
         return rootView;
     }
@@ -56,16 +85,114 @@ public class BoardFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.filter_options, menu);
+        itemLanguage = menu.findItem(R.id.category_language);
+        itemCulture = menu.findItem(R.id.category_culture);
+        itemWorkshops = menu.findItem(R.id.category_workshops);
+        itemSports = menu.findItem(R.id.category_sports);
+        itemGastronomy = menu.findItem(R.id.category_gastronomy);
+        itemLeisure = menu.findItem(R.id.category_leisure);
+        itemOther = menu.findItem(R.id.category_other);
+        itemOffer = menu.findItem(R.id.event_offer);
+        itemDemand = menu.findItem(R.id.event_demand);
+
         super.onCreateOptionsMenu(menu, inflater);
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.category_language:
+                language = !item.isChecked();
+                if (item.isChecked())item.setChecked(false);
+                else item.setChecked(true);
+                break;
+            case R.id.category_culture:
+                culture = !item.isChecked();
+                item.setChecked(!item.isChecked());
+                break;
+            case R.id.category_workshops:
+                workshops = !item.isChecked();
+                item.setChecked(!item.isChecked());
+                break;
+            case R.id.category_sports:
+                sports = !item.isChecked();
+                item.setChecked(!item.isChecked());
+                break;
+            case R.id.category_gastronomy:
+                gastronomy = !item.isChecked();
+                item.setChecked(!item.isChecked());
+                break;
+            case R.id.category_leisure:
+                leisure = !item.isChecked();
+                item.setChecked(!item.isChecked());
+                break;
+            case R.id.category_other:
+                other = !item.isChecked();
+                item.setChecked(!item.isChecked());
+                break;
+            case R.id.event_offer:
+                offer = !item.isChecked();
+                item.setChecked(!item.isChecked());
+
+                break;
+            case R.id.event_demand:
+                demand = !item.isChecked();
+                item.setChecked(!item.isChecked());
+                break;
+            case R.id.delete_filters:
+                demand = other = offer = language = culture = workshops = sports = gastronomy = leisure = false;
+                itemLanguage.setChecked(false);
+                itemCulture.setChecked(false);
+                itemWorkshops.setChecked(false);
+                itemSports.setChecked(false);
+                itemGastronomy.setChecked(false);
+                itemLeisure.setChecked(false);
+                itemOther.setChecked(false);
+                itemOffer.setChecked(false);
+                itemDemand.setChecked(false);
+                break;
+        }
+        update();
+        return true;
+
+    }
+
+    private void update() {
+        aux.clear();
+        boolean category = language || culture || workshops || sports || gastronomy || leisure || other;
+        if (category || offer || demand) {
+            for (Event event: allItems) {
+                if ((language &&  event.getCategory() == Event.Category.LANGUAGE)) aux.add(event);
+                else if (culture && event.getCategory() == Event.Category.CULTURE ) aux.add(event);
+                else if (workshops && event.getCategory() == Event.Category.WORKSHOPS ) aux.add(event);
+                else if (sports && event.getCategory() == Event.Category.SPORTS ) aux.add(event);
+                else if (gastronomy && event.getCategory() == Event.Category.GASTRONOMY ) aux.add(event);
+                else if (leisure && event.getCategory() == Event.Category.LEISURE) aux.add(event);
+                else if (other && event.getCategory() == Event.Category.OTHER ) aux.add(event);
+                else if (!category && (offer || demand )) {
+                    if ((offer && !event.isDemand()) || (demand && event.isDemand()) ) aux.add(event);
+                }
+            }
+            items.clear();
+            items.addAll(aux);
+            for (Event event : items) {
+                if (offer && event.isDemand()) aux.remove(event);
+                else if (demand && !event.isDemand()) aux.remove(event);
+            }
+            items.clear();
+            items.addAll(aux);
+        } else {
+            items.clear();
+            items.addAll(allItems);
+        }
+        mAdapter.notifyDataSetChanged();
+    }
 
     //Call to the API
     public void getAllEvents() {
 
         APICommunicator apiCommunicator = new APICommunicator();
         Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response -> {
-            List<Event> items = new ArrayList<>();
             JSONArray jsonArray;
             try {
                 jsonArray = new JSONArray(response.response);
@@ -89,7 +216,7 @@ public class BoardFragment extends Fragment {
                     FragmentChangeListener fc = (FragmentChangeListener) getActivity();
                     fc.replaceFragment(eventFragment);
                 });
-
+                allItems.addAll(items);
                 mRecyclerView.setAdapter(mAdapter);
                 loadingDialog.dismiss();
 
