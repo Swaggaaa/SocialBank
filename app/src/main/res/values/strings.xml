@@ -82,5 +82,7 @@
     <string name="category_leisure">Leisure</string>
     <string name="category_other">Other</string>
     <string name="time_hours">Hours</string>
+    <string name="timepicker">TimePicker</string>
+    <string name="event_category">Category</string>
 
 </resources>
