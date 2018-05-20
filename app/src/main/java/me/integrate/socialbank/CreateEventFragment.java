@@ -123,8 +123,6 @@ public class CreateEventFragment extends Fragment {
 
         imageView = (ImageView) rootView.findViewById(R.id.imageView);
 
-        button = (Button) rootView.findViewById(R.id.button);
-
         buttonAsk = (Button) rootView.findViewById(R.id.buttonAsk);
         buttonOffer = (Button) rootView.findViewById(R.id.buttonOffer);
         buttonYesFixed = (Button) rootView.findViewById(R.id.buttonYesFixed);
@@ -194,10 +192,6 @@ public class CreateEventFragment extends Fragment {
             buttonOffer.setTextColor(getResources().getColor(R.color.colorTextButton));
             eventType = 1;
             enableButton();
-        });
-        view.findViewById(R.id.button).setOnClickListener(view12 ->
-        {
-            getMyHours();
         });
         view.findViewById(R.id.buttonOffer).setOnClickListener(view13 ->
         {
