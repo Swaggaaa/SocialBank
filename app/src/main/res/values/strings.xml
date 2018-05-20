@@ -88,6 +88,6 @@
     <string name="confirm_delete_event">Do you want delete this event?</string>
     <string name="discard">Discard</string>
     <string name="confirm">Confirm</string>
-    <string name="delete_filters">Delete all the filters</string>
+    <string name="clean_filters">Clean filters</string>
 
 </resources>

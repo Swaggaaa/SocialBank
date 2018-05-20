@@ -53,9 +53,10 @@
                 app:showAsAction="never"
                 android:checkable="true"/>
 
-            <item android:id="@+id/delete_filters"
-                android:title="@string/delete_filters"
-                app:showAsAction="never"/>
+            <item
+                android:id="@+id/delete_filters"
+                android:title="@string/clean_filters"
+                app:showAsAction="never" />
 
         </menu>
     </item>
