@@ -51,7 +51,6 @@ public class BoardFragment extends Fragment {
 
     //Call to the API
     public void getAllEvents() {
-
         APICommunicator apiCommunicator = new APICommunicator();
         Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response -> {
             List<Event> items = new ArrayList<>();

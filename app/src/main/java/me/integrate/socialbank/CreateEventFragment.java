@@ -10,6 +10,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
@@ -32,11 +33,17 @@ import android.widget.Toast;
 
 import com.android.volley.Response;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
 import static android.content.ContentValues.TAG;
@@ -77,6 +84,10 @@ public class CreateEventFragment extends Fragment {
     private int endHour = -1;
     private int endMin = -1;
 
+    double userHours;
+
+    private Button button;
+
     private void postCredentials(HashMap<String, String> params) {
         APICommunicator apiCommunicator = new APICommunicator();
         Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response ->
@@ -111,6 +122,8 @@ public class CreateEventFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_create_event, container, false);
 
         imageView = (ImageView) rootView.findViewById(R.id.imageView);
+
+        button = (Button) rootView.findViewById(R.id.button);
 
         buttonAsk = (Button) rootView.findViewById(R.id.buttonAsk);
         buttonOffer = (Button) rootView.findViewById(R.id.buttonOffer);
@@ -163,37 +176,12 @@ public class CreateEventFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         view.findViewById(R.id.buttonCreate).setOnClickListener(view1 ->
         {
-            HashMap<String, String> params = new HashMap<>();
-            //TODO: Change them to null when API accepts it
-            String dataIni = null;
-            String dataEnd = null;
-            if (eventFixed == 1) {
-                dataIni = strStartDate.concat("T").concat(editTextStartHour.getText().toString()).concat(":00Z");
-                dataEnd = strEndDate.concat("T").concat(editTextEndHour.getText().toString()).concat(":00Z");
-            }
-            String emailUser = SharedPreferencesManager.INSTANCE.read(getActivity(), "user_email");
-            String demand = "false";
-            if (eventType == 1) demand = "true";
-
-            EventLocation eventLocation = new EventLocation(address.getText().toString());
-
-            params.put("category", category.getSelectedItem().toString().toUpperCase());
-            params.put("creatorEmail", emailUser);
-            params.put("demand", demand);
-            params.put("description", description.getText().toString());
-            params.put("endDate", dataEnd);
-            params.put("iniDate", dataIni);
-            params.put("location", eventLocation.getAddress());
-            params.put("latitude", String.valueOf(eventLocation.getLatitude()));
-            params.put("longitude", String.valueOf(eventLocation.getLongitude()));
-            params.put("title", name.getText().toString());
-            params.put("image", thereisPic ? ImageCompressor.INSTANCE.compressAndEncodeAsBase64(
-                    ((BitmapDrawable) imageView.getDrawable()).getBitmap())
-                    : "");
-
-            buttonCreate.setText("LOADING");
-            buttonCreate.setEnabled(false);
-            postCredentials(params);
+            if( getEventType() == "false" ||  (getEventType() == "true" && enoughHours()) )
+                postEvent();
+            else
+                Toast.makeText(getActivity(), "You do not have enough hours to create " +
+                                "this event",
+                        Toast.LENGTH_SHORT).show();
         });
         view.findViewById(R.id.imageView).setOnClickListener(v ->
         {
@@ -206,6 +194,10 @@ public class CreateEventFragment extends Fragment {
             buttonOffer.setTextColor(getResources().getColor(R.color.colorTextButton));
             eventType = 1;
             enableButton();
+        });
+        view.findViewById(R.id.button).setOnClickListener(view12 ->
+        {
+            getMyHours();
         });
         view.findViewById(R.id.buttonOffer).setOnClickListener(view13 ->
         {
@@ -300,6 +292,46 @@ public class CreateEventFragment extends Fragment {
             showEndHourPickerDialog();
             enableButton();
         });
+    }
+
+    private void postEvent() {
+        HashMap<String, String> params = new HashMap<>();
+        String dataIni = null;
+        String dataEnd = null;
+        if (eventFixed == 1) {
+            dataIni = strStartDate.concat("T").concat(editTextStartHour.getText().toString()).concat(":00Z");
+            dataEnd = strEndDate.concat("T").concat(editTextEndHour.getText().toString()).concat(":00Z");
+        }
+        EventLocation eventLocation = new EventLocation(address.getText().toString());
+
+        params.put("category", category.getSelectedItem().toString().toUpperCase());
+        params.put("creatorEmail", getUserEmail());
+        params.put("demand", getEventType());
+        params.put("description", description.getText().toString());
+        params.put("endDate", dataEnd);
+        params.put("iniDate", dataIni);
+        params.put("location", eventLocation.getAddress());
+        params.put("latitude", String.valueOf(eventLocation.getLatitude()));
+        params.put("longitude", String.valueOf(eventLocation.getLongitude()));
+        params.put("title", name.getText().toString());
+        params.put("image", thereisPic ? ImageCompressor.INSTANCE.compressAndEncodeAsBase64(
+                ((BitmapDrawable) imageView.getDrawable()).getBitmap())
+                : "");
+
+        buttonCreate.setText("LOADING");
+        buttonCreate.setEnabled(false);
+        postCredentials(params);
+    }
+
+    private String getUserEmail() {
+        return SharedPreferencesManager.INSTANCE.read(getActivity(), "user_email");
+    }
+
+    @NonNull
+    private String getEventType() {
+        String demand = "false";
+        if (eventType == 1) demand = "true";
+        return demand;
     }
 
     public boolean isVerified() {
@@ -469,16 +501,45 @@ public class CreateEventFragment extends Fragment {
         return hour + ":" + minute;
     }
 
-    private int getMyHours() {
-        return 100000;
+    private void getMyHours() {
+        APICommunicator apiCommunicator = new APICommunicator();
+        Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response -> {
+            try {
+                JSONObject jsonObject = new JSONObject(response.response);
+                String balance = jsonObject.get("balance").toString();
+                userHours = Double.valueOf( balance );
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        };
+        Response.ErrorListener errorListener = error -> {
+            String message;
+            int errorCode = error.networkResponse.statusCode;
+            if (errorCode == 401)
+                message = "Unauthorized";
+            else if (errorCode == 403)
+                message = "Forbidden";
+            else if (errorCode == 404)
+                message = "Not Found";
+            else
+                message = "Unexpected error";
+            Toast.makeText(getActivity().getApplicationContext(), message, Toast.LENGTH_LONG).show();
+        };
+        apiCommunicator.getRequest(getActivity().getApplicationContext(), "/users/"+getUserEmail(), responseListener, errorListener, null);
+
     }
 
-    private int getEventHours() { //Round down decimals
-        long hours = -1;
+    private double getEventHours() { //Without rounding
+        double hours = -1;
         if( startHour != -1 && endHour != -1 && dateStart != null && dateEnd != null ) {
             hours = (dateEnd.getTime() - dateStart.getTime()) / 3600000;
             hours += ((endHour + (endMin * 0.01)) - (startHour + (startMin * 0.01)));
         }
-        return (int) hours;
+        return hours;
+    }
+
+    private boolean enoughHours() {
+        getMyHours();
+        return userHours >= getEventHours();
     }
 }
