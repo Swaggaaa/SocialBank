@@ -31,10 +31,9 @@ import static android.content.ContentValues.TAG;
 
 public class MyEventFragment extends EventFragment{
 
-    private boolean thereisPic;
     Button updateButton;
     ImageView editEvent;
-    ImageView changeUserPhoto;
+    ImageView changeEventPhoto;
 
 
     private static final String URL = "/events";
@@ -51,7 +50,7 @@ public class MyEventFragment extends EventFragment{
         View view = super.onCreateView(inflater, container, savedInstanceState);
         updateButton = (Button) view.findViewById(R.id.buttonUpdate);
         editEvent = (ImageView) view.findViewById(R.id.editEvent);
-        changeUserPhoto = (ImageView) view.findViewById(R.id.loadPicture);
+        changeEventPhoto = (ImageView) view.findViewById(R.id.loadPicture);
         delete_button = (Button) view.findViewById(R.id.delete_event);
         id = getArguments().getInt("id");
         return view;
@@ -62,8 +61,7 @@ public class MyEventFragment extends EventFragment{
         super.onViewCreated(view, savedInstanceState);
         delete_button.setVisibility(View.VISIBLE);
         editEvent.setVisibility(View.VISIBLE);
-        changeUserPhoto.setVisibility(View.VISIBLE);
-        thereisPic = false;
+        changeEventPhoto.setVisibility(View.VISIBLE);
         view.findViewById(R.id.loadPicture).setOnClickListener(v ->
         {
             readGallery();
@@ -162,7 +160,7 @@ public class MyEventFragment extends EventFragment{
     private void updateEvent() {
         HashMap<String, String> params = new HashMap<>();
         params.put("description", descriptionEvent);
-        params.put("image", thereisPic ? ImageCompressor.INSTANCE.compressAndEncodeAsBase64(
+        params.put("image", imageView!=null ? ImageCompressor.INSTANCE.compressAndEncodeAsBase64(
                 ((BitmapDrawable)imageView.getDrawable()).getBitmap())
                 : "");
         putCredentials(params);
@@ -198,7 +196,6 @@ public class MyEventFragment extends EventFragment{
 
         if(resultCode == RESULT_OK){
             if(requestCode == 2 ) {
-                thereisPic = true;
                 data.getData();
                 Uri selectedImage = data.getData();
                 Log.v(TAG, "Selected image uri" + selectedImage);
