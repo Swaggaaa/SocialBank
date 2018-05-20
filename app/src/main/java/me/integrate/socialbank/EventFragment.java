@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,7 +27,7 @@ public class EventFragment extends Fragment {
 
     private static final String URL = "/events";
 
-    private ImageView imageView;
+    protected ImageView imageView;
     private TextView textEventTitle;
     private TextView textEventOrganizer;
     private TextView textEventCategory;
@@ -38,6 +39,7 @@ public class EventFragment extends Fragment {
     private TextView textEventHours;
     private TextView textStartDate;
     private TextView textEndDate;
+    protected EditText editDescription;
 
     private String creator;
     protected int id;
@@ -66,6 +68,7 @@ public class EventFragment extends Fragment {
         textEventHours = (TextView) rootView.findViewById(R.id.hours);
         textStartDate = (TextView) rootView.findViewById(R.id.start_date);
         textEndDate = (TextView) rootView.findViewById(R.id.end_date);
+        editDescription = (EditText) rootView.findViewById(R.id.editDescription);
 
 
 
@@ -90,7 +93,9 @@ public class EventFragment extends Fragment {
                 textDemandEvent.setText(event.getDemand() ? R.string.demand : R.string.offer);
                 imageView.setImageBitmap(event.getImage());
 
-                //TODO not harcoded this values
+                editDescription.setText(descriptionEvent);
+
+                //TODO not hardcoded this values
                 textIndividualOrGroup.setText("Individual");
                 textViewNumberPersonsEvent.setText("1/1");
 

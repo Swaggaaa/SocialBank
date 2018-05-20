@@ -32,9 +32,10 @@ import static android.content.ContentValues.TAG;
 public class MyEventFragment extends EventFragment{
 
     private boolean thereisPic;
-    ImageView eventPicture;
-    EditText editDescription;
     Button updateButton;
+    ImageView editEvent;
+    ImageView changeUserPhoto;
+
 
     private static final String URL = "/events";
     private Button delete_button;
@@ -48,13 +49,9 @@ public class MyEventFragment extends EventFragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
-        editDescription = (EditText) view.findViewById(R.id.editDescription);
         updateButton = (Button) view.findViewById(R.id.buttonUpdate);
-        FloatingActionButton editEvent = (FloatingActionButton) view.findViewById(R.id.editEvent);
-        editEvent.setVisibility(View.VISIBLE);
-        ImageView changeUserPhoto = (ImageView) view.findViewById(R.id.loadPicture);
-        changeUserPhoto.setVisibility(View.VISIBLE);
-
+        editEvent = (ImageView) view.findViewById(R.id.editEvent);
+        changeUserPhoto = (ImageView) view.findViewById(R.id.loadPicture);
         delete_button = (Button) view.findViewById(R.id.delete_event);
         id = getArguments().getInt("id");
         return view;
@@ -64,6 +61,30 @@ public class MyEventFragment extends EventFragment{
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         delete_button.setVisibility(View.VISIBLE);
+        editEvent.setVisibility(View.VISIBLE);
+        changeUserPhoto.setVisibility(View.VISIBLE);
+        thereisPic = false;
+        view.findViewById(R.id.loadPicture).setOnClickListener(v ->
+        {
+            readGallery();
+        });
+        editEvent.setOnClickListener(v ->
+        {
+            editDescription.setVisibility(View.VISIBLE);
+            updateButton.setVisibility(View.VISIBLE);
+            textEventDescription.setVisibility(View.GONE);
+
+        });
+        updateButton.setOnClickListener(v ->
+        {
+            updateButton.setEnabled(false);
+
+            if (editDescription.getText().toString().length() != 0) {
+                descriptionEvent = editDescription.getText().toString();
+                updateEvent();
+                eventSelected();
+            }
+        });
         delete_button.setOnClickListener(v -> {
 
             AlertDialog.Builder dialogDelete = new AlertDialog.Builder(getContext());
@@ -94,22 +115,34 @@ public class MyEventFragment extends EventFragment{
             else boardSelected();
         };
         Response.ErrorListener errorListener = error -> {
-            String message;
-            int errorCode = error.networkResponse.statusCode;
-            if (errorCode == 401)
-                message = getString(R.string.Unauthorized);
-            else if(errorCode == 403)
-                message = getString(R.string.Forbidden);
-            else if(errorCode == 404)
-                message = getString(R.string.NotFound);
-            else
-                message = getString(R.string.UnexpectedError);
+            errorTreatment(error.networkResponse.statusCode);
 
-            Toast.makeText(getActivity().getApplicationContext(), message, Toast.LENGTH_LONG).show();
         };
 
         apiCommunicator.deleteRequest(getActivity().getApplicationContext(), URL +'/'+ id, responseListener, errorListener, null);
 
+    }
+
+    private void errorTreatment(int errorCode) {
+        String message;
+        if (errorCode == 401)
+            message = getString(R.string.Unauthorized);
+        else if(errorCode == 403)
+            message = getString(R.string.Forbidden);
+        else if(errorCode == 404)
+            message = getString(R.string.NotFound);
+        else
+            message = getString(R.string.UnexpectedError);
+
+        Toast.makeText(getActivity().getApplicationContext(), message, Toast.LENGTH_LONG).show();
+    }
+
+    private void eventSelected() {
+        Bundle bundle = new Bundle();
+        bundle.putInt("id", id);
+        Fragment myEventFragment = MyEventFragment.newInstance(bundle);
+        FragmentChangeListener fc = (FragmentChangeListener) getActivity();
+        fc.replaceFragment(myEventFragment);
     }
 
     private void boardSelected() {
@@ -125,52 +158,28 @@ public class MyEventFragment extends EventFragment{
     }
 
 
-}
-        thereisPic = false;
-        view.findViewById(R.id.loadPicture).setOnClickListener(v ->
-        {
-            readGallery();
-        });
-        view.findViewById(R.id.editProfile).setOnClickListener(v ->
-        {
-            editDescription.setVisibility(View.VISIBLE);
-            updateButton.setVisibility(View.VISIBLE);
-            textEventDescription.setVisibility(View.GONE);
 
-        });
-        view.findViewById(R.id.buttonUpdate).setOnClickListener(v ->
-        {
-            updateButton.setEnabled(false);
-
-            if (editDescription.getText().toString().length() != 0) {
-                descriptionEvent = editDescription.getText().toString();
-
-
-            }
-        });
-    }
-
-
-    private void updateProfile() {
+    private void updateEvent() {
         HashMap<String, String> params = new HashMap<>();
         params.put("description", descriptionEvent);
         params.put("image", thereisPic ? ImageCompressor.INSTANCE.compressAndEncodeAsBase64(
-                ((BitmapDrawable)eventPicture.getDrawable()).getBitmap())
+                ((BitmapDrawable)imageView.getDrawable()).getBitmap())
                 : "");
-
         putCredentials(params);
     }
 
     private void putCredentials(HashMap<String, String> params) {
         APICommunicator apiCommunicator = new APICommunicator();
         Response.Listener responseListener = response -> {
-            Toast.makeText(getActivity().getApplicationContext(), "Image changed!", Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity().getApplicationContext(), R.string.EventUpdated, Toast.LENGTH_LONG).show();
 
         };
-        Response.ErrorListener errorListener = error -> Toast.makeText(getActivity().getApplicationContext(), "Something went wrong", Toast.LENGTH_LONG).show();
+        Response.ErrorListener errorListener = error -> {
+            errorTreatment(error.networkResponse.statusCode);
+        };
 
 
-        apiCommunicator.putRequest(getActivity().getApplicationContext(), "event/" + id, responseListener, errorListener, params);
+        apiCommunicator.putRequest(getActivity().getApplicationContext(), URL + '/' + id, responseListener, errorListener, params);
     }
 
 
@@ -195,7 +204,7 @@ public class MyEventFragment extends EventFragment{
                 Log.v(TAG, "Selected image uri" + selectedImage);
                 Log.v(TAG, String.valueOf(selectedImage));
                 loadImageFromUri(selectedImage);
-                updateProfile();
+                updateEvent();
             }
         }
         else{
@@ -205,7 +214,7 @@ public class MyEventFragment extends EventFragment{
 
     private void loadImageFromUri(Uri imageUri) {
         try {
-            eventPicture.setImageBitmap(MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), imageUri));
+            imageView.setImageBitmap(MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), imageUri));
         } catch (IOException e) {
             e.printStackTrace();
         }
