@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item android:id="@+id/item1"
+        android:title="Item"
+        android:icon="@drawable/ic_filter"
+        app:showAsAction="always">
+
+        <menu>
+            <item android:id="@+id/categories"
+                android:title="@string/categories"
+                app:showAsAction="never">
+                <menu>
+
+                    <item android:id="@+id/category_language"
+                        android:title="@string/category_language"
+                        android:checkable="true"/>
+
+                    <item android:id="@+id/category_culture"
+                        android:title="@string/category_culture"
+                        android:checkable="true"/>
+
+                    <item android:id="@+id/category_workshops"
+                        android:title="@string/category_workshops"
+                        android:checkable="true"/>
+
+                    <item android:id="@+id/category_sports"
+                        android:title="@string/category_sports"
+                        android:checkable="true"/>
+
+                    <item android:id="@+id/category_gastronomy"
+                        android:title="@string/category_gastronomy"
+                        android:checkable="true"/>
+
+                    <item android:id="@+id/category_leisure"
+                        android:title="@string/category_leisure"
+                        android:checkable="true"/>
+
+                    <item android:id="@+id/category_other"
+                        android:title="@string/category_other"
+                        android:checkable="true"/>
+
+                </menu>
+            </item>
+
+            <item android:id="@+id/event_offer"
+                android:title="@string/offered"
+                app:showAsAction="never"
+                android:checkable="true"/>
+
+            <item android:id="@+id/event_demand"
+                android:title="@string/demand"
+                app:showAsAction="never"
+                android:checkable="true"/>
+
+            <item
+                android:id="@+id/delete_filters"
+                android:title="@string/clean_filters"
+                app:showAsAction="never" />
+
+        </menu>
+    </item>
+
+</menu>
