@@ -11,7 +11,7 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -28,7 +28,8 @@
                 android:layout_gravity="center"
                 android:layout_weight="1"
                 android:clickable="true"
-                app:srcCompat="@android:drawable/ic_menu_camera" />
+                app:srcCompat="@android:drawable/ic_menu_camera"
+                android:contentDescription="TODO" />
 
             <TableRow
                 android:layout_width="match_parent"
@@ -179,9 +180,6 @@
                     </LinearLayout>
                 </TableRow>
 
-                <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
 
                     <LinearLayout
                         android:id="@+id/layoutDate"
@@ -203,7 +201,7 @@
                                 android:clickable="true"
                                 android:ems="9"
                                 android:focusable="false"
-                                android:hint="Start date"
+                                android:hint="@string/start_date"
                                 android:inputType="date"
                                 android:textSize="15sp" />
 
@@ -215,7 +213,7 @@
                                 android:clickable="true"
                                 android:ems="9"
                                 android:focusable="false"
-                                android:hint="End date"
+                                android:hint="@string/end_date"
                                 android:inputType="date"
                                 android:textSize="15sp" />
                         </LinearLayout>
@@ -233,7 +231,7 @@
                                 android:clickable="true"
                                 android:ems="9"
                                 android:focusable="false"
-                                android:hint="Start hour"
+                                android:hint="@string/start_hour"
                                 android:inputType="number"
                                 android:textSize="15sp" />
 
@@ -245,14 +243,12 @@
                                 android:clickable="true"
                                 android:ems="9"
                                 android:focusable="false"
-                                android:hint="End hour"
+                                android:hint="@string/end_hour"
                                 android:inputType="number"
                                 android:textSize="15sp" />
                         </LinearLayout>
 
                     </LinearLayout>
-
-                </TableRow>
 
             </TableLayout>
 

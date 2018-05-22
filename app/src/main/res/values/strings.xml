@@ -90,4 +90,8 @@
     <string name="confirm">Confirm</string>
     <string name="timepicker">TimePicker</string>
     <string name="event_category">Category</string>
+    <string name="end_date">End date</string>
+    <string name="start_date">Start date</string>
+    <string name="start_hour">Start hour</string>
+    <string name="end_hour">End hour</string>
 </resources>
