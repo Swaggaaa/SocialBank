@@ -67,13 +67,16 @@ public class CreateEventFragment extends Fragment {
     private EditText editTextStartHour;
     private EditText editTextEndHour;
     private EditText description;
+    private EditText editTextCapacity;
     private LinearLayout layoutDate;
     private TableRow capacityRow;
     private int eventType;
     private int eventFixed;
+    private String capacity;
     private Spinner category;
 
     private boolean thereisPic;
+    private String  verified;
     private String strStartDate;
     private String strEndDate;
     private Date dateStart = null;
@@ -85,8 +88,6 @@ public class CreateEventFragment extends Fragment {
     private int endMin = -1;
 
     double userHours;
-
-    private Button button;
 
     private void postCredentials(HashMap<String, String> params) {
         APICommunicator apiCommunicator = new APICommunicator();
@@ -138,6 +139,7 @@ public class CreateEventFragment extends Fragment {
         editTextStartHour = (EditText) rootView.findViewById(R.id.editTextStartHour);
         editTextEndHour = (EditText) rootView.findViewById(R.id.editTextEndHour);
         description = (EditText) rootView.findViewById(R.id.editTextDescription);
+        editTextCapacity = (EditText) rootView.findViewById(R.id.editTextCapacity);
 
         layoutDate = (LinearLayout) rootView.findViewById(R.id.layoutDate);
 
@@ -148,6 +150,8 @@ public class CreateEventFragment extends Fragment {
 
         eventType = -1;
         eventFixed = -1;
+
+        capacity = "1";
 
         category = (Spinner) rootView.findViewById(R.id.editTextCategory);
 
@@ -276,6 +280,18 @@ public class CreateEventFragment extends Fragment {
                 enableButton();
             }
         });
+        editTextCapacity.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+            @Override
+            public void afterTextChanged(Editable s) {
+                capacity = editTextCapacity.getText().toString();
+            }
+        });
         view.findViewById(R.id.editTextStartHour).setOnClickListener(view19 ->
         {
             showStartHourPickerDialog();
@@ -311,6 +327,7 @@ public class CreateEventFragment extends Fragment {
         params.put("image", thereisPic ? ImageCompressor.INSTANCE.compressAndEncodeAsBase64(
                 ((BitmapDrawable) imageView.getDrawable()).getBitmap())
                 : "");
+        params.put("capacity", capacity);
 
         buttonCreate.setText("LOADING");
         buttonCreate.setEnabled(false);
@@ -321,7 +338,6 @@ public class CreateEventFragment extends Fragment {
         return SharedPreferencesManager.INSTANCE.read(getActivity(), "user_email");
     }
 
-    @NonNull
     private String getEventType() {
         String demand = "false";
         if (eventType == 1) demand = "true";
@@ -329,8 +345,11 @@ public class CreateEventFragment extends Fragment {
     }
 
     public boolean isVerified() {
-        //TODO: API function still not implemented
-        return false;
+        boolean isVerified;
+        getUserInfo();
+        if( verified == "true" ) isVerified = true;
+        else isVerified = false;
+        return isVerified;
     }
 
     private boolean areFilled() {
@@ -401,9 +420,11 @@ public class CreateEventFragment extends Fragment {
             if ((dateEnd == null || dateStart.before(dateEnd)) && dateStart.after(Calendar.getInstance().getTime())) {
                 SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
                 strStartDate = format.format(calendar.getTime());
-                editTextStartDate.setText(selectedDate);sameDay = editTextStartDate.getText().toString() == editTextEndDate.getText().toString();
-                sameDay = editTextStartDate.getText().toString().contains( editTextEndDate.getText().toString() );
-                if (!checkHours()) editTextEndHour.setText("");
+                editTextStartDate.setText(selectedDate);
+                sameDay = editTextStartDate.getText().toString() == editTextEndDate.getText().toString();
+                sameDay = editTextStartDate.getText().toString().contains(editTextEndDate.getText().toString());
+
+                editTextEndHour.setText("");
                 enableButton();
             } else
                 Toast.makeText(getActivity(), "Start date must be minor than End date and greater than current date", Toast.LENGTH_SHORT).show();
@@ -426,20 +447,17 @@ public class CreateEventFragment extends Fragment {
                 SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
                 strEndDate = format.format(dateEnd);
                 editTextEndDate.setText(selectedDate);
-                sameDay = editTextStartDate.getText().toString().contains( editTextEndDate.getText().toString() );
-                if (!CreateEventFragment.this.checkHours()) editTextEndHour.setText("");
-                CreateEventFragment.this.enableButton();
+                sameDay = editTextStartDate.getText().toString().contains(editTextEndDate.getText().toString());
+                if (!rightHour()) {
+                    Toast.makeText(getActivity(), "Pick a right hour", Toast.LENGTH_SHORT).show();
+                    editTextStartHour.setText("");
+                    editTextEndHour.setText("");
+                }
+                enableButton();
             } else
                 Toast.makeText(CreateEventFragment.this.getActivity(), R.string.endDateBigger, Toast.LENGTH_SHORT).show();
         });
         newFragment.show(getActivity().getSupportFragmentManager(), "datePicker");
-    }
-
-    private boolean checkHours() {
-        String hourStart = editTextStartHour.getText().toString();
-        String hourEnd = editTextEndHour.getText().toString();
-        return !(dateStart != null && dateEnd != null && !hourStart.isEmpty() && !hourEnd.isEmpty()
-                && (editTextStartDate.getText().toString().equals(editTextEndDate.getText().toString()))) || Integer.valueOf(hourEnd) > Integer.valueOf(hourStart);
     }
 
     private void showStartHourPickerDialog() {
@@ -495,12 +513,13 @@ public class CreateEventFragment extends Fragment {
         return hour + ":" + minute;
     }
 
-    private void getMyHours() {
+    private void getUserInfo() {
         APICommunicator apiCommunicator = new APICommunicator();
         Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response -> {
             try {
                 JSONObject jsonObject = new JSONObject(response.response);
                 String balance = jsonObject.get("balance").toString();
+                verified = jsonObject.get("verified").toString();
                 userHours = Double.valueOf( balance );
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -533,7 +552,6 @@ public class CreateEventFragment extends Fragment {
     }
 
     private boolean enoughHours() {
-        getMyHours();
         return userHours >= getEventHours();
     }
 }
