@@ -169,7 +169,6 @@ public class CreateEventFragment extends Fragment {
             params.put("latitude", String.valueOf(eventLocation.getLatitude()));
             params.put("longitude", String.valueOf(eventLocation.getLongitude()));
             params.put("title", name.getText().toString());
-            params.put("category", "test");
             params.put("image", thereisPic ? ImageCompressor.INSTANCE.compressAndEncodeAsBase64(
                     ((BitmapDrawable) imageView.getDrawable()).getBitmap())
                     : "");
