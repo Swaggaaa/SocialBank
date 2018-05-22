@@ -150,7 +150,7 @@ public class ProfileFragment extends Fragment {
             dialogDelete.setPositiveButton(getResources().getString(R.string.confirm), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
-                    //reportUserAPI();
+                    //TODO:reportUserAPI();
                     Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.user_reported), Toast.LENGTH_LONG).show();
                 }
             });
