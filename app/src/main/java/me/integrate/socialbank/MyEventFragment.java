@@ -67,7 +67,6 @@ public class MyEventFragment extends EventFragment{
             updateButton.setVisibility(View.VISIBLE);
             textEventDescription.setVisibility(View.GONE);
             updateButton.setEnabled(true);
-
         });
         updateButton.setOnClickListener(v ->
         {
