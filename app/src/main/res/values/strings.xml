@@ -89,5 +89,6 @@
     <string name="discard">Discard</string>
     <string name="confirm">Confirm</string>
     <string name="clean_filters">Clean filters</string>
+    <string name="categories">Categories</string>
 
 </resources>
