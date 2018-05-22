@@ -26,6 +26,8 @@ public class EventFragment extends Fragment {
 
     private static final String URL = "/events";
 
+    protected Button join_button;
+
     private ImageView imageView;
     private TextView textEventTitle;
     private TextView textEventOrganizer;
@@ -67,6 +69,7 @@ public class EventFragment extends Fragment {
         textEndDate = (TextView) rootView.findViewById(R.id.end_date);
 
 
+        join_button = (Button) rootView.findViewById(R.id.join_button);
 
         id = getArguments().getInt("id");
         showEventInformation();
@@ -159,6 +162,14 @@ public class EventFragment extends Fragment {
             profileFragment.setArguments(b);
             FragmentChangeListener fc = (FragmentChangeListener) getActivity();
             fc.replaceFragment(profileFragment);
+        });
+        join_button.setOnClickListener(v->
+        {
+            //TODO llamar API para apuntarse, notificar que se ha apuntado
+            //TODO que aparezca en la lista de eventos que se ha apuntado
+            Toast.makeText(EventFragment.this.getActivity().getApplicationContext(), R.string.JSONException, Toast.LENGTH_LONG).show();
+            join_button.setText("Disjoin");
+
         });
     }
 }
