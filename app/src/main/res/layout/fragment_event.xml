@@ -216,7 +216,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="50dp"
                 android:background="@android:color/holo_blue_dark"
-                android:text="@string/delete"
+                android:text="@string/update"
                 android:visibility="gone" />
 
             <Button

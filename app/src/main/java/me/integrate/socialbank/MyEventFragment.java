@@ -7,16 +7,13 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -31,9 +28,9 @@ import static android.content.ContentValues.TAG;
 
 public class MyEventFragment extends EventFragment{
 
-    Button updateButton;
-    ImageView editEvent;
-    ImageView changeEventPhoto;
+    private Button updateButton;
+    private ImageView editEvent;
+    private ImageView changeEventPhoto;
 
 
     private static final String URL = "/events";
@@ -63,9 +60,7 @@ public class MyEventFragment extends EventFragment{
         editEvent.setVisibility(View.VISIBLE);
         changeEventPhoto.setVisibility(View.VISIBLE);
         view.findViewById(R.id.loadPicture).setOnClickListener(v ->
-        {
-            readGallery();
-        });
+                readGallery());
         editEvent.setOnClickListener(v ->
         {
             editDescription.setVisibility(View.VISIBLE);
@@ -80,7 +75,11 @@ public class MyEventFragment extends EventFragment{
             if (editDescription.getText().toString().length() != 0) {
                 descriptionEvent = editDescription.getText().toString();
                 updateEvent();
-                eventSelected();
+                editDescription.setVisibility(View.GONE);
+                updateButton.setVisibility(View.GONE);
+                textEventDescription.setVisibility(View.VISIBLE);
+                textEventDescription.setText(descriptionEvent);
+
             }
         });
         delete_button.setOnClickListener(v -> {
@@ -89,17 +88,11 @@ public class MyEventFragment extends EventFragment{
             dialogDelete.setTitle(getResources().getString(R.string.are_sure));
             dialogDelete.setMessage(getResources().getString(R.string.confirm_delete_event));
             dialogDelete.setCancelable(false);
-            dialogDelete.setPositiveButton(getResources().getString(R.string.confirm), new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    deleteEvent();
-                    Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.delete_event), Toast.LENGTH_LONG).show();
-                }
+            dialogDelete.setPositiveButton(getResources().getString(R.string.confirm), (dialogInterface, i) -> {
+                deleteEvent();
+                Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.delete_event), Toast.LENGTH_LONG).show();
             });
-            dialogDelete.setNegativeButton(getResources().getString(R.string.discard), new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                }
+            dialogDelete.setNegativeButton(getResources().getString(R.string.discard), (dialogInterface, i) -> {
             });
             dialogDelete.show();
         });
@@ -112,10 +105,7 @@ public class MyEventFragment extends EventFragment{
             if (getArguments().getBoolean("MyProfile")) profileSelected();
             else boardSelected();
         };
-        Response.ErrorListener errorListener = error -> {
-            errorTreatment(error.networkResponse.statusCode);
-
-        };
+        Response.ErrorListener errorListener = error -> errorTreatment(error.networkResponse.statusCode);
 
         apiCommunicator.deleteRequest(getActivity().getApplicationContext(), URL +'/'+ id, responseListener, errorListener, null);
 
@@ -133,14 +123,6 @@ public class MyEventFragment extends EventFragment{
             message = getString(R.string.UnexpectedError);
 
         Toast.makeText(getActivity().getApplicationContext(), message, Toast.LENGTH_LONG).show();
-    }
-
-    private void eventSelected() {
-        Bundle bundle = new Bundle();
-        bundle.putInt("id", id);
-        Fragment myEventFragment = MyEventFragment.newInstance(bundle);
-        FragmentChangeListener fc = (FragmentChangeListener) getActivity();
-        fc.replaceFragment(myEventFragment);
     }
 
     private void boardSelected() {
@@ -168,13 +150,8 @@ public class MyEventFragment extends EventFragment{
 
     private void putCredentials(HashMap<String, String> params) {
         APICommunicator apiCommunicator = new APICommunicator();
-        Response.Listener responseListener = response -> {
-            Toast.makeText(getActivity().getApplicationContext(), R.string.EventUpdated, Toast.LENGTH_LONG).show();
-
-        };
-        Response.ErrorListener errorListener = error -> {
-            errorTreatment(error.networkResponse.statusCode);
-        };
+        Response.Listener responseListener = response -> Toast.makeText(getActivity().getApplicationContext(), R.string.EventUpdated, Toast.LENGTH_LONG).show();
+        Response.ErrorListener errorListener = error -> errorTreatment(error.networkResponse.statusCode);
 
 
         apiCommunicator.putRequest(getActivity().getApplicationContext(), URL + '/' + id, responseListener, errorListener, params);
