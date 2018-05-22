@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,11 +29,11 @@ public class EventFragment extends Fragment {
 
     protected Button join_button;
 
-    private ImageView imageView;
+    protected ImageView imageView;
     private TextView textEventTitle;
     private TextView textEventOrganizer;
     private TextView textEventCategory;
-    private TextView textEventDescription;
+    protected TextView textEventDescription;
     private TextView textDemandEvent;
     private TextView textLocation;
     private TextView textIndividualOrGroup;
@@ -40,9 +41,11 @@ public class EventFragment extends Fragment {
     private TextView textEventHours;
     private TextView textStartDate;
     private TextView textEndDate;
+    protected EditText editDescription;
 
     private String creator;
     protected int id;
+    protected String descriptionEvent;
 
     public static EventFragment newInstance(Bundle params) {
         EventFragment eventFragment = new EventFragment();
@@ -67,6 +70,7 @@ public class EventFragment extends Fragment {
         textEventHours = (TextView) rootView.findViewById(R.id.hours);
         textStartDate = (TextView) rootView.findViewById(R.id.start_date);
         textEndDate = (TextView) rootView.findViewById(R.id.end_date);
+        editDescription = (EditText) rootView.findViewById(R.id.editDescription);
 
 
         join_button = (Button) rootView.findViewById(R.id.join_button);
@@ -88,12 +92,15 @@ public class EventFragment extends Fragment {
 
                 textEventOrganizer.setText(creator);
                 textEventCategory.setText(event.getCategory().toString());
-                textEventDescription.setText(event.getDescription());
+                descriptionEvent = event.getDescription();
+                textEventDescription.setText(descriptionEvent);
                 textLocation.setText(event.getLocation());
                 textDemandEvent.setText(event.getDemand() ? R.string.demand : R.string.offer);
                 imageView.setImageBitmap(event.getImage());
 
-                //TODO not harcoded this values
+                editDescription.setText(descriptionEvent);
+
+                //TODO not hardcoded this values
                 textIndividualOrGroup.setText("Individual");
                 textViewNumberPersonsEvent.setText("1/1");
 
