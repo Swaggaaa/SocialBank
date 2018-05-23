@@ -56,7 +56,6 @@ public class MyEventFragment extends EventFragment{
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        join_button.setVisibility(View.GONE);
         delete_button.setVisibility(View.VISIBLE);
         editEvent.setVisibility(View.VISIBLE);
         changeEventPhoto.setVisibility(View.VISIBLE);

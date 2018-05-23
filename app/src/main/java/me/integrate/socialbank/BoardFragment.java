@@ -208,8 +208,8 @@ public class BoardFragment extends Fragment {
                     if (event.getCreatorEmail().equals(SharedPreferencesManager.INSTANCE.read(getActivity(),"user_email"))
                             && correctDate(event.getIniDate())) {
                         eventFragment = MyEventFragment.newInstance(bundle);
-                    }
-                    else eventFragment = EventFragment.newInstance(bundle);
+                    } //else if (event.getCreatorEmail().equals(SharedPreferencesManager.INSTANCE.read(getActivity(), "user_email"))) eventFragment = EventFragment.newInstance(bundle);
+                    else eventFragment = MyJoinEventFragment.newInstance(bundle);
                     FragmentChangeListener fc = (FragmentChangeListener) getActivity();
                     fc.replaceFragment(eventFragment);
                 });

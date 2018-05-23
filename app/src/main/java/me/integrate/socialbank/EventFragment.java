@@ -170,13 +170,5 @@ public class EventFragment extends Fragment {
             FragmentChangeListener fc = (FragmentChangeListener) getActivity();
             fc.replaceFragment(profileFragment);
         });
-        join_button.setOnClickListener(v->
-        {
-            //TODO llamar API para apuntarse, notificar que se ha apuntado
-            //TODO que aparezca en la lista de eventos que se ha apuntado
-            Toast.makeText(EventFragment.this.getActivity().getApplicationContext(), R.string.JSONException, Toast.LENGTH_LONG).show();
-            join_button.setText("Disjoin");
-
-        });
     }
 }

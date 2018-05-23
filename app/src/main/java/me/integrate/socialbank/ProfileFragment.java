@@ -85,41 +85,41 @@ public class ProfileFragment extends Fragment {
     }
 
     private void getUserInfo(String emailUser) {
-        APICommunicator apiCommunicator = new APICommunicator();
-        Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response -> {
-            JSONObject jsonObject;
-            Float balance = null;
-            try{
-                jsonObject = new JSONObject(response.response);
-                nameUser = jsonObject.getString("name");
-                String events = getString(R.string.personal_events);
-                myEvents.setText(nameUser+events);
-                lastNameUser = jsonObject.getString("surname");
-                dateUser = jsonObject.getString("birthdate");
-                genderUser = jsonObject.getString("gender");
-                descriptionUser = jsonObject.getString("description");
-                String completeName = nameUser + " " + lastNameUser;
-                userName.setText(completeName);
-                balance = BigDecimal.valueOf(jsonObject.getDouble("balance")).floatValue();
-                userBalance.setText(balance.toString());
-                userEmailToShow.setText(jsonObject.getString("email"));
-                userDescription.setText(descriptionUser);
-                String image = jsonObject.getString("image");
-                if (!image.equals("")) {
-                    byte[] decodeString = Base64.decode(image, Base64.DEFAULT);
-                    userPicture.setImageBitmap(BitmapFactory.decodeByteArray(
-                            decodeString, 0, decodeString.length));
+            APICommunicator apiCommunicator = new APICommunicator();
+            Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response -> {
+                JSONObject jsonObject;
+                Float balance = null;
+                try{
+                    jsonObject = new JSONObject(response.response);
+                    nameUser = jsonObject.getString("name");
+                    String events = getString(R.string.personal_events);
+                    myEvents.setText(nameUser+events);
+                    lastNameUser = jsonObject.getString("surname");
+                    dateUser = jsonObject.getString("birthdate");
+                    genderUser = jsonObject.getString("gender");
+                    descriptionUser = jsonObject.getString("description");
+                    String completeName = nameUser + " " + lastNameUser;
+                    userName.setText(completeName);
+                    balance = BigDecimal.valueOf(jsonObject.getDouble("balance")).floatValue();
+                    userBalance.setText(balance.toString());
+                    userEmailToShow.setText(jsonObject.getString("email"));
+                    userDescription.setText(descriptionUser);
+                    String image = jsonObject.getString("image");
+                    if (!image.equals("")) {
+                        byte[] decodeString = Base64.decode(image, Base64.DEFAULT);
+                        userPicture.setImageBitmap(BitmapFactory.decodeByteArray(
+                                decodeString, 0, decodeString.length));
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
+                if (balance < 0) userBalance.setTextColor(Color.RED);
+                else if (balance > 0) userBalance.setTextColor(Color.GREEN);
+                else userBalance.setTextColor(Color.BLUE);
 
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            if (balance < 0) userBalance.setTextColor(Color.RED);
-            else if (balance > 0) userBalance.setTextColor(Color.GREEN);
-            else userBalance.setTextColor(Color.BLUE);
-
-        };
-        Response.ErrorListener errorListener = error -> {
+            };
+            Response.ErrorListener errorListener = error -> {
             Toast.makeText(getActivity().getApplicationContext(), "Something went wrong", Toast.LENGTH_LONG).show();
             Fragment boardFragment = new BoardFragment();
             FragmentChangeListener fc = (FragmentChangeListener) getActivity();
@@ -162,10 +162,11 @@ public class ProfileFragment extends Fragment {
                     bundle.putInt("id", event.getId());
                     bundle.putBoolean("MyProfile", true);
                     Fragment eventFragment;
-                    if (event.getCreatorEmail().equals(emailUser) && correctDate(event.getIniDate())) {
+                    if (event.getCreatorEmail().equals(SharedPreferencesManager.INSTANCE.read(getActivity(),"user_email"))
+                            && correctDate(event.getIniDate())) {
                         eventFragment = MyEventFragment.newInstance(bundle);
-                    }
-                    else eventFragment = EventFragment.newInstance(bundle);
+                    } else if (event.getCreatorEmail().equals(SharedPreferencesManager.INSTANCE.read(getActivity(), "user_email"))) eventFragment = EventFragment.newInstance(bundle);
+                    else eventFragment = MyJoinEventFragment.newInstance(bundle);
                     FragmentChangeListener fc = (FragmentChangeListener) getActivity();
                     fc.replaceFragment(eventFragment);
                 });

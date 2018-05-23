@@ -67,7 +67,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/colorTransparent"
-                android:text="@string/join"
+                android:visibility="gone"
                 android:textColor="@color/colorTextForgot" />
 
             <TextView
