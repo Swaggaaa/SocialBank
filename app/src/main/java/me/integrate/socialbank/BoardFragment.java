@@ -101,8 +101,7 @@ public class BoardFragment extends Fragment {
         switch (item.getItemId()) {
             case R.id.category_language:
                 language = !item.isChecked();
-                if (item.isChecked())item.setChecked(false);
-                else item.setChecked(true);
+                item.setChecked(!item.isChecked());
                 break;
             case R.id.category_culture:
                 culture = !item.isChecked();
@@ -246,23 +245,6 @@ public class BoardFragment extends Fragment {
             long hours = iniDate.getTime() - currentDate.getTime();
             hours = hours/ 1000 / 60 / 60;
             return hours >= 24;
-        }
-    }
-
-    private byte[] bitmapToByteArray(Bitmap bitmap) {
-        if (bitmap != null) {
-            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
-            return byteArrayOutputStream.toByteArray();
-        }
-        else return null;
-    }
-
-    private String dateToString(Date date) {
-        if (date == null) return getResources().getString(R.string.notDate);
-        else{
-            DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-            return df.format(date);
         }
     }
 

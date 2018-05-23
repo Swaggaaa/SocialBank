@@ -13,7 +13,7 @@
         <item
             android:icon="@drawable/ic_account_circle"
             android:id="@+id/myEvents"
-            android:title="My events" />
+            android:title="@string/my_events" />
 
         <item
             android:icon="@drawable/crosshairs_gps"

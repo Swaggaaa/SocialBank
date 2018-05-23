@@ -7,6 +7,9 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -29,10 +32,13 @@ public class AllMyEventsFragment extends Fragment {
     private RecyclerView.Adapter mAdapter;
 
     private ProgressDialog loadingDialog;
+    private List<Event> events;
+    private List<Event> joinEvents;
     private List<Event> items;
     private String emailUser;
 
-    //TODO filter options
+    private MenuItem itemMyEvents;
+    private MenuItem itemMyJoinEvents;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -46,17 +52,69 @@ public class AllMyEventsFragment extends Fragment {
         mRecyclerView.setLayoutManager(mLayoutManager);
         loadingDialog = ProgressDialog.show(getActivity(), "",
                 getString(R.string.loadingMessage), true);
+        events = new ArrayList<>();
+        joinEvents = new ArrayList<>();
         items = new ArrayList<>();
         emailUser = SharedPreferencesManager.INSTANCE.read(getActivity(),"user_email");
         getAllEventsByUser();
 
         //TODO modificar
-        //getJoinEvents();
+        getJoinEvents();
         return rootView;
     }
 
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.filter_events, menu);
+        itemMyEvents = menu.findItem(R.id.my_events);
+        itemMyJoinEvents = menu.findItem(R.id.my_events_join);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.my_events:
+                items.clear();
+                if (item.isChecked()) {
+                    items.addAll(events);
+                    items.addAll(joinEvents);
+                    item.setChecked(false);
+                }
+                else {
+                    if (itemMyJoinEvents.isChecked()) items.addAll(joinEvents);
+                    items.addAll(events);
+                    item.setChecked(true);
+                }
+                break;
+            case R.id.my_events_join:
+                items.clear();
+                if (item.isChecked()) {
+                    items.addAll(events);
+                    items.addAll(joinEvents);
+                    item.setChecked(false);
+                }
+                else {
+                    if (itemMyEvents.isChecked()) items.addAll(events);
+                    items.addAll(joinEvents);
+                    item.setChecked(true);
+                }
+                break;
+            case R.id.delete_filters:
+                items.clear();
+                items.addAll(events);
+                items.addAll(joinEvents);
+                itemMyJoinEvents.setChecked(false);
+                itemMyEvents.setChecked(false);
+                break;
+        }
+        mAdapter.notifyDataSetChanged();
+        return true;
+
     }
 
     //Call to the api for the events by creator
@@ -70,7 +128,7 @@ public class AllMyEventsFragment extends Fragment {
                 System.out.println(String.valueOf(jsonArray.length()));
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
-                    items.add(new Event(jsonObject));
+                    events.add(new Event(jsonObject));
 
                 }
 
@@ -94,9 +152,11 @@ public class AllMyEventsFragment extends Fragment {
                 System.out.println(String.valueOf(jsonArray.length()));
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
-                    items.add(new Event(jsonObject));
+                    joinEvents.add(new Event(jsonObject));
 
                 }
+                items.addAll(joinEvents);
+                items.addAll(events);
                 mAdapter = new EventAdapter(items, getActivity(), (v1, position) -> {
                     Bundle bundle = new Bundle();
                     Event event = items.get(position);

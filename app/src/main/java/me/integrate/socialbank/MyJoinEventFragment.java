@@ -15,9 +15,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.List;
-
-
 public class MyJoinEventFragment extends EventFragment {
 
     private static final String URL = "/users";
@@ -34,25 +31,66 @@ public class MyJoinEventFragment extends EventFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
         emailUser = SharedPreferencesManager.INSTANCE.read(getActivity(),"user_email");
-
+        getAllJoinEventsByUser();
         return view;
     }
 
+    //TODO change set text
+    //TODO hacer llamadas api correctamente
+    //TODO controlar número asistentes
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        //if (!join_button.getText().equals("Disjoin")) join_button.setText("Join");
+        join_button.setVisibility(View.VISIBLE);
+        join_button.setOnClickListener(v->
+        {
+            if (join_button.getText().equals("Disjoin"))
+            {
+                AlertDialog.Builder dialogDelete = new AlertDialog.Builder(getContext());
+                dialogDelete.setTitle(getResources().getString(R.string.are_sure));
+                dialogDelete.setMessage(getResources().getString(R.string.confirm_delete_event));
+                dialogDelete.setCancelable(false);
+                dialogDelete.setPositiveButton(getResources().getString(R.string.confirm), (dialogInterface, i) -> {
+                    //Call to the api function
+                   // disjointEvent();
+                    join_button.setText(getResources().getString(R.string.join));
+                    Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.delete_event), Toast.LENGTH_LONG).show();
+
+                });
+                dialogDelete.setNegativeButton(getResources().getString(R.string.discard), (dialogInterface, i) -> {
+                });
+                dialogDelete.show();
+
+            } else {
+                //signUpEvent();
+                join_button.setText("Disjoin");
+                //call to the api function
+            }
+
+        });
+    }
+
     //Call to the api for the events by creator
-    private void getAllEventsByUser() {
+    private void getAllJoinEventsByUser() {
 
         APICommunicator apiCommunicator = new APICommunicator();
         Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response -> {
             JSONArray jsonArray;
+            boolean found = false;
             try {
                 jsonArray = new JSONArray(response.response);
                 System.out.println(String.valueOf(jsonArray.length()));
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
                     Event event = new Event(jsonObject);
-                    if (event.getId() == id) join_button.setText("Disjoin");
+                    if (event.getId() == id ) {
+                        found = true;
+                        join_button.setText("Disjoin");
+                    }
 
                 }
+                if (!found) join_button.setText("Join");
 
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -77,40 +115,26 @@ public class MyJoinEventFragment extends EventFragment {
         Toast.makeText(getActivity().getApplicationContext(), message, Toast.LENGTH_LONG).show();
     }
 
+   /* void signUpEvent() {
+        APICommunicator apiCommunicator = new APICommunicator();
+        Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response -> {
 
-    //TODO change set text
-    //TODO hacer llamadas api
-    //TODO controlar número asistentes
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        getAllEventsByUser();
-        //if (!join_button.getText().equals("Disjoin")) join_button.setText("Join");
-        join_button.setVisibility(View.VISIBLE);
-        join_button.setOnClickListener(v->
-        {
-            if (join_button.getText().equals("Disjoin"))
-            {
-                AlertDialog.Builder dialogDelete = new AlertDialog.Builder(getContext());
-                dialogDelete.setTitle(getResources().getString(R.string.are_sure));
-                dialogDelete.setMessage(getResources().getString(R.string.confirm_delete_event));
-                dialogDelete.setCancelable(false);
-                dialogDelete.setPositiveButton(getResources().getString(R.string.confirm), (dialogInterface, i) -> {
-                    //Call to the api function
-                    join_button.setText("Join");
-                    Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.delete_event), Toast.LENGTH_LONG).show();
+        };
+        Response.ErrorListener errorListener = error -> errorTreatment(error.networkResponse.statusCode);
 
-                });
-                dialogDelete.setNegativeButton(getResources().getString(R.string.discard), (dialogInterface, i) -> {
-                });
-                dialogDelete.show();
+        apiCommunicator.postRequest(getActivity().getApplicationContext(), URL +'/'+ id, responseListener, errorListener, null);
 
-            } else {
-                join_button.setText("Join");
-                //call to the api function
-            }
-
-        });
     }
+
+    void disjointEvent() {
+        APICommunicator apiCommunicator = new APICommunicator();
+        Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response -> {
+
+        };
+        Response.ErrorListener errorListener = error -> errorTreatment(error.networkResponse.statusCode);
+
+        apiCommunicator.deleteRequest(getActivity().getApplicationContext(), URL +'/'+ id, responseListener, errorListener, null);
+
+    }*/
 
 }
