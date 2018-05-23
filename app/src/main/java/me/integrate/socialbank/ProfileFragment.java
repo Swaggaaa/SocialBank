@@ -150,8 +150,9 @@ public class ProfileFragment extends Fragment {
             dialogDelete.setPositiveButton(getResources().getString(R.string.confirm), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
-                    //TODO:reportUserAPI();
-                    Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.user_reported), Toast.LENGTH_LONG).show();
+                    HashMap<String, String> params = new HashMap<>();
+                    params.put("email", emailUser);
+                    sendReportUser(params);
                 }
             });
             dialogDelete.setNegativeButton(getResources().getString(R.string.discard), new DialogInterface.OnClickListener() {
@@ -161,6 +162,31 @@ public class ProfileFragment extends Fragment {
             });
             dialogDelete.show();
         });
+    }
+
+    private void sendReportUser(HashMap<String, String> params) {
+        APICommunicator apiCommunicator = new APICommunicator();
+        Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response -> {
+            Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.user_reported), Toast.LENGTH_LONG).show();
+        };
+        Response.ErrorListener errorListener = error -> {
+            String message;
+            int errorCode = error.networkResponse.statusCode;
+            if (errorCode == 401)
+                message = "Unauthorized";
+            else if (errorCode == 403)
+                message = "Forbidden";
+            else if (errorCode == 404)
+                message = "User not Found";
+            else if (errorCode == 409)
+                message = "User already reported";
+            else
+                message = "Unexpected error";
+            Toast.makeText(getActivity().getApplicationContext(), message, Toast.LENGTH_LONG).show();
+
+        };
+
+        apiCommunicator.postRequest(getActivity().getApplicationContext(), URL+'/'+emailUser+"/report", responseListener, errorListener, params);
     }
 
     private void getUserEvents() {
