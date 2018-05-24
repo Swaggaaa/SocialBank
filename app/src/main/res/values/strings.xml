@@ -94,5 +94,6 @@
     <string name="categories">Categories</string>
     <string name="report_user">Report user</string>
     <string name="user_reported">User reported</string>
+    <string name="user_already_reported">User already reported</string>
 
 </resources>

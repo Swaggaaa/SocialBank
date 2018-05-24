@@ -173,15 +173,15 @@ public class ProfileFragment extends Fragment {
             String message;
             int errorCode = error.networkResponse.statusCode;
             if (errorCode == 401)
-                message = "Unauthorized";
+                message = getString(R.string.unauthorized);
             else if (errorCode == 403)
-                message = "Forbidden";
+                message = getString(R.string.forbidden);
             else if (errorCode == 404)
-                message = "User not Found";
+                message = getString(R.string.NotFound);
             else if (errorCode == 409)
-                message = "User already reported";
+                message = getString(R.string.user_already_reported);
             else
-                message = "Unexpected error";
+                message = getString(R.string.unexpectedError);
             Toast.makeText(getActivity().getApplicationContext(), message, Toast.LENGTH_LONG).show();
 
         };
@@ -237,13 +237,13 @@ public class ProfileFragment extends Fragment {
             String message;
             int errorCode = error.networkResponse.statusCode;
             if (errorCode == 401)
-                message = "Unauthorized";
+                message = getString(R.string.unauthorized);
             else if (errorCode == 403)
-                message = "Forbidden";
+                message = getString(R.string.forbidden);
             else if (errorCode == 404)
-                message = "Not Found";
+                message = getString(R.string.NotFound);
             else
-                message = "Unexpected error";
+                message = getString(R.string.unexpectedError);
 
             loadingDialog.dismiss();
             Toast.makeText(getActivity().getApplicationContext(), message, Toast.LENGTH_LONG).show();
