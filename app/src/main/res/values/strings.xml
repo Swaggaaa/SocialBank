@@ -93,5 +93,8 @@
     <string name="EditAccount">Account</string>
     <string name="account_status">Account Status:</string>
     <string name="categories">Categories</string>
+    <string name="verify_account_text">You can request to verify your account here</string>
+    <string name="status">Status</string>
+    <string name="send_request">Send request</string>
 
 </resources>

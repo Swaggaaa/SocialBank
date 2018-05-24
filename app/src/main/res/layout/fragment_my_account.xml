@@ -25,7 +25,7 @@
                 android:text="@string/account_status"
                 android:textSize="20sp"
                 android:textStyle="bold"
-                android:layout_marginRight="10dp"/>
+                android:layout_marginEnd="10dp"/>
 
             <TextView
                 android:id="@+id/account_verified"
@@ -40,10 +40,30 @@
                 android:layout_height="wrap_content"
                 android:textSize="20sp"
                 android:id="@+id/AccountStatus"
-                android:text="State"/>
+                android:text="@string/status"/>
 
 
         </LinearLayout>
+        <TextView
+            android:id="@+id/account_verify_hint"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/verify_account_text"
+            android:layout_marginTop="10dp"/>
+
+        <EditText
+            android:id="@+id/editText_request"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textMultiLine"
+            android:lines="5"
+            android:scrollbars="vertical"/>
+        <Button
+            android:id="@+id/button_send_request"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/send_request"
+            android:background="@android:color/holo_blue_dark"/>
 
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>
