@@ -86,9 +86,10 @@ public class UserSearchFragment extends Fragment {
 
             mAdapter = new UserAdapter(sortedItems, getActivity(), (v1, position) -> {
                 Bundle bundle = new Bundle();
-                bundle.putString("email", sortedItems.get(position).getEmail());
+                String email = sortedItems.get(position).getEmail();
+                bundle.putString("email", email);
                 FragmentChangeListener fc = (FragmentChangeListener) getActivity();
-                ProfileFragment profileFragment = new ProfileFragment();
+                ProfileFragment profileFragment = !email.equals(SharedPreferencesManager.INSTANCE.read(getActivity(), "user_email")) ? new ProfileFragment() : new MyProfileFragment();
                 profileFragment.setArguments(bundle);
                 fc.replaceFragment(profileFragment);
             });
