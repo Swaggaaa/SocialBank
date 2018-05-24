@@ -100,5 +100,9 @@
     <string name="verify_account_text">You can request to verify your account here</string>
     <string name="status">Status</string>
     <string name="send_request">Send request</string>
+    <string name="account_actual_balance">Account actual balance</string>
+    <string name="buy_more_hours">Buy more hours</string>
+    <string name="verified">VERIFIED</string>
+    <string name="standard">STANDARD</string>
 
 </resources>

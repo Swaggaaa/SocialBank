@@ -1,5 +1,6 @@
 package me.integrate.socialbank;
 
+import android.app.ProgressDialog;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.support.v4.app.Fragment;
@@ -28,7 +29,11 @@ public class MyAccountFragment extends Fragment {
     private TextView verifyAccountHint;
     private EditText sendRequestText;
     private Button sendRequestButton;
+    private TextView accountBalanceHint;
+    private TextView userBalance;
+    private Button buyHours;
     private boolean verified;
+    private ProgressDialog loadingDialog;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -40,7 +45,12 @@ public class MyAccountFragment extends Fragment {
         verifyAccountHint = (TextView) rootView.findViewById(R.id.account_verify_hint);
         sendRequestText = (EditText) rootView.findViewById(R.id.editText_request);
         sendRequestButton = (Button) rootView.findViewById(R.id.button_send_request);
+        accountBalanceHint = (TextView) rootView.findViewById(R.id.account_balance_hint);
+        userBalance = (TextView) rootView.findViewById(R.id.user_balance);
+        buyHours = (Button) rootView.findViewById(R.id.button_buy_hours);
         String email = SharedPreferencesManager.INSTANCE.read(getActivity(),"user_email");
+        loadingDialog = ProgressDialog.show(getActivity(), "",
+                getString(R.string.loadingMessage), true);
         loadScreen(email);
         return rootView;
     }
@@ -50,10 +60,29 @@ public class MyAccountFragment extends Fragment {
         APICommunicator apiCommunicator = new APICommunicator();
         Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response -> {
             JSONObject jsonObject;
-            Float balance = null;
+
             try {
                 jsonObject = new JSONObject(response.response);
                 verified = jsonObject.getBoolean("verified");
+                Float balance = null;
+                balance = BigDecimal.valueOf(jsonObject.getDouble("balance")).floatValue();
+                userBalance.setText(balance.toString());
+                userBalance.setVisibility(View.VISIBLE);
+                if (balance < 0) userBalance.setTextColor(Color.RED);
+                else if (balance > 0) userBalance.setTextColor(Color.GREEN);
+                else userBalance.setTextColor(Color.BLUE);
+                if (verified) {
+                    accountStatusImage.setVisibility(View.VISIBLE);
+                    accountStatus.setText(R.string.verified);
+                    buyHours.setVisibility(View.VISIBLE);
+                }
+                else {
+                    accountStatus.setText(R.string.standard);
+                    verifyAccountHint.setVisibility(View.VISIBLE);
+                    sendRequestText.setVisibility(View.VISIBLE);
+                    sendRequestButton.setVisibility(View.VISIBLE);
+                }
+                loadingDialog.dismiss();
 
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -61,13 +90,24 @@ public class MyAccountFragment extends Fragment {
 
         };
         Response.ErrorListener errorListener = error -> {
-            Toast.makeText(getActivity().getApplicationContext(), "Something went wrong", Toast.LENGTH_LONG).show();
-            Fragment boardFragment = new BoardFragment();
-            FragmentChangeListener fc = (FragmentChangeListener) getActivity();
-            fc.replaceFragment(boardFragment);
+            String message;
+            int errorCode = error.networkResponse.statusCode;
+            if (errorCode == 401)
+                message = getString(R.string.unauthorized);
+            else if (errorCode == 403)
+                message = getString(R.string.forbidden);
+            else if (errorCode == 404)
+                message = getString(R.string.NotFound);
+            else if (errorCode == 409)
+                message = getString(R.string.user_already_reported);
+            else
+                message = getString(R.string.unexpectedError);
+            Toast.makeText(getActivity().getApplicationContext(), message, Toast.LENGTH_LONG).show();
         };
 
         apiCommunicator.getRequest(getActivity().getApplicationContext(), URL + '/' + emailUser, responseListener, errorListener, null);
     }
+
+
 
 }
