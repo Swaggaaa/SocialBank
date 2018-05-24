@@ -92,5 +92,7 @@
     <string name="clean_filters">Clean filters</string>
     <string name="categories">Categories</string>
     <string name="comments">Comments</string>
+    <string name="new_comment">New comment</string>
+    <string name="new_comment_created">New comment created</string>
 
 </resources>

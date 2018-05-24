@@ -19,18 +19,22 @@ import android.widget.Toast;
 
 import com.android.volley.Response;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class EventFragment extends Fragment {
 
     private static final String URL = "/events";
 
     protected ImageView imageView;
+    private ImageView addComment;
     private TextView textEventTitle;
     private TextView textEventOrganizer;
     private TextView textEventCategory;
@@ -51,6 +55,7 @@ public class EventFragment extends Fragment {
 
 
     private String creator;
+    private Date iniDate;
     protected int id;
     protected String descriptionEvent;
 
@@ -78,6 +83,7 @@ public class EventFragment extends Fragment {
         textStartDate = (TextView) rootView.findViewById(R.id.start_date);
         textEndDate = (TextView) rootView.findViewById(R.id.end_date);
         editDescription = (EditText) rootView.findViewById(R.id.editDescription);
+        addComment = (ImageView) rootView.findViewById(R.id.addComment);
 
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.my_recycler_view_user_profile);
         mRecyclerView.setHasFixedSize(true);
@@ -88,11 +94,42 @@ public class EventFragment extends Fragment {
 
         //TODO call to the api
        // getComments();
-
-
         id = getArguments().getInt("id");
         showEventInformation();
         return rootView;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        addComment.setVisibility(View.VISIBLE);
+        view.findViewById(R.id.textEventOrganizer).setOnClickListener(v ->
+        {
+            Bundle b = new Bundle();
+            b.putString("email", creator);
+            Fragment profileFragment;
+            if (!creator.equals(SharedPreferencesManager.INSTANCE.read(getActivity(),"user_email"))){
+                profileFragment = new ProfileFragment();
+            }
+            else {
+                profileFragment = new MyProfileFragment();
+            }
+            profileFragment.setArguments(b);
+            FragmentChangeListener fc = (FragmentChangeListener) getActivity();
+            fc.replaceFragment(profileFragment);
+        });
+        addComment.setOnClickListener(v ->
+        {
+            Bundle b = new Bundle();
+            b.putInt("id", id);
+            b.putString("creator", creator);
+            System.out.println("DATE " + dateToString(iniDate));
+            b.putString("iniDate", dateToString(iniDate));
+            Fragment addCommentFragment = new AddCommentFragment();
+            addCommentFragment.setArguments(b);
+            FragmentChangeListener fc = (FragmentChangeListener) getActivity();
+            fc.replaceFragment(addCommentFragment);
+        });
     }
 
         //Call API to obtain event's information
@@ -117,7 +154,7 @@ public class EventFragment extends Fragment {
                 textIndividualOrGroup.setText("Individual");
                 textViewNumberPersonsEvent.setText("1/1");
 
-                Date iniDate = event.getIniDate();
+                iniDate = event.getIniDate();
                 Date endDate = event.getEndDate();
                 String hours = getHours(iniDate, endDate) + " " + getResources().getString(R.string.time_hours);
                 textEventHours.setText(hours);
@@ -128,20 +165,7 @@ public class EventFragment extends Fragment {
                 Toast.makeText(EventFragment.this.getActivity().getApplicationContext(), R.string.JSONException, Toast.LENGTH_LONG).show();
             }
         };
-        Response.ErrorListener errorListener = error -> {
-            String message;
-            int errorCode = error.networkResponse.statusCode;
-            if (errorCode == 401)
-                message = getString(R.string.Unauthorized);
-            else if(errorCode == 403)
-                message = getString(R.string.Forbidden);
-            else if(errorCode == 404)
-                message = getString(R.string.NotFound);
-            else
-                message = getString(R.string.UnexpectedError);
-
-            Toast.makeText(getActivity().getApplicationContext(), message, Toast.LENGTH_LONG).show();
-        };
+        Response.ErrorListener errorListener = error -> errorTreatment(error.networkResponse.statusCode);
 
         apiCommunicator.getRequest(getActivity().getApplicationContext(), URL+'/'+ id, responseListener, errorListener, null);
 
@@ -160,35 +184,16 @@ public class EventFragment extends Fragment {
     private String dateToString(Date date) {
         if (date == null) return getResources().getString(R.string.notDate);
         else{
-            DateFormat df = new SimpleDateFormat("dd/MM/yyyy        HH:mm");
+            DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm");
             return df.format(date);
         }
     }
 
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        view.findViewById(R.id.textEventOrganizer).setOnClickListener(v ->
-        {
-            Bundle b = new Bundle();
-            b.putString("email", creator);
-            Fragment profileFragment;
-            if (!creator.equals(SharedPreferencesManager.INSTANCE.read(getActivity(),"user_email"))){
-                 profileFragment = new ProfileFragment();
-            }
-            else {
-                profileFragment = new MyProfileFragment();
-            }
-            profileFragment.setArguments(b);
-            FragmentChangeListener fc = (FragmentChangeListener) getActivity();
-            fc.replaceFragment(profileFragment);
-        });
-    }
 
     /*void getComments() {
         APICommunicator apiCommunicator = new APICommunicator();
         Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response -> {
-            List<Event> comments = new ArrayList<>();
+            List<Comment> comments = new ArrayList<>();
             JSONArray jsonArray;
             try {
                 jsonArray = new JSONArray(response.response);
@@ -197,21 +202,36 @@ public class EventFragment extends Fragment {
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
                     comments.add(new Comment(jsonObject));
 
+
                 }
                 mAdapter = new CommentAdapter(comments, getActivity(), (v1, position) -> {
+                    Bundle b = new Bundle();
+                    b.putString("email", creator);
+                    Fragment profileFragment;
+                    if (!creator.equals(SharedPreferencesManager.INSTANCE.read(getActivity(),"user_email"))){
+                        profileFragment = new ProfileFragment();
+                    }
+                    else {
+                        profileFragment = new MyProfileFragment();
+                    }
+                    profileFragment.setArguments(b);
+                    FragmentChangeListener fc = (FragmentChangeListener) getActivity();
+                    fc.replaceFragment(profileFragment);
 
                 });
 
                 mRecyclerView.setAdapter(mAdapter);
                 loadingDialog.dismiss();
 
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
         };
         Response.ErrorListener errorListener = error -> errorTreatment(error.networkResponse.statusCode);
 
         apiCommunicator.deleteRequest(getActivity().getApplicationContext(), URL + '/' + id, responseListener, errorListener, null);
 
-    }
+    }*/
 
     private void errorTreatment(int errorCode) {
         String message;
@@ -223,8 +243,8 @@ public class EventFragment extends Fragment {
             message = getString(R.string.NotFound);
         else
             message = getString(R.string.UnexpectedError);
-        loadingDialog.dismiss();
+
         Toast.makeText(getActivity().getApplicationContext(), message, Toast.LENGTH_LONG).show();
-    }*/
+    }
 
 }
