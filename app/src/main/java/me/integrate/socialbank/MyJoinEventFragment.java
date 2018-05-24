@@ -48,13 +48,13 @@ public class MyJoinEventFragment extends EventFragment {
             {
                 AlertDialog.Builder dialogDelete = new AlertDialog.Builder(getContext());
                 dialogDelete.setTitle(getResources().getString(R.string.are_sure));
-                dialogDelete.setMessage(getResources().getString(R.string.confirm_delete_event));
+                dialogDelete.setMessage(getResources().getString(R.string.confirm_disjoin_event));
                 dialogDelete.setCancelable(false);
                 dialogDelete.setPositiveButton(getResources().getString(R.string.confirm), (dialogInterface, i) -> {
                     //Call to the api function
                    // disjointEvent();
                     join_button.setText(getResources().getString(R.string.join));
-                    Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.delete_event), Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.disjoin_confirm), Toast.LENGTH_LONG).show();
 
                 });
                 dialogDelete.setNegativeButton(getResources().getString(R.string.discard), (dialogInterface, i) -> {
