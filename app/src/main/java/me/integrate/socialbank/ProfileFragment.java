@@ -1,6 +1,8 @@
 package me.integrate.socialbank;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -13,6 +15,7 @@ import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -44,6 +47,9 @@ public class ProfileFragment extends Fragment {
     String dateUser;
     String genderUser;
     String descriptionUser;
+    Button reportUser;
+    Button confirmReport;
+    Button discardReport;
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
 
@@ -62,6 +68,11 @@ public class ProfileFragment extends Fragment {
         userDescription = (TextView) rootView.findViewById(R.id.aboutMe);
         myEvents = (TextView)rootView.findViewById(R.id.events);
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.my_recycler_view_user_profile);
+        reportUser = (Button)rootView.findViewById(R.id.buttonReportUser);
+        confirmReport = (Button)rootView.findViewById(R.id.confirmReport);
+        confirmReport.setVisibility(View.GONE);
+        discardReport = (Button)rootView.findViewById(R.id.discardReport);
+        discardReport.setVisibility(View.GONE);
         mRecyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
@@ -131,6 +142,51 @@ public class ProfileFragment extends Fragment {
 
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        reportUser.setOnClickListener(v -> {
+            AlertDialog.Builder dialogDelete = new AlertDialog.Builder(getContext());
+            dialogDelete.setTitle(getResources().getString(R.string.are_sure));
+            dialogDelete.setMessage(getResources().getString(R.string.confirm_report_user));
+            dialogDelete.setCancelable(false);
+            dialogDelete.setPositiveButton(getResources().getString(R.string.confirm), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    HashMap<String, String> params = new HashMap<>();
+                    params.put("email", emailUser);
+                    sendReportUser(params);
+                }
+            });
+            dialogDelete.setNegativeButton(getResources().getString(R.string.discard), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                }
+            });
+            dialogDelete.show();
+        });
+    }
+
+    private void sendReportUser(HashMap<String, String> params) {
+        APICommunicator apiCommunicator = new APICommunicator();
+        Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response -> {
+            Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.user_reported), Toast.LENGTH_LONG).show();
+        };
+        Response.ErrorListener errorListener = error -> {
+            String message;
+            int errorCode = error.networkResponse.statusCode;
+            if (errorCode == 401)
+                message = getString(R.string.unauthorized);
+            else if (errorCode == 403)
+                message = getString(R.string.forbidden);
+            else if (errorCode == 404)
+                message = getString(R.string.NotFound);
+            else if (errorCode == 409)
+                message = getString(R.string.user_already_reported);
+            else
+                message = getString(R.string.unexpectedError);
+            Toast.makeText(getActivity().getApplicationContext(), message, Toast.LENGTH_LONG).show();
+
+        };
+
+        apiCommunicator.postRequest(getActivity().getApplicationContext(), URL+'/'+emailUser+"/report", responseListener, errorListener, params);
     }
 
     private void getUserEvents() {
@@ -181,13 +237,13 @@ public class ProfileFragment extends Fragment {
             String message;
             int errorCode = error.networkResponse.statusCode;
             if (errorCode == 401)
-                message = "Unauthorized";
+                message = getString(R.string.unauthorized);
             else if (errorCode == 403)
-                message = "Forbidden";
+                message = getString(R.string.forbidden);
             else if (errorCode == 404)
-                message = "Not Found";
+                message = getString(R.string.NotFound);
             else
-                message = "Unexpected error";
+                message = getString(R.string.unexpectedError);
 
             loadingDialog.dismiss();
             Toast.makeText(getActivity().getApplicationContext(), message, Toast.LENGTH_LONG).show();

@@ -86,10 +86,14 @@
     <string name="delete_event">Event delete</string>
     <string name="are_sure">Are you sure?</string>
     <string name="confirm_delete_event">Do you want delete this event?</string>
+    <string name="confirm_report_user">Do you want report this user?</string>
     <string name="discard">Discard</string>
     <string name="confirm">Confirm</string>
     <string name="EventUpdated">Event updated!</string>
     <string name="clean_filters">Clean filters</string>
     <string name="categories">Categories</string>
+    <string name="report_user">Report user</string>
+    <string name="user_reported">User reported</string>
+    <string name="user_already_reported">User already reported</string>
 
 </resources>
