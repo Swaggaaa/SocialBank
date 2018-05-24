@@ -86,6 +86,7 @@
     <string name="delete_event">Event delete</string>
     <string name="are_sure">Are you sure?</string>
     <string name="confirm_delete_event">Do you want delete this event?</string>
+    <string name="confirm_report_user">Do you want report this user?</string>
     <string name="discard">Discard</string>
     <string name="confirm">Confirm</string>
     <string name="EventUpdated">Event updated!</string>
@@ -93,6 +94,9 @@
     <string name="EditAccount">Account</string>
     <string name="account_status">Account Status:</string>
     <string name="categories">Categories</string>
+    <string name="report_user">Report user</string>
+    <string name="user_reported">User reported</string>
+    <string name="user_already_reported">User already reported</string>
     <string name="verify_account_text">You can request to verify your account here</string>
     <string name="status">Status</string>
     <string name="send_request">Send request</string>
