@@ -91,5 +91,6 @@
     <string name="EventUpdated">Event updated!</string>
     <string name="clean_filters">Clean filters</string>
     <string name="categories">Categories</string>
+    <string name="comments">Comments</string>
 
 </resources>

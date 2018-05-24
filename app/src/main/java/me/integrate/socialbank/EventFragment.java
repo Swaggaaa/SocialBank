@@ -1,10 +1,13 @@
 package me.integrate.socialbank;
 
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,6 +44,12 @@ public class EventFragment extends Fragment {
     private TextView textEndDate;
     protected EditText editDescription;
 
+
+    private RecyclerView mRecyclerView;
+    private RecyclerView.Adapter mAdapter;
+    private ProgressDialog loadingDialog;
+
+
     private String creator;
     protected int id;
     protected String descriptionEvent;
@@ -70,6 +79,15 @@ public class EventFragment extends Fragment {
         textEndDate = (TextView) rootView.findViewById(R.id.end_date);
         editDescription = (EditText) rootView.findViewById(R.id.editDescription);
 
+        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.my_recycler_view_user_profile);
+        mRecyclerView.setHasFixedSize(true);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
+        mRecyclerView.setLayoutManager(mLayoutManager);
+       // loadingDialog = ProgressDialog.show(getActivity(), "",
+           //     getString(R.string.loadingMessage), true);
+
+        //TODO call to the api
+       // getComments();
 
 
         id = getArguments().getInt("id");
@@ -166,4 +184,47 @@ public class EventFragment extends Fragment {
             fc.replaceFragment(profileFragment);
         });
     }
+
+    /*void getComments() {
+        APICommunicator apiCommunicator = new APICommunicator();
+        Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response -> {
+            List<Event> comments = new ArrayList<>();
+            JSONArray jsonArray;
+            try {
+                jsonArray = new JSONArray(response.response);
+                System.out.println(String.valueOf(jsonArray.length()));
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+                    comments.add(new Comment(jsonObject));
+
+                }
+                mAdapter = new CommentAdapter(comments, getActivity(), (v1, position) -> {
+
+                });
+
+                mRecyclerView.setAdapter(mAdapter);
+                loadingDialog.dismiss();
+
+            }
+        };
+        Response.ErrorListener errorListener = error -> errorTreatment(error.networkResponse.statusCode);
+
+        apiCommunicator.deleteRequest(getActivity().getApplicationContext(), URL + '/' + id, responseListener, errorListener, null);
+
+    }
+
+    private void errorTreatment(int errorCode) {
+        String message;
+        if (errorCode == 401)
+            message = getString(R.string.Unauthorized);
+        else if (errorCode == 403)
+            message = getString(R.string.Forbidden);
+        else if (errorCode == 404)
+            message = getString(R.string.NotFound);
+        else
+            message = getString(R.string.UnexpectedError);
+        loadingDialog.dismiss();
+        Toast.makeText(getActivity().getApplicationContext(), message, Toast.LENGTH_LONG).show();
+    }*/
+
 }
