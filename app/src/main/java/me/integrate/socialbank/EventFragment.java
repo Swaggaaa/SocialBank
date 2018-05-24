@@ -123,7 +123,6 @@ public class EventFragment extends Fragment {
             Bundle b = new Bundle();
             b.putInt("id", id);
             b.putString("creator", creator);
-            System.out.println("DATE " + dateToString(iniDate));
             b.putString("iniDate", dateToString(iniDate));
             Fragment addCommentFragment = new AddCommentFragment();
             addCommentFragment.setArguments(b);
