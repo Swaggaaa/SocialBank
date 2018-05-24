@@ -41,11 +41,10 @@ public class MyJoinEventFragment extends EventFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        //if (!join_button.getText().equals("Disjoin")) join_button.setText("Join");
         join_button.setVisibility(View.VISIBLE);
         join_button.setOnClickListener(v->
         {
-            if (join_button.getText().equals("Disjoin"))
+            if (join_button.getText().equals(getResources().getString(R.string.disjoin)))
             {
                 AlertDialog.Builder dialogDelete = new AlertDialog.Builder(getContext());
                 dialogDelete.setTitle(getResources().getString(R.string.are_sure));
@@ -64,7 +63,7 @@ public class MyJoinEventFragment extends EventFragment {
 
             } else {
                 //signUpEvent();
-                join_button.setText("Disjoin");
+                join_button.setText(getResources().getString(R.string.disjoin));
                 //call to the api function
             }
 
@@ -86,11 +85,11 @@ public class MyJoinEventFragment extends EventFragment {
                     Event event = new Event(jsonObject);
                     if (event.getId() == id ) {
                         found = true;
-                        join_button.setText("Disjoin");
+                        join_button.setText(getResources().getString(R.string.disjoin));
                     }
 
                 }
-                if (!found) join_button.setText("Join");
+                if (!found) join_button.setText(getResources().getString(R.string.join));
 
             } catch (JSONException e) {
                 e.printStackTrace();
