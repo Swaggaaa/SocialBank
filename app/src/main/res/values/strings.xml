@@ -96,5 +96,6 @@
     <string name="disjoin">Disjoin</string>
     <string name="confirm_disjoin_event">Do you want un unenroll this event?</string>
     <string name="disjoin_confirm">Unenroll of this event</string>
+    <string name="imposible_join">Imposible to enroll this event</string>
 
 </resources>

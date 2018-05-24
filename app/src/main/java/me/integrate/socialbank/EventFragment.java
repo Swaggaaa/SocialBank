@@ -46,6 +46,8 @@ public class EventFragment extends Fragment {
     private String creator;
     protected int id;
     protected String descriptionEvent;
+    protected Date iniDate;
+    protected Date endDate;
 
     public static EventFragment newInstance(Bundle params) {
         EventFragment eventFragment = new EventFragment();
@@ -104,9 +106,10 @@ public class EventFragment extends Fragment {
                 textIndividualOrGroup.setText("Individual");
                 textViewNumberPersonsEvent.setText("1/1");
 
-                Date iniDate = event.getIniDate();
-                Date endDate = event.getEndDate();
-                String hours = getHours(iniDate, endDate) + " " + getResources().getString(R.string.time_hours);
+                iniDate = event.getIniDate();
+                endDate = event.getEndDate();
+                long hoursL = getHours(iniDate, endDate);
+                String hours =  (hoursL > 0) ? String.valueOf(hoursL) : getResources().getString(R.string.notHour) + " " + getResources().getString(R.string.time_hours);
                 textEventHours.setText(hours);
                 textStartDate.setText(dateToString(iniDate));
                 textEndDate.setText(dateToString(endDate));
@@ -134,14 +137,13 @@ public class EventFragment extends Fragment {
 
     }
 
-    private String getHours(Date hourIni, Date hourEnd) {
+    protected long getHours(Date hourIni, Date hourEnd) {
+        long hours = 0;
         if (hourIni != null && hourEnd != null ) {
             long diff = hourEnd.getTime() - hourIni.getTime();
-            long seconds = diff/1000;
-            long minutes = seconds/60;
-            long hours = minutes/60;
-            return String.valueOf(hours);
-        } else return getResources().getString(R.string.notHour);
+            hours = diff/1000/ 60 / 60;
+        }
+        return hours;
     }
 
     private String dateToString(Date date) {

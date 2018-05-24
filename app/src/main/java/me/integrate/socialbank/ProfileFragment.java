@@ -47,6 +47,7 @@ public class ProfileFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
 
+    protected Float balance;
     private ProgressDialog loadingDialog;
 
 
@@ -67,6 +68,7 @@ public class ProfileFragment extends Fragment {
         mRecyclerView.setLayoutManager(mLayoutManager);
         loadingDialog = ProgressDialog.show(getActivity(), "",
                 getString(R.string.loadingMessage), true);
+        balance = null;
         fillFields();
         getUserEvents();
         return rootView;
@@ -88,7 +90,6 @@ public class ProfileFragment extends Fragment {
             APICommunicator apiCommunicator = new APICommunicator();
             Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response -> {
                 JSONObject jsonObject;
-                Float balance = null;
                 try{
                     jsonObject = new JSONObject(response.response);
                     nameUser = jsonObject.getString("name");
@@ -113,6 +114,9 @@ public class ProfileFragment extends Fragment {
 
                 } catch (JSONException e) {
                     e.printStackTrace();
+                }
+                if (emailUser.equals(SharedPreferencesManager.INSTANCE.read(getActivity(), "user_email"))) {
+                    SharedPreferencesManager.INSTANCE.store(getActivity(), "balance", String.valueOf(balance));
                 }
                 if (balance < 0) userBalance.setTextColor(Color.RED);
                 else if (balance > 0) userBalance.setTextColor(Color.GREEN);

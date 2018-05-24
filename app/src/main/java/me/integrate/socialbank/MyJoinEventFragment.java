@@ -35,7 +35,6 @@ public class MyJoinEventFragment extends EventFragment {
         return view;
     }
 
-    //TODO change set text
     //TODO hacer llamadas api correctamente
     //TODO controlar número asistentes
     @Override
@@ -61,15 +60,16 @@ public class MyJoinEventFragment extends EventFragment {
                 });
                 dialogDelete.show();
 
-            } else {
+            } else if (hasHours()){
                 //signUpEvent();
                 join_button.setText(getResources().getString(R.string.disjoin));
-                //call to the api function
-            }
+            } else Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.imposible_join), Toast.LENGTH_LONG).show();
+
 
         });
     }
 
+    //TODO modificar
     //Call to the api for the events by creator
     private void getAllJoinEventsByUser() {
 
@@ -112,6 +112,13 @@ public class MyJoinEventFragment extends EventFragment {
             message = getString(R.string.UnexpectedError);
 
         Toast.makeText(getActivity().getApplicationContext(), message, Toast.LENGTH_LONG).show();
+    }
+
+    private boolean hasHours() {
+        long aux = getHours(iniDate,endDate);
+        int hours = (int) aux;
+        if (Integer.valueOf(SharedPreferencesManager.INSTANCE.read(getActivity(), "balance")) - hours > 0) return true;
+        else return false;
     }
 
    /* void signUpEvent() {
