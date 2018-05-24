@@ -104,5 +104,7 @@
     <string name="buy_more_hours">Buy more hours</string>
     <string name="verified">VERIFIED</string>
     <string name="standard">STANDARD</string>
+    <string name="verification_requested">verification requested</string>
+    <string name="awaiting_approval">Already requested. Awaiting approval</string>
 
 </resources>

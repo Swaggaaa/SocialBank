@@ -1,8 +1,11 @@
 package me.integrate.socialbank;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -21,6 +24,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
 
 public class MyAccountFragment extends Fragment {
     private static final String URL = "/users";
@@ -34,6 +38,7 @@ public class MyAccountFragment extends Fragment {
     private Button buyHours;
     private boolean verified;
     private ProgressDialog loadingDialog;
+    private String email;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -48,7 +53,7 @@ public class MyAccountFragment extends Fragment {
         accountBalanceHint = (TextView) rootView.findViewById(R.id.account_balance_hint);
         userBalance = (TextView) rootView.findViewById(R.id.user_balance);
         buyHours = (Button) rootView.findViewById(R.id.button_buy_hours);
-        String email = SharedPreferencesManager.INSTANCE.read(getActivity(),"user_email");
+        email = SharedPreferencesManager.INSTANCE.read(getActivity(),"user_email");
         loadingDialog = ProgressDialog.show(getActivity(), "",
                 getString(R.string.loadingMessage), true);
         loadScreen(email);
@@ -102,12 +107,53 @@ public class MyAccountFragment extends Fragment {
                 message = getString(R.string.user_already_reported);
             else
                 message = getString(R.string.unexpectedError);
+            loadingDialog.dismiss();
             Toast.makeText(getActivity().getApplicationContext(), message, Toast.LENGTH_LONG).show();
         };
 
         apiCommunicator.getRequest(getActivity().getApplicationContext(), URL + '/' + emailUser, responseListener, errorListener, null);
     }
 
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        sendRequestButton.setOnClickListener(v -> {
+            loadingDialog = ProgressDialog.show(getActivity(), "",
+                    getString(R.string.loadingMessage), true);
+            HashMap<String, String> params = new HashMap<>();
+            params.put("message ", sendRequestText.getText().toString());
+            sendRequest(params);
+        });
+        buyHours.setOnClickListener(v -> {
+            //ready per comprar hores
+        });
+    }
+
+    private void sendRequest(HashMap<String, String> params) {
+        APICommunicator apiCommunicator = new APICommunicator();
+        Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response -> {
+            loadingDialog.dismiss();
+            Toast.makeText(getActivity().getApplicationContext(), R.string.verification_requested, Toast.LENGTH_LONG).show();
+        };
+        Response.ErrorListener errorListener = error -> {
+            loadingDialog.dismiss();
+            String message;
+            int errorCode = error.networkResponse.statusCode;
+            if (errorCode == 401)
+                message = getString(R.string.unauthorized);
+            else if (errorCode == 403)
+                message = getString(R.string.forbidden);
+            else if (errorCode == 404)
+                message = getString(R.string.NotFound);
+            else if (errorCode == 409)
+                message = getString(R.string.awaiting_approval);
+            else
+                message = getString(R.string.unexpectedError);
+            Toast.makeText(getActivity().getApplicationContext(), message, Toast.LENGTH_LONG).show();
+
+        };
+
+        apiCommunicator.postRequest(getActivity().getApplicationContext(), URL+'/'+email+"/verified", responseListener, errorListener, params);
+    }
 
 
 }
