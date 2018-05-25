@@ -12,6 +12,14 @@ public class Comment {
     private String user;
     private String text;
     private String surname;
+    private String emailCreator;
+
+    Comment(String name, String surname, String text, String email) {
+        this.user = user;
+        this.text = text;
+        this.surname = surname;
+        this.emailCreator = email;
+    }
 
     Comment(JSONObject jsonObject) {
         try {
@@ -19,6 +27,7 @@ public class Comment {
             this.surname = jsonObject.getString("surname");
             //TODO no se aun como se llama
             this.text = jsonObject.getString("text");
+            this.emailCreator = jsonObject.getString("creator");
         }
         catch (JSONException ex) {
             ex.printStackTrace();
@@ -48,4 +57,8 @@ public class Comment {
     public void setComment(String text) {
         this.text = text;
     }
+
+    public String getEmailCreator() {return emailCreator;}
+
+    public void setEmailCreator(String emailCreator) {this.emailCreator = emailCreator;}
 }

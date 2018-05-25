@@ -47,6 +47,7 @@ public class EventFragment extends Fragment {
     private TextView textStartDate;
     private TextView textEndDate;
     protected EditText editDescription;
+    private Button deleted_comment;
 
 
     private RecyclerView mRecyclerView;
@@ -84,13 +85,16 @@ public class EventFragment extends Fragment {
         textEndDate = (TextView) rootView.findViewById(R.id.end_date);
         editDescription = (EditText) rootView.findViewById(R.id.editDescription);
         addComment = (ImageView) rootView.findViewById(R.id.addComment);
+        deleted_comment = (Button) rootView.findViewById(R.id.delete_comment_button);
 
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view_comment);
         mRecyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
+
        // loadingDialog = ProgressDialog.show(getActivity(), "",
            //     getString(R.string.loadingMessage), true);
+
 
         //TODO call to the api
        // getComments();
@@ -98,6 +102,7 @@ public class EventFragment extends Fragment {
         showEventInformation();
         return rootView;
     }
+
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -198,12 +203,12 @@ public class EventFragment extends Fragment {
                 }
 
                 mAdapter = new CommentAdapter(comments, getActivity(), (v1, position) -> {
-                    Bundle b = new Bundle();
-                    b.putString("email", creator);
-                    Fragment profileFragment;
-                    profileFragment = !creator.equals(SharedPreferencesManager.INSTANCE.read(getActivity(), "user_email")) ? new ProfileFragment() : new MyProfileFragment();
-                    profileFragment.setArguments(b);
+                    Bundle bundle = new Bundle();
+                    String email = comments.get(position).getEmailCreator();
+                    bundle.putString("email", email);
                     FragmentChangeListener fc = (FragmentChangeListener) getActivity();
+                    ProfileFragment profileFragment = !email.equals(SharedPreferencesManager.INSTANCE.read(getActivity(), "user_email")) ? new ProfileFragment() : new MyProfileFragment();
+                    profileFragment.setArguments(bundle);
                     fc.replaceFragment(profileFragment);
 
                });

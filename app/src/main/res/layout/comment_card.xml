@@ -19,6 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
+            android:layout_marginBottom="15dp"
             android:orientation="vertical">
 
             <TextView
@@ -38,12 +39,21 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="5dp"
                 android:layout_marginStart="5dp"
-                android:layout_marginBottom="20dp"
                 android:text="@string/comments"
                 android:textColor="@color/colorNavigation"
                 android:textSize="15sp" />
 
+            <Button
+                android:id="@+id/delete_comment_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorTransparent"
+                android:text="PRUEBA"
+                android:textColor="@color/colorTextForgot"
+                android:visibility="gone"/>
+
         </LinearLayout>
+
 
     </LinearLayout>
 
