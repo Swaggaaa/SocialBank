@@ -92,6 +92,7 @@ public class UserSearchFragment extends Fragment {
                 ProfileFragment profileFragment = !email.equals(SharedPreferencesManager.INSTANCE.read(getActivity(), "user_email")) ? new ProfileFragment() : new MyProfileFragment();
                 profileFragment.setArguments(bundle);
                 fc.replaceFragment(profileFragment);
+
             });
 
             mRecyclerView.setAdapter(mAdapter);

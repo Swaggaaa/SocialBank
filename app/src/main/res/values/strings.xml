@@ -90,6 +90,12 @@
     <string name="discard">Discard</string>
     <string name="confirm">Confirm</string>
     <string name="EventUpdated">Event updated!</string>
+    <string name="timepicker">TimePicker</string>
+    <string name="event_category">Category</string>
+    <string name="end_date">End date</string>
+    <string name="start_date">Start date</string>
+    <string name="start_hour">Start hour</string>
+    <string name="end_hour">End hour</string>
     <string name="clean_filters">Clean filters</string>
     <string name="EditAccount">Account</string>
     <string name="account_status">Account Status:</string>
@@ -106,5 +112,9 @@
     <string name="standard">STANDARD</string>
     <string name="verification_requested">verification requested</string>
     <string name="awaiting_approval">Already requested. Awaiting approval</string>
+    <string name="Pick_hour_msg">Pick a right hour</string>
+    <string name="Wrong_date_msg">Start date must be minor than End date and greater than current date</string>
+    <string name="Not_hours_msg">You do not have enough hours to create this event</string>
+    <string name="event_created_msg">Event created successfully</string>
 
 </resources>
