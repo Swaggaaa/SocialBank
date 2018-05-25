@@ -109,5 +109,6 @@
     <string name="standard">STANDARD</string>
     <string name="verification_requested">verification requested</string>
     <string name="awaiting_approval">Already requested. Awaiting approval</string>
+    <string name="delete_comment">DELETE</string>
 
 </resources>
