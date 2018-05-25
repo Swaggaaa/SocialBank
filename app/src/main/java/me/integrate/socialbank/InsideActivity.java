@@ -111,6 +111,7 @@ public class InsideActivity extends AppCompatActivity implements FragmentChangeL
     private void logout() {
         SharedPreferencesManager.INSTANCE.remove(this, "token");
         startActivity(new Intent(this, MainActivity.class));
+        finish();
     }
 
     @Override
