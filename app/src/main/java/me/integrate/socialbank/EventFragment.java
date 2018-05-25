@@ -85,7 +85,7 @@ public class EventFragment extends Fragment {
         editDescription = (EditText) rootView.findViewById(R.id.editDescription);
         addComment = (ImageView) rootView.findViewById(R.id.addComment);
 
-        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.my_recycler_view_user_profile);
+        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view_comment);
         mRecyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
@@ -195,9 +195,8 @@ public class EventFragment extends Fragment {
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
                     comments.add(new Comment(jsonObject));
-
-
                 }
+
                 mAdapter = new CommentAdapter(comments, getActivity(), (v1, position) -> {
                     Bundle b = new Bundle();
                     b.putString("email", creator);

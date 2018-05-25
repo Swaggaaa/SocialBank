@@ -42,7 +42,7 @@ class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentViewHold
     @Override
     public CommentViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View v = LayoutInflater.from(viewGroup.getContext())
-                .inflate(R.layout.users_card, viewGroup, false);
+                .inflate(R.layout.comment_card, viewGroup, false);
         CommentViewHolder userViewHolder = new CommentViewHolder(v);
         v.setOnClickListener(view -> listener.onItemClick(view, userViewHolder.getLayoutPosition()));
         return userViewHolder;
