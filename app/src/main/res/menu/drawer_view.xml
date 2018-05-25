@@ -19,9 +19,18 @@
             android:id="@+id/newEvent"
             android:title="@string/create_event_menu" />
 
+        <item
+            android:icon="@drawable/user_icon"
+            android:id="@+id/searchUsers"
+            android:title="@string/search_users" />
+
     </group>
     <item android:title="@string/settings">
         <menu>
+            <item
+                android:icon="@drawable/ic_settings"
+                android:id="@+id/myAccount"
+                android:title="@string/EditAccount" />
             <item
                 android:icon="@drawable/ic_exit_to_app"
                 android:id="@+id/logout"

@@ -6,7 +6,9 @@
     android:layout_height="match_parent"
     tools:context=".ProfileFragment">
 
-
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -16,8 +18,7 @@
             android:id="@+id/myProfileImage"
             android:layout_width="match_parent"
             android:layout_height="200dp"
-            app:srcCompat="@android:drawable/ic_menu_camera"
-            android:contentDescription="TODO" />
+            app:srcCompat="@android:drawable/ic_menu_camera" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -54,6 +55,12 @@
 
             </LinearLayout>
 
+            <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/award_recycler_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+
             <TextView
                 android:id="@+id/userEmailToShow"
                 android:layout_width="match_parent"
@@ -65,13 +72,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/about_me"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/aboutMe"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textMultiLine"
                 android:maxLines="5"
                 android:text="" />
 
@@ -81,7 +87,8 @@
                 android:layout_height="wrap_content"
                 android:text="@string/hours"
                 android:textSize="24sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:visibility="gone"/>
 
             <View
                 android:id="@+id/divider"
@@ -94,7 +101,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/my_events"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
             <FrameLayout
                 android:layout_width="match_parent"
@@ -117,6 +124,36 @@
             </FrameLayout>
         </LinearLayout>
 
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorTransparent"
+            android:text="@string/report_user"
+            android:id="@+id/buttonReportUser"
+            android:textColor="#8d0c0c" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorTransparent"
+                android:text="@string/confirm"
+                android:id="@+id/confirmReport"
+                android:textColor="#8d0c0c"
+                android:layout_weight="1"/>
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorTransparent"
+                android:text="@string/discard"
+                android:id="@+id/discardReport"
+                android:textColor="#8d0c0c"
+                android:layout_weight="1"/>
+        </LinearLayout>
+
     </LinearLayout>
+    </ScrollView>
 
 </android.support.constraint.ConstraintLayout>

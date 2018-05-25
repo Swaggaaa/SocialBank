@@ -1,348 +1,362 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/scrollView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true">
 
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <LinearLayout
+    <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:layout_marginTop="20dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp">
+        android:layout_height="wrap_content">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="horizontal">
+            android:layout_height="match_parent"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginStart="20dp"
+            android:orientation="vertical">
 
             <ImageView
                 android:id="@+id/imageView"
                 android:layout_width="match_parent"
-                android:layout_height="100dp"
+                android:layout_height="200dp"
                 android:layout_gravity="center"
                 android:layout_weight="1"
+                android:clickable="true"
                 app:srcCompat="@android:drawable/ic_menu_camera"
-                android:clickable="true"/>
+                android:contentDescription="TODO" />
 
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/textViewType"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:text="@string/event_type"
+                    android:textColor="@color/material_blue_grey_800" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/buttonAsk"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="1"
+                        android:background="@android:color/transparent"
+                        android:text="@string/ask"
+                        android:textColor="@color/colorTextButton" />
+
+                    <TextView
+                        android:id="@+id/textView1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="1"
+                        android:text="@string/stick"
+                        android:textAlignment="center"
+                        android:textColor="@color/material_blue_grey_800"
+                        android:textSize="30sp" />
+
+                    <Button
+                        android:id="@+id/buttonOffer"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="1"
+                        android:background="@android:color/transparent"
+                        android:text="@string/offer"
+                        android:textColor="@color/colorTextButton" />
+
+                </LinearLayout>
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:textAlignment="center">
+
+                <TextView
+                    android:id="@+id/textViewCategory"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:text="@string/event_category"
+                    android:textColor="@color/material_blue_grey_800" />
+
+                <Spinner
+                    android:id="@+id/editTextCategory"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:entries="@array/categories"
+                    android:textColor="@color/material_blue_grey_800" />
+            </TableRow>
+
+            <EditText
+                android:id="@+id/editTextName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="8"
+                android:hint="@string/event_name"
+                android:inputType="textPersonName"
+                android:textSize="15sp" />
+
+            <EditText
+                android:id="@+id/editTextAddress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="8"
+                android:hint="@string/event_address"
+                android:inputType="textPersonName"
+                android:textSize="15sp" />
+
+            <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/textViewFixed"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="1"
+                        android:text="@string/event_fixed"
+                        android:textColor="@color/material_blue_grey_800" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <Button
+                            android:id="@+id/buttonYesFixed"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_weight="1"
+                            android:background="@android:color/transparent"
+                            android:text="@string/yes"
+                            android:textColor="@color/colorTextButton" />
+
+                        <TextView
+                            android:id="@+id/textView2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_weight="1"
+                            android:text="@string/stick"
+                            android:textAlignment="center"
+                            android:textColor="@color/material_blue_grey_800"
+                            android:textSize="30sp" />
+
+                        <Button
+                            android:id="@+id/buttonNoFixed"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_weight="1"
+                            android:background="@android:color/transparent"
+                            android:text="@string/no"
+                            android:textColor="@color/colorTextButton" />
+
+                    </LinearLayout>
+                </TableRow>
+
+
+                    <LinearLayout
+                        android:id="@+id/layoutDate"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="end"
+                            android:orientation="vertical">
+
+                            <EditText
+                                android:id="@+id/editTextStartDate"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:clickable="true"
+                                android:ems="9"
+                                android:focusable="false"
+                                android:hint="@string/start_date"
+                                android:inputType="date"
+                                android:textSize="15sp" />
+
+                            <EditText
+                                android:id="@+id/editTextEndDate"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:clickable="true"
+                                android:ems="9"
+                                android:focusable="false"
+                                android:hint="@string/end_date"
+                                android:inputType="date"
+                                android:textSize="15sp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <EditText
+                                android:id="@+id/editTextStartHour"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:clickable="true"
+                                android:ems="9"
+                                android:focusable="false"
+                                android:hint="@string/start_hour"
+                                android:inputType="number"
+                                android:textSize="15sp" />
+
+                            <EditText
+                                android:id="@+id/editTextEndHour"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:clickable="true"
+                                android:ems="9"
+                                android:focusable="false"
+                                android:hint="@string/end_hour"
+                                android:inputType="number"
+                                android:textSize="15sp" />
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+            </TableLayout>
+
+            <TableLayout
+                android:id="@+id/groupTable"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    tools:layout_editor_absoluteX="20dp"
+                    tools:layout_editor_absoluteY="20dp">
+
+                    <TextView
+                        android:id="@+id/textViewGroup"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="1"
+                        android:text="@string/event_group"
+                        android:textColor="@color/material_blue_grey_800" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <Button
+                            android:id="@+id/buttonYesGroup"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:background="@android:color/transparent"
+                            android:text="@string/yes"
+                            android:textColor="@color/colorTextButton" />
+
+                        <TextView
+                            android:id="@+id/textView3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_weight="1"
+                            android:text="@string/stick"
+                            android:textAlignment="center"
+                            android:textColor="@color/material_blue_grey_800"
+                            android:textSize="30sp" />
+
+                        <Button
+                            android:id="@+id/buttonNoGroup"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_weight="1"
+                            android:background="@android:color/transparent"
+                            android:text="@string/no"
+                            android:textColor="@color/colorTextButton" />
+
+                    </LinearLayout>
+                </TableRow>
+
+                <TableRow
+                    android:id="@+id/capacityRow"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/textViewCapacity"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/capacity" />
+
+                    <EditText
+                        android:id="@+id/editTextCapacity"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0"
+                        android:ems="6"
+                        android:hint="@string/_0"
+                        android:inputType="number"
+                        android:textAlignment="textEnd"
+                        android:textSize="15sp" />
+
+                </TableRow>
+            </TableLayout>
+
+            <EditText
+                android:id="@+id/editTextDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="8"
+                android:hint="@string/description"
+                android:inputType="textMultiLine"
+                android:selectAllOnFocus="false"
+                android:singleLine="false"
+                android:textSize="15sp" />
+
+            <Button
+                android:id="@+id/buttonCreate"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginBottom="20dp"
+                android:layout_marginTop="15dp"
+                android:background="@android:color/holo_blue_dark"
+                android:text="@string/create_event"
+                tools:enabled="false" />
         </LinearLayout>
 
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:id="@+id/textViewType"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1"
-                android:text="@string/event_type"
-                android:textColor="@color/material_blue_grey_800" />
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <Button
-                    android:id="@+id/buttonAsk"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_weight="1"
-                    android:background="@android:color/transparent"
-                    android:text="@string/ask"
-                    android:textColor="@color/colorTextButton" />
-                <TextView
-                    android:id="@+id/textView1"
-                    android:layout_height="wrap_content"
-                    android:layout_width="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_weight="1"
-                    android:text="@string/stick"
-                    android:textAlignment="center"
-                    android:textColor="@color/material_blue_grey_800"
-                    android:textSize="30sp" />
-
-                <Button
-                    android:id="@+id/buttonOffer"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_weight="1"
-                    android:background="@android:color/transparent"
-                    android:text="@string/offer"
-                    android:textColor="@color/colorTextButton" />
-
-            </LinearLayout>
-        </TableRow>
-
-        <EditText
-            android:id="@+id/editTextName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="8"
-            android:hint="@string/event_name"
-            android:inputType="textPersonName"
-            android:textSize="15sp" />
-
-        <EditText
-            android:id="@+id/editTextAddress"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="8"
-            android:hint="@string/event_address"
-            android:inputType="textPersonName"
-            android:textSize="15sp" />
-
-        <TableLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <TextView
-                    android:id="@+id/textViewFixed"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_weight="1"
-                    android:text="@string/event_fixed"
-                    android:textColor="@color/material_blue_grey_800" />
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <Button
-                        android:id="@+id/buttonYesFixed"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_weight="1"
-                        android:background="@android:color/transparent"
-                        android:text="@string/yes"
-                        android:textColor="@color/colorTextButton" />
-
-                    <TextView
-                        android:id="@+id/textView2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_weight="1"
-                        android:text="@string/stick"
-                        android:textAlignment="center"
-                        android:textColor="@color/material_blue_grey_800"
-                        android:textSize="30sp" />
-
-                    <Button
-                        android:id="@+id/buttonNoFixed"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_weight="1"
-                        android:background="@android:color/transparent"
-                        android:text="@string/no"
-                        android:textColor="@color/colorTextButton" />
-
-                </LinearLayout>
-            </TableRow>
-
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <LinearLayout
-                    android:id="@+id/layoutDate"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="right"
-                        android:orientation="vertical">
-
-                        <EditText
-                            android:id="@+id/editTextStartDate"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:ems="9"
-                            android:hint="Start date"
-                            android:inputType="date"
-                            android:textSize="15sp"
-                            android:clickable="true"
-                            android:focusable="false" />
-
-                        <EditText
-                            android:id="@+id/editTextEndDate"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:ems="9"
-                            android:hint="End date"
-                            android:inputType="date"
-                            android:textSize="15sp"
-                            android:clickable="true"
-                            android:focusable="false" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
-
-                        <EditText
-                            android:id="@+id/editTextStartHour"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:ems="9"
-                            android:hint="Start hour"
-                            android:inputType="number"
-                            android:textSize="15sp"
-                            android:clickable="true"/>
-
-                        <EditText
-                            android:id="@+id/editTextEndHour"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:ems="9"
-                            android:hint="End hour"
-                            android:inputType="number"
-                            android:textSize="15sp"
-                            android:clickable="true"/>
-                    </LinearLayout>
-
-                </LinearLayout>
-
-            </TableRow>
-
-        </TableLayout>
-
-        <TableLayout
-            android:id="@+id/groupTable"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                tools:layout_editor_absoluteX="20dp"
-                tools:layout_editor_absoluteY="20dp">
-
-                <TextView
-                    android:id="@+id/textViewGroup"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_weight="1"
-                    android:text="@string/event_group"
-                    android:textColor="@color/material_blue_grey_800" />
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <Button
-                        android:id="@+id/buttonYesGroup"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:background="@android:color/transparent"
-                        android:text="@string/yes"
-                        android:textColor="@color/colorTextButton" />
-
-                    <TextView
-                        android:id="@+id/textView3"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_weight="1"
-                        android:text="@string/stick"
-                        android:textAlignment="center"
-                        android:textColor="@color/material_blue_grey_800"
-                        android:textSize="30sp" />
-
-                    <Button
-                        android:id="@+id/buttonNoGroup"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_weight="1"
-                        android:background="@android:color/transparent"
-                        android:text="@string/no"
-                        android:textColor="@color/colorTextButton" />
-
-                </LinearLayout>
-            </TableRow>
-
-            <TableRow
-                android:id="@+id/capacityRow"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <TextView
-                    android:id="@+id/textViewCapacity"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/capacity" />
-
-                <EditText
-                    android:id="@+id/editTextCapacity"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0"
-                    android:ems="6"
-                    android:hint="@string/_0"
-                    android:inputType="number"
-                    android:textAlignment="textEnd"
-                    android:textSize="15sp" />
-
-            </TableRow>
-        </TableLayout>
-
-        <EditText
-            android:id="@+id/editTextDescription"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="8"
-            android:hint="@string/description"
-            android:inputType="textMultiLine"
-            android:selectAllOnFocus="false"
-            android:singleLine="false"
-            android:textSize="15sp" />
-
-        <Button
-            android:id="@+id/buttonCreate"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_marginBottom="20dp"
-            android:layout_marginTop="15dp"
-            android:background="@android:color/holo_blue_dark"
-            android:text="@string/create_event"
-            tools:enabled="false" />
-    </LinearLayout>
-
-</android.support.constraint.ConstraintLayout>
+    </android.support.constraint.ConstraintLayout>
 </ScrollView>

@@ -19,7 +19,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
@@ -48,7 +51,6 @@ public class BoardFragment extends Fragment {
 
     //Call to the API
     public void getAllEvents() {
-
         APICommunicator apiCommunicator = new APICommunicator();
         Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response -> {
             List<Event> items = new ArrayList<>();
@@ -65,17 +67,13 @@ public class BoardFragment extends Fragment {
                 mAdapter = new EventAdapter(items, getActivity(), (v1, position) -> {
                     Bundle bundle = new Bundle();
                     Event event = items.get(position);
-
                     bundle.putInt("id", event.getId());
-                    bundle.putBoolean("isDemand", event.getDemand());
-                    bundle.putString("creator", event.getCreatorEmail());
-                    bundle.putString("location", event.getLocation());
-                    bundle.putByteArray("image", bitmapToByteArray(event.getImage()));
-                    bundle.putString("title", event.getTitle());
-                    bundle.putString("description", event.getDescription());
-                    bundle.putString("startDate", event.getIniDate().toString());
-                    bundle.putString("endDate", event.getEndDate().toString());
-                    Fragment eventFragment = EventFragment.newInstance(bundle);
+                    Fragment eventFragment;
+                    if (event.getCreatorEmail().equals(SharedPreferencesManager.INSTANCE.read(getActivity(),"user_email"))
+                            && correctDate(event.getIniDate())) {
+                        eventFragment = MyEventFragment.newInstance(bundle);
+                    }
+                    else eventFragment = EventFragment.newInstance(bundle);
                     FragmentChangeListener fc = (FragmentChangeListener) getActivity();
                     fc.replaceFragment(eventFragment);
                 });
@@ -105,6 +103,16 @@ public class BoardFragment extends Fragment {
         apiCommunicator.getRequest(getActivity().getApplicationContext(), URL, responseListener, errorListener, null);
     }
 
+    private boolean correctDate(Date iniDate) {
+        if (iniDate == null) return true;
+        else {
+            Date currentDate = new Date();
+            long hours = iniDate.getTime() - currentDate.getTime();
+            hours = hours/ 1000 / 60 / 60;
+            return hours >= 24;
+        }
+    }
+
     private byte[] bitmapToByteArray(Bitmap bitmap) {
         if (bitmap != null) {
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
@@ -112,6 +120,14 @@ public class BoardFragment extends Fragment {
             return byteArrayOutputStream.toByteArray();
         }
         else return null;
+    }
+
+    private String dateToString(Date date) {
+        if (date == null) return getResources().getString(R.string.notDate);
+        else{
+            DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+            return df.format(date);
+        }
     }
 
 }

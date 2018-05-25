@@ -1,10 +1,6 @@
 package me.integrate.socialbank;
 
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.hardware.SensorManager;
-import android.location.Criteria;
+import android.annotation.SuppressLint;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -12,7 +8,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,17 +20,15 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
-import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-
 import org.json.JSONArray;
 import org.json.JSONException;
 
-import java.io.ByteArrayOutputStream;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -54,6 +47,7 @@ public class NearbyEventsFragment extends Fragment {
     private Map<Marker, Event> eventsMap;
 
 
+    @SuppressLint("MissingPermission")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_nearby_events, container, false);
@@ -71,52 +65,49 @@ public class NearbyEventsFragment extends Fragment {
         try {
             MapsInitializer.initialize(getActivity().getApplicationContext());
         } catch (Exception e) {
-            Toast.makeText(getActivity().getApplicationContext(), R.string.UnexpectedError, Toast.LENGTH_LONG).show();;
+            Toast.makeText(getActivity().getApplicationContext(), R.string.UnexpectedError, Toast.LENGTH_LONG).show();
         }
 
+        mMapView.getMapAsync(mMap -> {
+            googleMap = mMap;
 
-        mMapView.getMapAsync(new OnMapReadyCallback() {
-            @Override
-            public void onMapReady(GoogleMap mMap) {
-                googleMap = mMap;
-
-                // For showing a move to my location button
-                googleMap.setMyLocationEnabled(true);
-                googleMap.setOnInfoWindowClickListener(marker -> {
-                    Event event = eventsMap.get(marker);
-                    Bundle bundle = new Bundle();
-                    bundle.putInt("id", event.getId());
-                    bundle.putByteArray("image", bitmapToByteArray(event.getImage()));
-                    bundle.putString("title", event.getTitle());
-                    bundle.putString("description", event.getDescription());
-                    Fragment eventFragment = EventFragment.newInstance(bundle);
-                    FragmentChangeListener fc = (FragmentChangeListener) getActivity();
-                    fc.replaceFragment(eventFragment);
-
-                });
-
-                LocationManager mLocationManager = (LocationManager) getActivity().getApplicationContext().getSystemService(LOCATION_SERVICE);
-                List<String> providers = mLocationManager.getProviders(true);
-                Location bestLocation = null;
-                for (String provider : providers) {
-                    Location l = mLocationManager.getLastKnownLocation(provider);
-                    if (l == null) {
-                        continue;
-                    }
-                    if (bestLocation == null || l.getAccuracy() < bestLocation.getAccuracy()) {
-                        // Found best last known location: %s", l);
-                        bestLocation = l;
-                    }
+            googleMap.setMyLocationEnabled(true);
+            googleMap.setOnInfoWindowClickListener(marker -> {
+                Event event = eventsMap.get(marker);
+                Bundle bundle = new Bundle();
+                bundle.putInt("id", event.getId());
+                Fragment eventFragment;
+                if (event.getCreatorEmail().equals(SharedPreferencesManager.INSTANCE.read(getActivity(),"user_email"))
+                        && correctDate(event.getIniDate())) {
+                    eventFragment = MyEventFragment.newInstance(bundle);
                 }
+                else eventFragment = EventFragment.newInstance(bundle);
+                FragmentChangeListener fc = (FragmentChangeListener) getActivity();
+                fc.replaceFragment(eventFragment);
 
-                double latitude = bestLocation.getLatitude();
-                double longitude = bestLocation.getLongitude();
+            });
 
-                showNearbyEvents();
-                myPosition = new LatLng(latitude, longitude);
-                CameraPosition cameraPosition = new CameraPosition.Builder().target(myPosition).zoom(12).build();
-                googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+            LocationManager mLocationManager = (LocationManager) getActivity().getApplicationContext().getSystemService(LOCATION_SERVICE);
+            List<String> providers = mLocationManager.getProviders(true);
+            Location bestLocation = null;
+            for (String provider : providers) {
+                Location l = mLocationManager.getLastKnownLocation(provider);
+                if (l == null) {
+                    continue;
+                }
+                if (bestLocation == null || l.getAccuracy() < bestLocation.getAccuracy()) {
+                    // Found best last known location: %s", l);
+                    bestLocation = l;
+                }
             }
+
+            double latitude = bestLocation.getLatitude();
+            double longitude = bestLocation.getLongitude();
+
+            showNearbyEvents();
+            myPosition = new LatLng(latitude, longitude);
+            CameraPosition cameraPosition = new CameraPosition.Builder().target(myPosition).zoom(12).build();
+            googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
         });
 
         return rootView;
@@ -124,21 +115,17 @@ public class NearbyEventsFragment extends Fragment {
 
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        searchButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                searchButton.setEnabled(false);
+        searchButton.setOnClickListener(view1 -> {
+            searchButton.setEnabled(false);
 
-                if (address.getText().toString().length() != 0) {
-                    EventLocation eventLocation = new EventLocation (address.getText().toString());
-                    if (eventLocation.getAddress() == null){
-                        Toast.makeText(getActivity().getApplicationContext(), R.string.AddressNotFound, Toast.LENGTH_LONG).show();
-                    }
-                    else {
-                        myPosition = new LatLng(eventLocation.getLatitude(), eventLocation.getLongitude());
-                        CameraPosition cameraPosition = new CameraPosition.Builder().target(myPosition).zoom(12).build();
-                        googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-                    }
+            if (address.getText().toString().length() != 0) {
+                EventLocation eventLocation = new EventLocation(address.getText().toString());
+                if (eventLocation.getAddress() == null) {
+                    Toast.makeText(getActivity().getApplicationContext(), R.string.AddressNotFound, Toast.LENGTH_LONG).show();
+                } else {
+                    myPosition = new LatLng(eventLocation.getLatitude(), eventLocation.getLongitude());
+                    CameraPosition cameraPosition = new CameraPosition.Builder().target(myPosition).zoom(12).build();
+                    googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
                 }
             }
         });
@@ -152,10 +139,20 @@ public class NearbyEventsFragment extends Fragment {
         });
     }
 
+    private boolean correctDate(Date iniDate) {
+        if (iniDate == null) return true;
+        else {
+            Date currentDate = new Date();
+            long hours = iniDate.getTime() - currentDate.getTime();
+            hours = hours/ 1000 / 60 / 60;
+            return hours >= 24;
+        }
+    }
+
     private void showNearbyEvents() {
         APICommunicator apiCommunicator = new APICommunicator();
         Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response -> {
-            JSONArray jsonArray = null;
+            JSONArray jsonArray;
             try {
                 jsonArray = new JSONArray(response.response);
                 for (int i = 0; i < jsonArray.length(); i++) {
@@ -185,12 +182,6 @@ public class NearbyEventsFragment extends Fragment {
 
         apiCommunicator.getRequest(getActivity().getApplicationContext(), URL, responseListener, errorListener, null);
 
-    }
-
-    private byte[] bitmapToByteArray(Bitmap bitmap) {
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
-        return byteArrayOutputStream.toByteArray();
     }
 
 
