@@ -12,17 +12,13 @@ public class Comment {
     private String user;
     private String text;
     private String surname;
-    private Bitmap image;
 
     Comment(JSONObject jsonObject) {
         try {
             this.user = jsonObject.getString("name");
             this.surname = jsonObject.getString("surname");
             //TODO no se aun como se llama
-            this.text = jsonObject.getString("surname");
-            String base64 = jsonObject.getString("image");
-            byte[] decodeString = Base64.decode(base64, Base64.DEFAULT);
-            this.image = BitmapFactory.decodeByteArray(decodeString, 0, decodeString.length);
+            this.text = jsonObject.getString("text");
         }
         catch (JSONException ex) {
             ex.printStackTrace();
@@ -51,13 +47,5 @@ public class Comment {
 
     public void setComment(String text) {
         this.text = text;
-    }
-
-    public Bitmap getImage() {
-        return image;
-    }
-
-    public void setImage(Bitmap image) {
-        this.image = image;
     }
 }

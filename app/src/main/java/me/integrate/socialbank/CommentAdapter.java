@@ -25,13 +25,11 @@ class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentViewHold
 
         private TextView user;
         private TextView text;
-        private ImageView image;
 
         private CommentViewHolder(View v) {
             super(v);
             user = (TextView) v.findViewById(R.id.name_user);
             text = (TextView) v.findViewById(R.id.comments);
-            image = (ImageView) v.findViewById(R.id.photo_user);
         }
     }
 
@@ -55,8 +53,6 @@ class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentViewHold
         String name = items.get(i).getUser().concat(" ").concat(items.get(i).getSurname());
         viewHolder.user.setText(name);
         viewHolder.text.setText(items.get(i).getComment());
-        viewHolder.image.setImageBitmap(items.get(i).getImage());
-
     }
 
     @Override

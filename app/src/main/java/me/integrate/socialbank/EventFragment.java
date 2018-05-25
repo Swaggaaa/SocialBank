@@ -202,17 +202,12 @@ public class EventFragment extends Fragment {
                     Bundle b = new Bundle();
                     b.putString("email", creator);
                     Fragment profileFragment;
-                    if (!creator.equals(SharedPreferencesManager.INSTANCE.read(getActivity(),"user_email"))){
-                        profileFragment = new ProfileFragment();
-                    }
-                    else {
-                        profileFragment = new MyProfileFragment();
-                    }
+                    profileFragment = !creator.equals(SharedPreferencesManager.INSTANCE.read(getActivity(), "user_email")) ? new ProfileFragment() : new MyProfileFragment();
                     profileFragment.setArguments(b);
                     FragmentChangeListener fc = (FragmentChangeListener) getActivity();
                     fc.replaceFragment(profileFragment);
 
-                });
+               });
 
                 mRecyclerView.setAdapter(mAdapter);
                 loadingDialog.dismiss();
