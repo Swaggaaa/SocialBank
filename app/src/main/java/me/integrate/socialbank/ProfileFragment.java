@@ -47,6 +47,11 @@ public class ProfileFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
 
+    private RecyclerView awardRecyclerView;
+    private RecyclerView.Adapter awardAdapter;
+
+    private List<String> items = new ArrayList<>();
+
     private ProgressDialog loadingDialog;
 
 
@@ -61,9 +66,13 @@ public class ProfileFragment extends Fragment {
         userBalance = (TextView) rootView.findViewById(R.id.hoursBalance);
         userDescription = (TextView) rootView.findViewById(R.id.aboutMe);
         myEvents = (TextView)rootView.findViewById(R.id.events);
+        awardRecyclerView = (RecyclerView) rootView.findViewById(R.id.award_recycler_view);
+        awardRecyclerView.setHasFixedSize(true);
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.my_recycler_view_user_profile);
         mRecyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
+        RecyclerView.LayoutManager awardLayoutManager = new LinearLayoutManager(getContext(),LinearLayoutManager.HORIZONTAL, false);
+        awardRecyclerView.setLayoutManager(awardLayoutManager);
         mRecyclerView.setLayoutManager(mLayoutManager);
         loadingDialog = ProgressDialog.show(getActivity(), "",
                 getString(R.string.loadingMessage), true);
@@ -110,6 +119,17 @@ public class ProfileFragment extends Fragment {
                     userPicture.setImageBitmap(BitmapFactory.decodeByteArray(
                             decodeString, 0, decodeString.length));
                 }
+
+                JSONArray jsonArray = jsonObject.getJSONArray("awards");
+                for (int i = 0; i < jsonArray.length(); ++i) {
+                    items.add(jsonArray.getString(i));
+                }
+
+                awardAdapter = new AwardAdapter(items, (v1, position) -> {
+                });
+
+                awardRecyclerView.setAdapter(awardAdapter);
+
 
             } catch (JSONException e) {
                 e.printStackTrace();
