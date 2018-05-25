@@ -170,7 +170,7 @@ public class CreateEventFragment extends Fragment {
             else
                 jsonEvent();
 
-        });
+         });
         view.findViewById(R.id.imageView).setOnClickListener(v ->
         {
             readGallery();

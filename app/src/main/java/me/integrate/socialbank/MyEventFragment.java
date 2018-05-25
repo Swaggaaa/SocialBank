@@ -2,6 +2,7 @@ package me.integrate.socialbank;
 
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -26,7 +27,7 @@ import static android.app.Activity.RESULT_OK;
 import static android.content.ContentValues.TAG;
 
 
-public class MyEventFragment extends EventFragment{
+public class MyEventFragment extends EventFragment {
 
     private Button updateButton;
     private ImageView editEvent;
@@ -108,7 +109,7 @@ public class MyEventFragment extends EventFragment{
         };
         Response.ErrorListener errorListener = error -> errorTreatment(error.networkResponse.statusCode);
 
-        apiCommunicator.deleteRequest(getActivity().getApplicationContext(), URL +'/'+ id, responseListener, errorListener, null);
+        apiCommunicator.deleteRequest(getActivity().getApplicationContext(), URL + '/' + id, responseListener, errorListener, null);
 
     }
 
@@ -116,9 +117,9 @@ public class MyEventFragment extends EventFragment{
         String message;
         if (errorCode == 401)
             message = getString(R.string.Unauthorized);
-        else if(errorCode == 403)
+        else if (errorCode == 403)
             message = getString(R.string.Forbidden);
-        else if(errorCode == 404)
+        else if (errorCode == 404)
             message = getString(R.string.NotFound);
         else
             message = getString(R.string.UnexpectedError);
@@ -139,13 +140,12 @@ public class MyEventFragment extends EventFragment{
     }
 
 
-
     private void updateEvent() {
         HashMap<String, String> params = new HashMap<>();
         params.put("description", descriptionEvent);
-        params.put("image", imageView!=null ? ImageCompressor.INSTANCE.compressAndEncodeAsBase64(
-                ((BitmapDrawable)imageView.getDrawable()).getBitmap())
-                : "");
+        Bitmap bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
+        params.put("image", bitmap != null ? ImageCompressor.INSTANCE.compressAndEncodeAsBase64(
+                bitmap) : "");
         putCredentials(params);
     }
 
@@ -172,8 +172,8 @@ public class MyEventFragment extends EventFragment{
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(resultCode == RESULT_OK){
-            if(requestCode == 2 ) {
+        if (resultCode == RESULT_OK) {
+            if (requestCode == 2) {
                 data.getData();
                 Uri selectedImage = data.getData();
                 Log.v(TAG, "Selected image uri" + selectedImage);
@@ -181,9 +181,8 @@ public class MyEventFragment extends EventFragment{
                 loadImageFromUri(selectedImage);
                 updateEvent();
             }
-        }
-        else{
-            Log.v("Result","Something happened when tried to get the image");
+        } else {
+            Log.v("Result", "Something happened when tried to get the image");
         }
     }
 

@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.TextView;
@@ -39,6 +40,8 @@ public class MyProfileFragment extends ProfileFragment {
         changeUserPhoto.setVisibility(View.VISIBLE);
         userBalance = (TextView) view.findViewById(R.id.hoursBalance);
         userBalance.setVisibility(View.VISIBLE);
+        Button reportUser = (Button)view.findViewById(R.id.buttonReportUser);
+        reportUser.setVisibility(View.GONE);
         return view;
     }
 
