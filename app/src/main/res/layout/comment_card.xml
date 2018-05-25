@@ -25,7 +25,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:layout_marginTop="5dp">
 
                 <TextView
                     android:id="@+id/name_user"
@@ -45,7 +46,8 @@
                     android:layout_height="wrap_content"
                     android:background="@color/colorTransparent"
                     android:text="@string/delete_comment"
-                    android:textColor="@color/colorTextForgot" />
+                    android:textColor="@color/colorTextForgot"
+                    android:visibility="gone"/>
 
             </LinearLayout>
 

@@ -8,6 +8,7 @@ import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import java.util.List;
@@ -25,11 +26,13 @@ class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentViewHold
 
         private TextView user;
         private TextView text;
+        private Button delete;
 
         private CommentViewHolder(View v) {
             super(v);
             user = (TextView) v.findViewById(R.id.name_user);
             text = (TextView) v.findViewById(R.id.comments);
+            delete = (Button) v.findViewById(R.id.delete_comment_button);
         }
     }
 
@@ -53,6 +56,9 @@ class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentViewHold
         String name = items.get(i).getUser().concat(" ").concat(items.get(i).getSurname());
         viewHolder.user.setText(name);
         viewHolder.text.setText(items.get(i).getComment());
+        if (items.get(i).getEmailCreator().equals(SharedPreferencesManager.INSTANCE.read(this.context, "user_email"))){
+            viewHolder.delete.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
