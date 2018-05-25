@@ -100,5 +100,5 @@
     <string name="Wrong_date_msg">Start date must be minor than End date and greater than current date</string>
     <string name="Not_hours_msg">You do not have enough hours to create this event</string>
     <string name="event_created_msg">Event created successfully</string>
-
-</resources>
+    <string name="EventUpdated">Event updated!</string>
+   </resources>
