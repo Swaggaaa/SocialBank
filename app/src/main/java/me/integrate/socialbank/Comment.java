@@ -15,7 +15,7 @@ public class Comment {
     private String emailCreator;
 
     Comment(String name, String surname, String text, String email) {
-        this.user = user;
+        this.user = name;
         this.text = text;
         this.surname = surname;
         this.emailCreator = email;

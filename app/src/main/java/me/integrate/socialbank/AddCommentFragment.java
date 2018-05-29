@@ -1,8 +1,12 @@
 package me.integrate.socialbank;
 
+import android.app.Dialog;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -21,7 +25,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-public class AddCommentFragment extends Fragment {
+public class AddCommentFragment extends DialogFragment {
     private static final String URL = "/users";
     private EditText comment;
     private Button submit;
@@ -30,25 +34,22 @@ public class AddCommentFragment extends Fragment {
     private String creator;
     private Date iniDate;
 
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_add_comment, container, false);
+    public AlertDialog addCommentFragment() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("Add comment");
+        LayoutInflater inflater = getActivity().getLayoutInflater();
+        View rootView = inflater.inflate(R.layout.fragment_add_comment, null);
+        builder.setView(rootView);
         comment = (EditText) rootView.findViewById(R.id.new_comment);
         submit = (Button) rootView.findViewById(R.id.button_comment);
         id = getArguments().getInt("id");
         creator = getArguments().getString("creator");
         String date = getArguments().getString("iniDate");
         getIniDate(date);
-        return rootView;
-    }
-
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
         submit.setOnClickListener(v -> {
             submit.setEnabled(false);
             if (comment.getText().toString().length() != 0) {
-
+                Toast.makeText(getActivity().getApplicationContext(), R.string.JSONException, Toast.LENGTH_LONG).show();
                 //TODO call to the api
                 //postCredentials(comment.getText().toString());
             }
@@ -62,6 +63,15 @@ public class AddCommentFragment extends Fragment {
                 enableButton();
             }
         });
+        return builder.create();
+    }
+
+    @NonNull
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        return addCommentFragment();
+
     }
 
     //TODO finish the call to the api with the correct erros and url

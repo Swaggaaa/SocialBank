@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -95,7 +96,8 @@ public class EventFragment extends Fragment {
        // loadingDialog = ProgressDialog.show(getActivity(), "",
            //     getString(R.string.loadingMessage), true);
 
-
+        //TODO eliminar
+        comment();
         //TODO call to the api
        // getComments();
         id = getArguments().getInt("id");
@@ -103,6 +105,27 @@ public class EventFragment extends Fragment {
         return rootView;
     }
 
+
+    private void comment()
+    {
+        Comment c = new Comment("jordi", "romero", "joan", "v@v.v");
+        List<Comment> comments = new ArrayList<>();
+        comments.add(c);
+
+        System.out.println("NAME " + c.getUser());
+        mAdapter = new CommentAdapter(comments, getActivity(), (v1, position) -> {
+            Bundle bundle = new Bundle();
+            String email = comments.get(position).getEmailCreator();
+            bundle.putString("email", email);
+            FragmentChangeListener fc = (FragmentChangeListener) getActivity();
+            ProfileFragment profileFragment = !email.equals(SharedPreferencesManager.INSTANCE.read(getActivity(), "user_email")) ? new ProfileFragment() : new MyProfileFragment();
+            profileFragment.setArguments(bundle);
+            fc.replaceFragment(profileFragment);
+
+        });
+
+        mRecyclerView.setAdapter(mAdapter);
+    }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -124,10 +147,10 @@ public class EventFragment extends Fragment {
             b.putInt("id", id);
             b.putString("creator", creator);
             b.putString("iniDate", dateToString(iniDate));
-            Fragment addCommentFragment = new AddCommentFragment();
+            FragmentManager fm  = getFragmentManager();
+            AddCommentFragment addCommentFragment = new AddCommentFragment();
             addCommentFragment.setArguments(b);
-            FragmentChangeListener fc = (FragmentChangeListener) getActivity();
-            fc.replaceFragment(addCommentFragment);
+            addCommentFragment.show(fm, "prova");
         });
     }
 
@@ -168,20 +191,6 @@ public class EventFragment extends Fragment {
 
         apiCommunicator.getRequest(getActivity().getApplicationContext(), URL+'/'+ id, responseListener, errorListener, null);
 
-    }
-
-    private void errorTreatment(int errorCode) {
-        String message;
-        if (errorCode == 401)
-            message = getString(R.string.Unauthorized);
-        else if (errorCode == 403)
-            message = getString(R.string.Forbidden);
-        else if (errorCode == 404)
-            message = getString(R.string.NotFound);
-        else
-            message = getString(R.string.UnexpectedError);
-
-        Toast.makeText(getActivity().getApplicationContext(), message, Toast.LENGTH_LONG).show();
     }
 
     private String getHours(Date hourIni, Date hourEnd) {
