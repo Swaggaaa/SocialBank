@@ -32,6 +32,9 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import static android.app.Activity.RESULT_OK;
 import static android.content.ContentValues.TAG;
@@ -78,7 +81,7 @@ public class CreateEventFragment extends Fragment {
 
     double userHours;
 
-    private void postEvent(HashMap<String, String> params) {
+    private void postEvent(HashMap<String, Object> params) {
         APICommunicator apiCommunicator = new APICommunicator();
         Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response ->
         {
@@ -299,7 +302,7 @@ public class CreateEventFragment extends Fragment {
     }
 
     private void jsonEvent() {
-        HashMap<String, String> params = new HashMap<>();
+        HashMap<String, Object> params = new HashMap<>();
         String dataIni = null;
         String dataEnd = null;
         if (eventFixed) {
@@ -322,6 +325,7 @@ public class CreateEventFragment extends Fragment {
                 ((BitmapDrawable) imageView.getDrawable()).getBitmap())
                 : "");
         params.put("capacity", capacity);
+        params.put("tags", getTags());
 
         buttonCreate.setText(R.string.loading);
         buttonCreate.setEnabled(false);
@@ -529,5 +533,31 @@ public class CreateEventFragment extends Fragment {
 
     private boolean enoughHours() {
         return userHours >= getEventHours();
+    }
+
+    private String getHashtag(String text) { //Returns a list with all Tags
+        String tag = text;
+        int i_space = text.indexOf(" ");
+        int i_next = text.indexOf("#");
+        int i = (i_space > i_next) ? i_next : i_space;
+
+        if( i > 0 ) {
+            tag = tag.substring(0, i);
+        }
+
+        return tag;
+    }
+
+    private Set<String> getTags() { //Returns a list with all Tags
+        Set<String> tags = new HashSet<String>();
+        String text = description.getText().toString();
+
+        //Find every occurrence of '#'
+        for (int i = -1; (i = text.indexOf("#", i + 1)) != -1; i++) {
+            String tag = getHashtag( text.substring(i+1) );
+            tags.add(tag);
+        }
+
+        return tags;
     }
 }
