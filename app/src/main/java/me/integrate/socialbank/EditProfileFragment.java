@@ -55,7 +55,6 @@ public class EditProfileFragment extends Fragment {
         APICommunicator apiCommunicator = new APICommunicator();
         Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response -> {
             JSONObject jsonObject;
-            Float balance = null;
             try {
                 jsonObject = new JSONObject(response.response);
                 newName.setText(jsonObject.getString("name"));

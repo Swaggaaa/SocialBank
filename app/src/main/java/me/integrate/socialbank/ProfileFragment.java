@@ -151,7 +151,7 @@ public class ProfileFragment extends Fragment {
 
         };
         Response.ErrorListener errorListener = error -> {
-            Toast.makeText(getActivity().getApplicationContext(), "Something went wrong", Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity().getApplicationContext(), getString(R.string.something_wrong), Toast.LENGTH_LONG).show();
             Fragment boardFragment = new BoardFragment();
             FragmentChangeListener fc = (FragmentChangeListener) getActivity();
             fc.replaceFragment(boardFragment);
@@ -189,24 +189,24 @@ public class ProfileFragment extends Fragment {
         Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response -> {
             Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.user_reported), Toast.LENGTH_LONG).show();
         };
-        Response.ErrorListener errorListener = error -> {
-            String message;
-            int errorCode = error.networkResponse.statusCode;
-            if (errorCode == 401)
-                message = getString(R.string.unauthorized);
-            else if (errorCode == 403)
-                message = getString(R.string.forbidden);
-            else if (errorCode == 404)
-                message = getString(R.string.NotFound);
-            else if (errorCode == 409)
-                message = getString(R.string.user_already_reported);
-            else
-                message = getString(R.string.unexpectedError);
-            Toast.makeText(getActivity().getApplicationContext(), message, Toast.LENGTH_LONG).show();
-
-        };
+        Response.ErrorListener errorListener = error -> errorTreatment(error.networkResponse.statusCode);
 
         apiCommunicator.postRequest(getActivity().getApplicationContext(), URL+'/'+emailUser+"/report", responseListener, errorListener, params);
+    }
+
+    private void errorTreatment(int errorCode) {
+        String message;
+        if (errorCode == 401)
+            message = getString(R.string.Unauthorized);
+        else if (errorCode == 403)
+            message = getString(R.string.Forbidden);
+        else if (errorCode == 404)
+            message = getString(R.string.NotFound);
+        else
+            message = getString(R.string.UnexpectedError);
+
+        loadingDialog.dismiss();
+        Toast.makeText(getActivity().getApplicationContext(), message, Toast.LENGTH_LONG).show();
     }
 
     private void getUserEvents() {
@@ -254,19 +254,8 @@ public class ProfileFragment extends Fragment {
             }
         };
         Response.ErrorListener errorListener = error -> {
-            String message;
-            int errorCode = error.networkResponse.statusCode;
-            if (errorCode == 401)
-                message = getString(R.string.unauthorized);
-            else if (errorCode == 403)
-                message = getString(R.string.forbidden);
-            else if (errorCode == 404)
-                message = getString(R.string.NotFound);
-            else
-                message = getString(R.string.unexpectedError);
-
             loadingDialog.dismiss();
-            Toast.makeText(getActivity().getApplicationContext(), message, Toast.LENGTH_LONG).show();
+            errorTreatment(error.networkResponse.statusCode);
         };
         apiCommunicator.getRequest(getActivity().getApplicationContext(), URL +'/'+ emailUser + "/events", responseListener, errorListener, params);
     }

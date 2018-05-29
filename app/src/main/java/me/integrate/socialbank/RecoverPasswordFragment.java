@@ -63,7 +63,7 @@ public class RecoverPasswordFragment extends Fragment {
 
         APICommunicator apiCommunicator = new APICommunicator();
         Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response -> {
-            Toast.makeText(getActivity().getApplicationContext(), "Recovery code email sent!", Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity().getApplicationContext(), getString(R.string.account_created), Toast.LENGTH_LONG).show();
             tokenSelected();
         };
         Response.ErrorListener errorListener = error -> {

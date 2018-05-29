@@ -34,8 +34,6 @@ public class ConvertAddressToCoordinatesTask extends AsyncTask<URL,Integer,Event
                 full += output;
             }
 
-            //full = "{\"results\":[{\"place_id\":\"ChIJ2eUgeAK6j4ARbn5u_wAGqWA\",\"address_components\":[{\"long_name\":\"1600\",\"types\":[\"street_number\"],\"short_name\":\"1600\"},{\"long_name\":\"Amphitheatre Pkwy\",\"types\":[\"route\"],\"short_name\":\"Amphitheatre Pkwy\"},{\"long_name\":\"Mountain View\",\"types\":[\"locality\",\"political\"],\"short_name\":\"Mountain View\"},{\"long_name\":\"Santa Clara County\",\"types\":[\"administrative_area_level_2\",\"political\"],\"short_name\":\"Santa Clara County\"},{\"long_name\":\"California\",\"types\":[\"administrative_area_level_1\",\"political\"],\"short_name\":\"CA\"},{\"long_name\":\"United States\",\"types\":[\"country\",\"political\"],\"short_name\":\"US\"},{\"long_name\":\"94043\",\"types\":[\"postal_code\"],\"short_name\":\"94043\"}],\"formatted_address\":\"1600 Amphitheatre Parkway, Mountain View, CA 94043, USA\",\"types\":[\"street_address\"],\"geometry\":{\"viewport\":{\"southwest\":{\"lng\":-122.0855988802915,\"lat\":37.4211274197085},\"northeast\":{\"lng\":-122.0829009197085,\"lat\":37.4238253802915}},\"location_type\":\"ROOFTOP\",\"location\":{\"lng\":-122.0842499,\"lat\":37.4224764}}}],\"status\":\"OK\"}";
-
 
             JSONObject json = new JSONObject(full);
 
