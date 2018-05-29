@@ -249,21 +249,4 @@ public class BoardFragment extends Fragment {
         }
     }
 
-    private byte[] bitmapToByteArray(Bitmap bitmap) {
-        if (bitmap != null) {
-            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
-            return byteArrayOutputStream.toByteArray();
-        }
-        else return null;
-    }
-
-    private String dateToString(Date date) {
-        if (date == null) return getResources().getString(R.string.notDate);
-        else{
-            DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-            return df.format(date);
-        }
-    }
-
 }

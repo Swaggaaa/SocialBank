@@ -79,10 +79,10 @@ public class MyProfileFragment extends ProfileFragment {
     private void putCredentials(HashMap<String, String> params) {
         APICommunicator apiCommunicator = new APICommunicator();
         Response.Listener responseListener = response -> {
-            Toast.makeText(getActivity().getApplicationContext(), "Image changed!", Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity().getApplicationContext(), getString(R.string.image_update), Toast.LENGTH_LONG).show();
 
         };
-        Response.ErrorListener errorListener = error -> Toast.makeText(getActivity().getApplicationContext(), "Something went wrong", Toast.LENGTH_LONG).show();
+        Response.ErrorListener errorListener = error -> Toast.makeText(getActivity().getApplicationContext(), getString(R.string.something_wrong), Toast.LENGTH_LONG).show();
 
 
         apiCommunicator.putRequest(getActivity().getApplicationContext(), URL + '/' + emailUser, responseListener, errorListener, params);
