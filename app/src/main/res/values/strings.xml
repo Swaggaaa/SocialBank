@@ -119,5 +119,6 @@
     <string name="something_wrong">Something went wrong</string>
     <string name="image_update">Image changed!</string>
     <string name="account_created">Account created!</string>
+    <string name="user_balance">User balance:  </string>
 
 </resources>
