@@ -6,154 +6,190 @@
     android:layout_height="match_parent"
     tools:context=".ProfileFragment">
 
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/editProfile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="16dp"
+        android:src="@drawable/ic_edit_black_24dp"
+        android:visibility="visible" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/loadPicture"
+        android:layout_margin="16dp"
+        android:src="@drawable/ic_camera_alt_black_24dp"
+        android:layout_gravity="bottom|end"
+        android:visibility="visible" />
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <ImageView
-            android:id="@+id/myProfileImage"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            app:srcCompat="@android:drawable/ic_menu_camera" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginEnd="20dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="20dp"
-            android:backgroundTint="@android:color/background_light"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="10dp">
+                <ImageView
+                    android:id="@+id/myProfileImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    app:srcCompat="@android:drawable/ic_menu_camera" />
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:layout_marginLeft="10dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/myProfileName"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:text="@string/user_name"
+                        android:layout_marginEnd="20dp"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginTop="5dp"
+                        android:textSize="24sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/userEmailToShow"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="20dp"
+                        android:layout_marginStart="20dp"
+                        android:text="@string/email" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/about_me"
+                        android:textStyle="bold"
+                        android:layout_marginEnd="20dp"
+                        android:layout_marginStart="20dp"/>
+
+                    <TextView
+                        android:id="@+id/aboutMe"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="20dp"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginBottom="5dp"
+                        android:maxLines="5"
+                        android:text="" />
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+
+
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="20dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
+                android:backgroundTint="@android:color/background_light"
+                android:orientation="vertical">
+
+
+
+                <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:id="@+id/award_recycler_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+
+
+
+                <TextView
+                    android:id="@+id/hoursBalance"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/hours"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    android:visibility="gone" />
+
+                <View
+                    android:id="@+id/divider"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="?android:attr/listDivider" />
+
+                <TextView
+                    android:id="@+id/events"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/my_events"
+                    android:textStyle="bold" />
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/my_recycler_view_user_profile"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" />
+
+
+
+                </FrameLayout>
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/buttonReportUser"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorTransparent"
+                android:text="@string/report_user"
+                android:textColor="#8d0c0c" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/myProfileName"
+                <Button
+                    android:id="@+id/confirmReport"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="@string/user_name"
-                    android:textSize="24sp"
-                    android:textStyle="bold" />
+                    android:background="@color/colorTransparent"
+                    android:text="@string/confirm"
+                    android:textColor="#8d0c0c" />
 
-                <ImageView
-                    android:id="@+id/loadPicture"
-                    android:layout_width="wrap_content"
+                <Button
+                    android:id="@+id/discardReport"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:maxHeight="42dp"
-                    android:maxWidth="42dp"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/ic_camera_alt_black_24dp"
-                    android:visibility="gone" />
-
+                    android:layout_weight="1"
+                    android:background="@color/colorTransparent"
+                    android:text="@string/discard"
+                    android:textColor="#8d0c0c" />
             </LinearLayout>
 
-            <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
-                android:id="@+id/award_recycler_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-
-
-            <TextView
-                android:id="@+id/userEmailToShow"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/email" />
-
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/about_me"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/aboutMe"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:maxLines="5"
-                android:text="" />
-
-            <TextView
-                android:id="@+id/hoursBalance"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/hours"
-                android:textSize="24sp"
-                android:textStyle="bold"
-                android:visibility="gone"/>
-
-            <View
-                android:id="@+id/divider"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="?android:attr/listDivider" />
-
-            <TextView
-                android:id="@+id/events"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/my_events"
-                android:textStyle="bold" />
-
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/my_recycler_view_user_profile"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
-
-                <android.support.design.widget.FloatingActionButton
-                    android:id="@+id/editProfile"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="bottom|end"
-                    android:layout_margin="16dp"
-                    android:src="@drawable/ic_edit_black_24dp"
-                    android:visibility="gone" />
-
-            </FrameLayout>
         </LinearLayout>
 
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/colorTransparent"
-            android:text="@string/report_user"
-            android:id="@+id/buttonReportUser"
-            android:textColor="#8d0c0c" />
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/colorTransparent"
-                android:text="@string/confirm"
-                android:id="@+id/confirmReport"
-                android:textColor="#8d0c0c"
-                android:layout_weight="1"/>
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/colorTransparent"
-                android:text="@string/discard"
-                android:id="@+id/discardReport"
-                android:textColor="#8d0c0c"
-                android:layout_weight="1"/>
-        </LinearLayout>
-
-    </LinearLayout>
     </ScrollView>
+
+
 
 </android.support.constraint.ConstraintLayout>

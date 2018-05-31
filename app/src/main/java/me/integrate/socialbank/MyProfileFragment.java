@@ -35,7 +35,7 @@ public class MyProfileFragment extends ProfileFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
         FloatingActionButton editProfile = (FloatingActionButton) view.findViewById(R.id.editProfile);
-        ImageView changeUserPhoto = (ImageView) view.findViewById(R.id.loadPicture);
+        FloatingActionButton changeUserPhoto = (FloatingActionButton) view.findViewById(R.id.loadPicture);
         editProfile.setVisibility(View.VISIBLE);
         changeUserPhoto.setVisibility(View.VISIBLE);
         userBalance = (TextView) view.findViewById(R.id.hoursBalance);
