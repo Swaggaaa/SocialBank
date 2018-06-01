@@ -207,14 +207,4 @@ public class Event {
 
     }
 
-
-    public Bitmap getImageRounded() {
-
-        if (image != null) {
-            image = ImageHelper.cropBitmapToSquare(image);
-            return ImageHelper.getRoundedCornerBitmap(image, 120);
-        }
-        return null;
-
-    }
 }

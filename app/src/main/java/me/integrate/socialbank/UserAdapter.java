@@ -52,7 +52,8 @@ class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder> {
     public void onBindViewHolder(UserViewHolder viewHolder, int i) {
         String name = items.get(i).getName().concat(" ").concat(items.get(i).getSurname());
         viewHolder.name.setText(name);
-        viewHolder.image.setImageBitmap(items.get(i).getImageRounded());
+        Bitmap myBitmap = getImageRounded(items.get(i).getImage());
+        viewHolder.image.setImageBitmap(myBitmap);
 
     }
 
@@ -61,8 +62,17 @@ class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder> {
         return items.size();
     }
 
-   /*private Bitmap getImage(Bitmap image)
-    {
-        return (image != null) ? image : getResources().
-    }*/
+    private Bitmap getImageRounded(Bitmap image) {
+
+        if (image != null) {
+            image = ImageHelper.cropBitmapToSquare(image);
+            image = ImageHelper.getRoundedCornerBitmap(image, 120);
+        } else {
+            image = BitmapFactory.decodeResource(App.getContext().getResources(),R.drawable.user_icon);
+            image = ImageHelper.cropBitmapToSquare(image);
+            image = ImageHelper.getRoundedCornerBitmap(image, 120);
+        }
+        return image;
+
+    }
 }
