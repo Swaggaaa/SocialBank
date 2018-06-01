@@ -15,11 +15,15 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.math.BigDecimal;
+
 public class MyJoinEventFragment extends EventFragment {
 
     private static final String URL = "/users";
     private String emailUser;
 
+    private float balance;
+    private boolean verified;
 
     public static MyJoinEventFragment newInstance(Bundle params) {
         MyJoinEventFragment myJoinEventFragment = new MyJoinEventFragment();
@@ -32,6 +36,7 @@ public class MyJoinEventFragment extends EventFragment {
         View view = super.onCreateView(inflater, container, savedInstanceState);
         emailUser = SharedPreferencesManager.INSTANCE.read(getActivity(),"user_email");
         getAllJoinEventsByUser();
+        getUserInfo();
         return view;
     }
 
@@ -50,8 +55,8 @@ public class MyJoinEventFragment extends EventFragment {
                 dialogDelete.setMessage(getResources().getString(R.string.confirm_disjoin_event));
                 dialogDelete.setCancelable(false);
                 dialogDelete.setPositiveButton(getResources().getString(R.string.confirm), (dialogInterface, i) -> {
-                    //Call to the api function
-                   // disjointEvent();
+                        //Call to the api function
+                    // disjointEvent();
                     join_button.setText(getResources().getString(R.string.join));
                     Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.disjoin_confirm), Toast.LENGTH_LONG).show();
 
@@ -60,13 +65,34 @@ public class MyJoinEventFragment extends EventFragment {
                 });
                 dialogDelete.show();
 
-            } else if (hasHours()){
+            } else if (!verified && hasHours()){
                 //signUpEvent();
                 join_button.setText(getResources().getString(R.string.disjoin));
-            } else Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.imposible_join), Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.imposible_join), Toast.LENGTH_LONG).show();
+            }
 
 
         });
+    }
+
+    private void getUserInfo() {
+
+        APICommunicator apiCommunicator = new APICommunicator();
+        Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response -> {
+            JSONObject jsonObject;
+            try{
+                jsonObject = new JSONObject(response.response);
+                balance = BigDecimal.valueOf(jsonObject.getDouble("balance")).floatValue();
+                verified = jsonObject.getBoolean("verified");
+                verified = false;
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        };
+        Response.ErrorListener errorListener = error ->  errorTreatment(error.networkResponse.statusCode);
+
+        apiCommunicator.getRequest(getActivity().getApplicationContext(), URL+'/'+ emailUser, responseListener, errorListener, null);
     }
 
     //TODO modificar
@@ -79,7 +105,6 @@ public class MyJoinEventFragment extends EventFragment {
             boolean found = false;
             try {
                 jsonArray = new JSONArray(response.response);
-                System.out.println(String.valueOf(jsonArray.length()));
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
                     Event event = new Event(jsonObject);
@@ -117,8 +142,8 @@ public class MyJoinEventFragment extends EventFragment {
     private boolean hasHours() {
         long aux = getHours(iniDate,endDate);
         int hours = (int) aux;
-        if (Integer.valueOf(SharedPreferencesManager.INSTANCE.read(getActivity(), "balance")) - hours > 0) return true;
-        else return false;
+        int bal = (int) balance;
+        return bal - hours >= -10;
     }
 
    /* void signUpEvent() {

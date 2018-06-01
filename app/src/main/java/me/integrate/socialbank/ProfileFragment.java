@@ -115,9 +115,6 @@ public class ProfileFragment extends Fragment {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                if (emailUser.equals(SharedPreferencesManager.INSTANCE.read(getActivity(), "user_email"))) {
-                    SharedPreferencesManager.INSTANCE.store(getActivity(), "balance", String.valueOf(balance));
-                }
                 if (balance < 0) userBalance.setTextColor(Color.RED);
                 else if (balance > 0) userBalance.setTextColor(Color.GREEN);
                 else userBalance.setTextColor(Color.BLUE);
