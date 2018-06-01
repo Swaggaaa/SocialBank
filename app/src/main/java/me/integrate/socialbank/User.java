@@ -59,4 +59,14 @@ class User {
     public void setImage(Bitmap image) {
         this.image = image;
     }
+
+    public Bitmap getImageRounded() {
+
+        if (image != null) {
+            image = ImageHelper.cropBitmapToSquare(image);
+            return ImageHelper.getRoundedCornerBitmap(image, 120);
+        }
+        return null;
+
+    }
 }

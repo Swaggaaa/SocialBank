@@ -52,7 +52,7 @@ class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder> {
     public void onBindViewHolder(UserViewHolder viewHolder, int i) {
         String name = items.get(i).getName().concat(" ").concat(items.get(i).getSurname());
         viewHolder.name.setText(name);
-        viewHolder.image.setImageBitmap(items.get(i).getImage());
+        viewHolder.image.setImageBitmap(items.get(i).getImageRounded());
 
     }
 
@@ -60,4 +60,9 @@ class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder> {
     public int getItemCount() {
         return items.size();
     }
+
+   /*private Bitmap getImage(Bitmap image)
+    {
+        return (image != null) ? image : getResources().
+    }*/
 }
