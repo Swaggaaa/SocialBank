@@ -118,12 +118,13 @@ public class ProfileFragment extends Fragment {
                 dateUser = jsonObject.getString("birthdate");
                 genderUser = jsonObject.getString("gender");
                 descriptionUser = jsonObject.getString("description");
+                System.out.println("PRUEBA " + descriptionUser);
                 String completeName = nameUser + " " + lastNameUser;
                 userName.setText(completeName);
                 balance = BigDecimal.valueOf(jsonObject.getDouble("balance")).floatValue();
                 userBalance.setText(balance.toString());
                 userEmailToShow.setText(jsonObject.getString("email"));
-                userDescription.setText(descriptionUser);
+                if(!descriptionUser.equals("null")) userDescription.setText(descriptionUser);
                 String image = jsonObject.getString("image");
                 if (!image.equals("")) {
                     byte[] decodeString = Base64.decode(image, Base64.DEFAULT);

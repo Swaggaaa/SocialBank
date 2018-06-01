@@ -5,6 +5,7 @@
     android:elevation="0dp"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:foreground="@drawable/custom_ripple"
     app:cardUseCompatPadding="true"
     tools:context="me.integrate.socialbank.BoardFragment">
 
