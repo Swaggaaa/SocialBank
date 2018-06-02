@@ -70,8 +70,12 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
     @Override
     public void onBindViewHolder(EventViewHolder viewHolder, int i) {
 
-        Bitmap image = getImageRounded(items.get(i).getImage());
-        viewHolder.imagen.setImageBitmap(image);
+        Bitmap image = (items.get(i).getImage());
+        if (image == null) viewHolder.imagen.setImageResource(R.drawable.ic_camera_alt);
+        else {
+            image = getImageRounded(image);
+            viewHolder.imagen.setImageBitmap(image);
+        }
         viewHolder.title.setText(items.get(i).getTitle());
         viewHolder.initDate.setText(dateToString(items.get(i).getIniDate()));
         viewHolder.finishDate.setText(dateToString(items.get(i).getEndDate()));
@@ -82,15 +86,8 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
     }
 
     private Bitmap getImageRounded(Bitmap image) {
-
-        if (image != null) {
-            image = ImageHelper.cropBitmapToSquare(image);
-            image = ImageHelper.getRoundedCornerBitmap(image, 100);
-        } else {
-            image = BitmapFactory.decodeResource(App.getContext().getResources(),R.drawable.user_icon);
-            image = ImageHelper.cropBitmapToSquare(image);
-            image = ImageHelper.getRoundedCornerBitmap(image, 100);
-        }
+        image = ImageHelper.cropBitmapToSquare(image);
+        image = ImageHelper.getRoundedCornerBitmap(image, 120);
         return image;
 
     }

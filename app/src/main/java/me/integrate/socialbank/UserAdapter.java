@@ -24,11 +24,13 @@ class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder> {
     static class UserViewHolder extends RecyclerView.ViewHolder {
 
         private TextView name;
+        private TextView userEmail;
         private ImageView image;
 
         private UserViewHolder(View v) {
             super(v);
             name = (TextView) v.findViewById(R.id.user_name);
+            userEmail = (TextView) v.findViewById(R.id.userEmail);
             image = (ImageView) v.findViewById(R.id.user_photo);
         }
     }
@@ -52,9 +54,11 @@ class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder> {
     public void onBindViewHolder(UserViewHolder viewHolder, int i) {
         String name = items.get(i).getName().concat(" ").concat(items.get(i).getSurname());
         viewHolder.name.setText(name);
-        Bitmap myBitmap = getImageRounded(items.get(i).getImage());
-        viewHolder.image.setImageBitmap(myBitmap);
-
+        Bitmap image = (items.get(i).getImage());
+        if (image == null) image = BitmapFactory.decodeResource(App.getContext().getResources(),R.drawable.user_icon);
+        image = getImageRounded(image);
+        viewHolder.image.setImageBitmap(image);
+        viewHolder.userEmail.setText(items.get(i).getEmail());
     }
 
     @Override
@@ -63,15 +67,8 @@ class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder> {
     }
 
     private Bitmap getImageRounded(Bitmap image) {
-
-        if (image != null) {
-            image = ImageHelper.cropBitmapToSquare(image);
-            image = ImageHelper.getRoundedCornerBitmap(image, 120);
-        } else {
-            image = BitmapFactory.decodeResource(App.getContext().getResources(),R.drawable.user_icon);
-            image = ImageHelper.cropBitmapToSquare(image);
-            image = ImageHelper.getRoundedCornerBitmap(image, 120);
-        }
+        image = ImageHelper.cropBitmapToSquare(image);
+        image = ImageHelper.getRoundedCornerBitmap(image, 120);
         return image;
 
     }
