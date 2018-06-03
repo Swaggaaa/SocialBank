@@ -118,7 +118,6 @@ public class ProfileFragment extends Fragment {
                 dateUser = jsonObject.getString("birthdate");
                 genderUser = jsonObject.getString("gender");
                 descriptionUser = jsonObject.getString("description");
-                System.out.println("PRUEBA " + descriptionUser);
                 String completeName = nameUser + " " + lastNameUser;
                 userName.setText(completeName);
                 balance = BigDecimal.valueOf(jsonObject.getDouble("balance")).floatValue();
