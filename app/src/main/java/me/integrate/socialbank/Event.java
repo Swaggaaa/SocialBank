@@ -159,6 +159,10 @@ public class Event {
         return isDemand;
     }
 
+    public Boolean isAvailable() {
+        return (iniDate == null || (iniDate.compareTo(new Date()) > 0));
+    }
+
     public void setDemand(Boolean demand) {
         isDemand = demand;
     }

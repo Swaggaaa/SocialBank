@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -47,6 +48,7 @@ public class BoardFragment extends Fragment {
     private boolean other;
     private boolean offer;
     private boolean demand;
+    private boolean available;
 
     private MenuItem itemLanguage;
     private MenuItem itemCulture;
@@ -57,6 +59,7 @@ public class BoardFragment extends Fragment {
     private MenuItem itemOther;
     private MenuItem itemOffer;
     private MenuItem itemDemand;
+    private MenuItem itemAvailable;
 
     private ProgressDialog loadingDialog;
 
@@ -74,7 +77,7 @@ public class BoardFragment extends Fragment {
                 getString(R.string.loadingMessage), true);
         items = new ArrayList<>();
         allItems = new ArrayList<>();
-        demand = other = offer = language = culture = workshops = sports = gastronomy = leisure = false;
+        available = demand = other = offer = language = culture = workshops = sports = gastronomy = leisure = false;
         getAllEvents();
         return rootView;
     }
@@ -92,6 +95,7 @@ public class BoardFragment extends Fragment {
         itemOther = menu.findItem(R.id.category_other);
         itemOffer = menu.findItem(R.id.event_offer);
         itemDemand = menu.findItem(R.id.event_demand);
+        itemAvailable = menu.findItem(R.id.event_available);
 
         super.onCreateOptionsMenu(menu, inflater);
     }
@@ -131,14 +135,17 @@ public class BoardFragment extends Fragment {
             case R.id.event_offer:
                 offer = !item.isChecked();
                 item.setChecked(!item.isChecked());
-
                 break;
             case R.id.event_demand:
                 demand = !item.isChecked();
                 item.setChecked(!item.isChecked());
                 break;
+            case R.id.event_available:
+                available = !item.isChecked();
+                item.setChecked(!item.isChecked());
+                break;
             case R.id.delete_filters:
-                demand = other = offer = language = culture = workshops = sports = gastronomy = leisure = false;
+                available = demand = other = offer = language = culture = workshops = sports = gastronomy = leisure = false;
                 itemLanguage.setChecked(false);
                 itemCulture.setChecked(false);
                 itemWorkshops.setChecked(false);
@@ -148,24 +155,28 @@ public class BoardFragment extends Fragment {
                 itemOther.setChecked(false);
                 itemOffer.setChecked(false);
                 itemDemand.setChecked(false);
+                itemAvailable.setChecked(false);
                 break;
         }
         update();
         return true;
+    }
 
+    private boolean checkAvailability(Event event) {
+        return (!available || (available && event.isAvailable()));
     }
 
     private void check(Event event) {
-        if (offer || demand) {
-            if (offer && !event.isDemand()) items.add(event);
-            else if (demand && event.isDemand()) items.add(event);
+        if (offer || demand || available) {
+            if (offer && !event.isDemand() && checkAvailability(event)) items.add(event);
+            else if (demand && event.isDemand() && checkAvailability(event)) items.add(event);
         } else items.add(event);
     }
 
     private void update() {
         items.clear();
         boolean category = language || culture || workshops || sports || gastronomy || leisure || other;
-        if (category || offer || demand) {
+        if (category || offer || demand || available) {
             for (Event event: allItems) {
                 if (language &&  event.getCategory() == Event.Category.LANGUAGE) check(event);
                 else if (culture && event.getCategory() == Event.Category.CULTURE ) check(event);
@@ -174,9 +185,10 @@ public class BoardFragment extends Fragment {
                 else if (gastronomy && event.getCategory() == Event.Category.GASTRONOMY ) check(event);
                 else if (leisure && event.getCategory() == Event.Category.LEISURE) check(event);
                 else if (other && event.getCategory() == Event.Category.OTHER ) check(event);
-                else if (!category && (offer || demand )) {
-                    if (offer && !event.isDemand()) items.add(event);
-                    else if (demand && event.isDemand()) items.add(event);
+                else if (!category && (offer || demand || available)) {
+                    if (offer && !event.isDemand() && checkAvailability(event)) items.add(event);
+                    else if (demand && event.isDemand() && checkAvailability(event)) items.add(event);
+                    else if (checkAvailability(event)) items.add(event);
                 }
             }
         } else {
