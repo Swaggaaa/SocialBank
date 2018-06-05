@@ -168,8 +168,15 @@ public class BoardFragment extends Fragment {
 
     private void check(Event event) {
         if (offer || demand || available) {
-            if (offer && !event.isDemand() && checkAvailability(event)) items.add(event);
-            else if (demand && event.isDemand() && checkAvailability(event)) items.add(event);
+            if (offer && !event.isDemand() && checkAvailability(event)) {
+                items.add(event);
+            }
+            else if (demand && event.isDemand() && checkAvailability(event)) {
+                items.add(event);
+            }
+            else if (!offer && !demand && checkAvailability(event)) {
+                items.add(event);
+            }
         } else items.add(event);
     }
 
@@ -178,18 +185,14 @@ public class BoardFragment extends Fragment {
         boolean category = language || culture || workshops || sports || gastronomy || leisure || other;
         if (category || offer || demand || available) {
             for (Event event: allItems) {
-                if (language &&  event.getCategory() == Event.Category.LANGUAGE) check(event);
+                if (language && event.getCategory() == Event.Category.LANGUAGE) check(event);
                 else if (culture && event.getCategory() == Event.Category.CULTURE ) check(event);
                 else if (workshops && event.getCategory() == Event.Category.WORKSHOPS ) check(event);
                 else if (sports && event.getCategory() == Event.Category.SPORTS ) check(event);
                 else if (gastronomy && event.getCategory() == Event.Category.GASTRONOMY ) check(event);
                 else if (leisure && event.getCategory() == Event.Category.LEISURE) check(event);
                 else if (other && event.getCategory() == Event.Category.OTHER ) check(event);
-                else if (!category && (offer || demand || available)) {
-                    if (offer && !event.isDemand() && checkAvailability(event)) items.add(event);
-                    else if (demand && event.isDemand() && checkAvailability(event)) items.add(event);
-                    else if (checkAvailability(event)) items.add(event);
-                }
+                else if (!category && (offer || demand || available)) check(event);
             }
         } else {
             items.addAll(allItems);
