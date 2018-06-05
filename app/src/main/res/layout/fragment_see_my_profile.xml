@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -11,8 +11,11 @@
         android:id="@+id/editProfile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
         android:layout_gravity="bottom|end"
-        android:layout_margin="16dp"
+        android:layout_marginBottom="20dp"
+        android:layout_marginEnd="20dp"
         android:src="@drawable/ic_edit_black_24dp"
         android:visibility="visible" />
 
@@ -20,10 +23,22 @@
         android:id="@+id/loadPicture"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/editProfile"
+        android:layout_alignTop="@+id/editProfile"
         android:layout_gravity="bottom|end"
-        android:layout_margin="16dp"
         android:src="@drawable/ic_camera_alt_black_24dp"
         android:visibility="visible" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/openMenu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/editProfile"
+        android:layout_alignTop="@+id/editProfile"
+        android:layout_gravity="bottom|end"
+        android:src="@drawable/ic_camera_alt_black_24dp"
+        android:visibility="visible" />
+
 
     <ScrollView
         android:layout_width="match_parent"
@@ -44,7 +59,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="200dp"
                     app:srcCompat="@android:drawable/ic_menu_camera" />
+
             </android.support.v7.widget.CardView>
+
 
             <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
@@ -202,4 +219,6 @@
     </ScrollView>
 
 
-</android.support.constraint.ConstraintLayout>
+
+</RelativeLayout>
+

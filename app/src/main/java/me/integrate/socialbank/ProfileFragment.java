@@ -85,8 +85,7 @@ public class ProfileFragment extends Fragment {
         RecyclerView.LayoutManager awardLayoutManager = new LinearLayoutManager(getContext(),LinearLayoutManager.HORIZONTAL, false);
         awardRecyclerView.setLayoutManager(awardLayoutManager);
         mRecyclerView.setLayoutManager(mLayoutManager);
-        loadingDialog = ProgressDialog.show(getActivity(), "",
-                getString(R.string.loadingMessage), true);
+        loadingDialog = ProgressDialog.show(getActivity(), "", getString(R.string.loadingMessage), true);
         fillFields();
         getUserEvents();
         return rootView;

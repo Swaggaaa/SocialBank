@@ -30,18 +30,24 @@ public class MyProfileFragment extends ProfileFragment {
     private static final String URL = "/users";
     private TextView userBalance;
     private boolean thereisPic;
+    private boolean isFABOpen;
+    FloatingActionButton editProfile;
+    FloatingActionButton changeUserPhoto;
+    FloatingActionButton openMenu;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
-        FloatingActionButton editProfile = (FloatingActionButton) view.findViewById(R.id.editProfile);
-        FloatingActionButton changeUserPhoto = (FloatingActionButton) view.findViewById(R.id.loadPicture);
+        editProfile = (FloatingActionButton) view.findViewById(R.id.editProfile);
+        changeUserPhoto = (FloatingActionButton) view.findViewById(R.id.loadPicture);
+        openMenu = (FloatingActionButton) view.findViewById(R.id.openMenu);
         editProfile.setVisibility(View.VISIBLE);
         changeUserPhoto.setVisibility(View.VISIBLE);
         userBalance = (TextView) view.findViewById(R.id.hoursBalance);
         userBalance.setVisibility(View.VISIBLE);
-        Button reportUser = (Button)view.findViewById(R.id.buttonReportUser);
+        Button reportUser = (Button) view.findViewById(R.id.buttonReportUser);
         reportUser.setVisibility(View.GONE);
+        isFABOpen = false;
         return view;
     }
 
@@ -59,6 +65,25 @@ public class MyProfileFragment extends ProfileFragment {
             FragmentChangeListener fc = (FragmentChangeListener) getActivity();
             fc.replaceFragment(boardFragment);
         });
+        view.findViewById(R.id.openMenu).setOnClickListener(view1 -> {
+            if (!isFABOpen) {
+                showFABMenu();
+            } else {
+                closeFABMenu();
+            }
+        });
+    }
+
+    private void showFABMenu() {
+        isFABOpen = true;
+        editProfile.animate().translationY(-getResources().getDimension(R.dimen.standard_55));
+        changeUserPhoto.animate().translationY(-getResources().getDimension(R.dimen.standard_105));
+    }
+
+    private void closeFABMenu() {
+        isFABOpen = false;
+        editProfile.animate().translationY(0);
+        changeUserPhoto.animate().translationY(0);
     }
 
     private void updateProfile() {
@@ -70,7 +95,7 @@ public class MyProfileFragment extends ProfileFragment {
         params.put("description", descriptionUser);
         params.put("email", emailUser);
         params.put("image", thereisPic ? ImageCompressor.INSTANCE.compressAndEncodeAsBase64(
-                ((BitmapDrawable)userPicture.getDrawable()).getBitmap())
+                ((BitmapDrawable) userPicture.getDrawable()).getBitmap())
                 : "");
 
         putCredentials(params);
@@ -101,8 +126,8 @@ public class MyProfileFragment extends ProfileFragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(resultCode == RESULT_OK){
-            if(requestCode == 2 ) {
+        if (resultCode == RESULT_OK) {
+            if (requestCode == 2) {
                 thereisPic = true;
                 data.getData();
                 Uri selectedImage = data.getData();
@@ -111,9 +136,8 @@ public class MyProfileFragment extends ProfileFragment {
                 loadImageFromUri(selectedImage);
                 updateProfile();
             }
-        }
-        else{
-            Log.v("Result","Something happened when tried to get the image");
+        } else {
+            Log.v("Result", "Something happened when tried to get the image");
         }
     }
 

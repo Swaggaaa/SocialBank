@@ -70,11 +70,11 @@ public class BoardFragment extends Fragment {
         setHasOptionsMenu(true);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
-        //loadingDialog = ProgressDialog.show(getActivity(), "", getString(R.string.loadingMessage), true);
+        loadingDialog = ProgressDialog.show(getActivity(), "", getString(R.string.loadingMessage), true);
         items = new ArrayList<>();
         allItems = new ArrayList<>();
         demand = other = offer = language = culture = workshops = sports = gastronomy = leisure = false;
-        //getAllEvents();
+        getAllEvents();
         return rootView;
     }
 
