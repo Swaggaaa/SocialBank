@@ -12,6 +12,8 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Event {
 
@@ -161,6 +163,15 @@ public class Event {
 
     public Boolean isAvailable() {
         return (iniDate == null || (iniDate.compareTo(new Date()) > 0));
+    }
+
+    public boolean hasTag(String hashtag) {
+        /*Set<String> tags = new HashSet<String>();
+
+        tags.add("hola");
+        tags.add("adeu");*/
+        //TODO: Deixar la seguent linea comentada i borrar les anteriorS que son per fer proves
+        return true; //tags.contains(hashtag);
     }
 
     public void setDemand(Boolean demand) {

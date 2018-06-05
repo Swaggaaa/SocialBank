@@ -120,5 +120,6 @@
     <string name="image_update">Image changed!</string>
     <string name="account_created">Account created!</string>
     <string name="available">Available</string>
+    <string name="event_tag">Tags</string>
 
 </resources>
