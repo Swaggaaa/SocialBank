@@ -122,7 +122,7 @@ public class ProfileFragment extends Fragment {
                 balance = BigDecimal.valueOf(jsonObject.getDouble("balance")).floatValue();
                 userBalance.setText(balance.toString());
                 userEmailToShow.setText(jsonObject.getString("email"));
-                userDescription.setText(descriptionUser);
+                if(!descriptionUser.equals("null")) userDescription.setText(descriptionUser);
                 String image = jsonObject.getString("image");
                 if (!image.equals("")) {
                     byte[] decodeString = Base64.decode(image, Base64.DEFAULT);
