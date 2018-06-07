@@ -1,20 +1,19 @@
 package me.integrate.socialbank;
 
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
-import android.graphics.BitmapFactory;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,6 +24,7 @@ import org.json.JSONObject;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
+import java.util.Locale;
 
 public class MyAccountFragment extends Fragment {
     private static final String URL = "/users";
@@ -39,6 +39,7 @@ public class MyAccountFragment extends Fragment {
     private boolean verified;
     private ProgressDialog loadingDialog;
     private String email;
+    private Spinner languageSpinner;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -53,6 +54,8 @@ public class MyAccountFragment extends Fragment {
         accountBalanceHint = (TextView) rootView.findViewById(R.id.account_balance_hint);
         userBalance = (TextView) rootView.findViewById(R.id.user_balance);
         buyHours = (Button) rootView.findViewById(R.id.button_buy_hours);
+        languageSpinner = (Spinner) rootView.findViewById(R.id.language_spinner);
+        languageSpinner.setSelection(LanguageHelper.getPosition(getResources().getConfiguration().locale.toString()));
         email = SharedPreferencesManager.INSTANCE.read(getActivity(),"user_email");
         loadingDialog = ProgressDialog.show(getActivity(), "",
                 getString(R.string.loadingMessage), true);
@@ -111,6 +114,23 @@ public class MyAccountFragment extends Fragment {
         buyHours.setOnClickListener(v -> {
             //ready per comprar hores
         });
+
+
+
+        languageSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
+        {
+            @Override
+            public void onItemSelected(AdapterView adapter, View v, int i, long lng) {
+
+                LanguageHelper.changeLocale(getContext().getResources(), i);
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView)
+            {
+
+            }
+        });
+
     }
 
     private void sendRequest(HashMap<String, String> params) {
@@ -127,17 +147,25 @@ public class MyAccountFragment extends Fragment {
     private void errorTreatment(int errorCode) {
         String message;
         if (errorCode == 401)
-            message = getString(R.string.Unauthorized);
+            message = getString(R.string.unauthorized);
         else if (errorCode == 403)
-            message = getString(R.string.Forbidden);
+            message = getString(R.string.forbidden);
         else if (errorCode == 404)
-            message = getString(R.string.NotFound);
+            message = getString(R.string.not_found);
         else
-            message = getString(R.string.UnexpectedError);
+            message = getString(R.string.unexpectedError);
 
         loadingDialog.dismiss();
         Toast.makeText(getActivity().getApplicationContext(), message, Toast.LENGTH_LONG).show();
     }
 
+    private void updateResources(String language) {
+        Locale locale = new Locale(language);
+        Locale.setDefault(locale);
 
+        Resources res = this.getContext().getResources();
+        Configuration config = new Configuration(res.getConfiguration());
+        config.locale = locale;
+        res.updateConfiguration(config, res.getDisplayMetrics());
+    }
 }
