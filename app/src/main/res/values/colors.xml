@@ -8,4 +8,6 @@
     <color name="colorTransparent">#00000000</color>
     <color name="colorNavigation">#000000</color>
     <color name="colorNavigationSecundary">#ff0008</color>
+    <color name="soft_pink">#ff1744</color>
+    <color name="gum_pink">#ff616f</color>
 </resources>

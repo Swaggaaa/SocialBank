@@ -8,6 +8,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -50,6 +51,9 @@ public class ProfileFragment extends Fragment {
     Button reportUser;
     Button confirmReport;
     Button discardReport;
+    private boolean isFABOpen;
+    FloatingActionButton openMenu;
+    FloatingActionButton reportUserButton;
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
 
@@ -81,6 +85,9 @@ public class ProfileFragment extends Fragment {
         discardReport = (Button)rootView.findViewById(R.id.discardReport);
         discardReport.setVisibility(View.GONE);
         mRecyclerView.setHasFixedSize(true);
+        isFABOpen = false;
+        openMenu = (FloatingActionButton) rootView.findViewById(R.id.openMenu);
+        reportUserButton = (FloatingActionButton) rootView.findViewById(R.id.reportProfile);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
         RecyclerView.LayoutManager awardLayoutManager = new LinearLayoutManager(getContext(),LinearLayoutManager.HORIZONTAL, false);
         awardRecyclerView.setLayoutManager(awardLayoutManager);
@@ -126,8 +133,7 @@ public class ProfileFragment extends Fragment {
                 String image = jsonObject.getString("image");
                 if (!image.equals("")) {
                     byte[] decodeString = Base64.decode(image, Base64.DEFAULT);
-                    userPicture.setImageBitmap(BitmapFactory.decodeByteArray(
-                            decodeString, 0, decodeString.length));
+                    userPicture.setImageBitmap(getImageRounded(BitmapFactory.decodeByteArray(decodeString, 0, decodeString.length)));
                 }
 
                 JSONArray jsonArray = jsonObject.getJSONArray("awards");
@@ -161,7 +167,7 @@ public class ProfileFragment extends Fragment {
 
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        reportUser.setOnClickListener(v -> {
+        reportUserButton.setOnClickListener(v -> {
             AlertDialog.Builder dialogDelete = new AlertDialog.Builder(getContext());
             dialogDelete.setTitle(getResources().getString(R.string.are_sure));
             dialogDelete.setMessage(getResources().getString(R.string.confirm_report_user));
@@ -181,6 +187,25 @@ public class ProfileFragment extends Fragment {
             });
             dialogDelete.show();
         });
+        view.findViewById(R.id.openMenu).setOnClickListener(view1 -> {
+            if (!isFABOpen) {
+                showFABMenu();
+            } else {
+                closeFABMenu();
+            }
+        });
+    }
+
+    private void showFABMenu() {
+        isFABOpen = true;
+        reportUserButton.animate().translationY(-getResources().getDimension(R.dimen.standard_55));
+
+    }
+
+    private void closeFABMenu() {
+        isFABOpen = false;
+        reportUserButton.animate().translationY(0);
+
     }
 
     private void sendReportUser(HashMap<String, String> params) {
@@ -267,6 +292,13 @@ public class ProfileFragment extends Fragment {
             hours = hours/ 1000 / 60 / 60;
             return hours >= 24;
         }
+    }
+
+    private Bitmap getImageRounded(Bitmap image) {
+        image = ImageHelper.cropBitmapToSquare(image);
+        image = ImageHelper.getRoundedCornerBitmap(image, 220);
+        return image;
+
     }
 
 }

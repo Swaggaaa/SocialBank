@@ -40,7 +40,6 @@ public class MyProfileFragment extends ProfileFragment {
         View view = super.onCreateView(inflater, container, savedInstanceState);
         editProfile = (FloatingActionButton) view.findViewById(R.id.editProfile);
         changeUserPhoto = (FloatingActionButton) view.findViewById(R.id.loadPicture);
-        openMenu = (FloatingActionButton) view.findViewById(R.id.openMenu);
         editProfile.setVisibility(View.VISIBLE);
         changeUserPhoto.setVisibility(View.VISIBLE);
         userBalance = (TextView) view.findViewById(R.id.hoursBalance);
