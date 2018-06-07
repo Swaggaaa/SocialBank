@@ -92,7 +92,6 @@ public class MyEventFragment extends EventFragment {
             dialogDelete.setCancelable(false);
             dialogDelete.setPositiveButton(getResources().getString(R.string.confirm), (dialogInterface, i) -> {
                 deleteEvent();
-                Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.delete_event), Toast.LENGTH_LONG).show();
             });
             dialogDelete.setNegativeButton(getResources().getString(R.string.discard), (dialogInterface, i) -> {
             });
@@ -106,6 +105,7 @@ public class MyEventFragment extends EventFragment {
         Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response -> {
             if (getArguments().getBoolean("MyProfile")) profileSelected();
             else boardSelected();
+            Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.delete_event), Toast.LENGTH_LONG).show();
         };
         Response.ErrorListener errorListener = error -> errorTreatment(error.networkResponse.statusCode);
 
