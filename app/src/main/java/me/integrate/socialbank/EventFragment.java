@@ -1,6 +1,7 @@
 package me.integrate.socialbank;
 
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -96,35 +97,11 @@ public class EventFragment extends Fragment {
        // loadingDialog = ProgressDialog.show(getActivity(), "",
            //     getString(R.string.loadingMessage), true);
 
-        //TODO eliminar
-        comment();
         //TODO call to the api
-       // getComments();
         id = getArguments().getInt("id");
+        getComments();
         showEventInformation();
         return rootView;
-    }
-
-
-    private void comment()
-    {
-        Comment c = new Comment("jordi", "romero", "joan", "v@v.v");
-        List<Comment> comments = new ArrayList<>();
-        comments.add(c);
-
-        System.out.println("NAME " + c.getUser());
-        mAdapter = new CommentAdapter(comments, getActivity(), (v1, position) -> {
-            Bundle bundle = new Bundle();
-            String email = comments.get(position).getEmailCreator();
-            bundle.putString("email", email);
-            FragmentChangeListener fc = (FragmentChangeListener) getActivity();
-            ProfileFragment profileFragment = !email.equals(SharedPreferencesManager.INSTANCE.read(getActivity(), "user_email")) ? new ProfileFragment() : new MyProfileFragment();
-            profileFragment.setArguments(bundle);
-            fc.replaceFragment(profileFragment);
-
-        });
-
-        mRecyclerView.setAdapter(mAdapter);
     }
 
     @Override
@@ -143,14 +120,22 @@ public class EventFragment extends Fragment {
         });
         addComment.setOnClickListener(v ->
         {
-            Bundle b = new Bundle();
-            b.putInt("id", id);
-            b.putString("creator", creator);
-            b.putString("iniDate", dateToString(iniDate));
             FragmentManager fm  = getFragmentManager();
             AddCommentFragment addCommentFragment = new AddCommentFragment();
-            addCommentFragment.setArguments(b);
             addCommentFragment.show(fm, "prova");
+        });
+        deleted_comment.setOnClickListener(v->
+        {
+            AlertDialog.Builder dialogDelete = new AlertDialog.Builder(getContext());
+            dialogDelete.setTitle(getResources().getString(R.string.are_sure));
+            dialogDelete.setMessage(getResources().getString(R.string.confirm_delete_event));
+            dialogDelete.setCancelable(false);
+            dialogDelete.setPositiveButton(getResources().getString(R.string.confirm), (dialogInterface, i) -> {
+                deletedComment();
+            });
+            dialogDelete.setNegativeButton(getResources().getString(R.string.discard), (dialogInterface, i) -> {
+            });
+            dialogDelete.show();
         });
     }
 
@@ -211,20 +196,31 @@ public class EventFragment extends Fragment {
         }
     }
 
+    //TODO acabar
+    void deletedComment() {
 
-    /*void getComments() {
+        APICommunicator apiCommunicator = new APICommunicator();
+        Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response -> {
+
+        };
+        Response.ErrorListener errorListener = error -> errorTreatment(error.networkResponse.statusCode);
+
+        apiCommunicator.deleteRequest(getActivity().getApplicationContext(), URL + '/' + id, responseListener, errorListener, null);
+    }
+
+    void getComments() {
         APICommunicator apiCommunicator = new APICommunicator();
         Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response -> {
             List<Comment> comments = new ArrayList<>();
             JSONArray jsonArray;
             try {
+
                 jsonArray = new JSONArray(response.response);
                 System.out.println(String.valueOf(jsonArray.length()));
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
                     comments.add(new Comment(jsonObject));
                 }
-
                 mAdapter = new CommentAdapter(comments, getActivity(), (v1, position) -> {
                     Bundle bundle = new Bundle();
                     String email = comments.get(position).getEmailCreator();
@@ -237,17 +233,16 @@ public class EventFragment extends Fragment {
                });
 
                 mRecyclerView.setAdapter(mAdapter);
-                loadingDialog.dismiss();
+
 
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         };
         Response.ErrorListener errorListener = error -> errorTreatment(error.networkResponse.statusCode);
+        apiCommunicator.getRequest(getActivity().getApplicationContext(), URL + '/' + id + '/' + "comments", responseListener, errorListener, null);
 
-        apiCommunicator.deleteRequest(getActivity().getApplicationContext(), URL + '/' + id, responseListener, errorListener, null);
-
-    }*/
+    }
 
     private void errorTreatment(int errorCode) {
         String message;

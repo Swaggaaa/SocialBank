@@ -1,6 +1,7 @@
 package me.integrate.socialbank;
 
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -26,15 +27,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class AddCommentFragment extends DialogFragment {
-    private static final String URL = "/users";
+    private static final String URL = "/events";
     private EditText comment;
     private Button submit;
 
-    private int id;
-    private String creator;
-    private Date iniDate;
-
     public AlertDialog addCommentFragment() {
+
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Add comment");
         LayoutInflater inflater = getActivity().getLayoutInflater();
@@ -42,16 +40,12 @@ public class AddCommentFragment extends DialogFragment {
         builder.setView(rootView);
         comment = (EditText) rootView.findViewById(R.id.new_comment);
         submit = (Button) rootView.findViewById(R.id.button_comment);
-        id = getArguments().getInt("id");
-        creator = getArguments().getString("creator");
-        String date = getArguments().getString("iniDate");
-        getIniDate(date);
+
         submit.setOnClickListener(v -> {
+            DialogInterface dialog;
             submit.setEnabled(false);
             if (comment.getText().toString().length() != 0) {
-                Toast.makeText(getActivity().getApplicationContext(), R.string.JSONException, Toast.LENGTH_LONG).show();
-                //TODO call to the api
-                //postCredentials(comment.getText().toString());
+                postComment(comment.getText().toString());
             }
 
         });
@@ -74,28 +68,19 @@ public class AddCommentFragment extends DialogFragment {
 
     }
 
-    //TODO finish the call to the api with the correct erros and url
-   /* private void postCredentials(String comment) {
+    private void postComment(String comment) {
 
         APICommunicator apiCommunicator = new APICommunicator();
         Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response -> {
+
             Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.new_comment_created), Toast.LENGTH_LONG).show();
-                Bundle bundle = new Bundle();
-                bundle.putInt("id", id);
-                Fragment eventFragment;
-                if (creator.equals(SharedPreferencesManager.INSTANCE.read(getActivity(),"user_email"))
-                        && correctDate(iniDate)) {
-                    eventFragment = MyEventFragment.newInstance(bundle);
-                } else eventFragment = EventFragment.newInstance(bundle);
-                FragmentChangeListener fc = (FragmentChangeListener) getActivity();
-                fc.replaceFragment(eventFragment);
 
         };
         Response.ErrorListener errorListener = error -> errorTreatment(error.networkResponse.statusCode);
         Map<String, String> params = new HashMap<>();
-        params.put("comment", comment);
+        params.put("content", comment);
 
-        apiCommunicator.postRequest(getActivity().getApplicationContext(), URL, responseListener, errorListener, params);
+        apiCommunicator.postRequest(getActivity().getApplicationContext(), URL + '/' + "comments", responseListener, errorListener, params);
     }
 
     private void errorTreatment(int errorCode) {
@@ -110,29 +95,6 @@ public class AddCommentFragment extends DialogFragment {
             message = getString(R.string.UnexpectedError);
 
         Toast.makeText(getActivity().getApplicationContext(), message, Toast.LENGTH_LONG).show();
-    }*/
-
-
-    private boolean correctDate(Date iniDate) {
-        if (iniDate == null) return true;
-        else {
-            Date currentDate = new Date();
-            long hours = iniDate.getTime() - currentDate.getTime();
-            hours = hours/ 1000 / 60 / 60;
-            return hours >= 24;
-        }
-    }
-
-    private void getIniDate(String date) {
-        DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-        if (date.equals("null")) iniDate = null;
-        else {
-            try {
-                iniDate = df.parse(date);
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-        }
     }
 
     private boolean areFilled() {

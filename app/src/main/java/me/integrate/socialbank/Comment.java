@@ -14,20 +14,12 @@ public class Comment {
     private String surname;
     private String emailCreator;
 
-    Comment(String name, String surname, String text, String email) {
-        this.user = name;
-        this.text = text;
-        this.surname = surname;
-        this.emailCreator = email;
-    }
-
     Comment(JSONObject jsonObject) {
         try {
-            this.user = jsonObject.getString("name");
-            this.surname = jsonObject.getString("surname");
-            //TODO no se aun como se llama
-            this.text = jsonObject.getString("text");
-            this.emailCreator = jsonObject.getString("creator");
+            this.user = jsonObject.getString("userName");
+            this.surname = jsonObject.getString("userSurname");
+            this.text = jsonObject.getString("content");
+            this.emailCreator = jsonObject.getString("creatorEmail");
         }
         catch (JSONException ex) {
             ex.printStackTrace();
