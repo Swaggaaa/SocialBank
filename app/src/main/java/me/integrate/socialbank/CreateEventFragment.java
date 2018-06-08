@@ -539,12 +539,8 @@ public class CreateEventFragment extends Fragment {
         String tag = text;
         int i_space = text.indexOf(" ");
         int i_next = text.indexOf("#");
-        int i = (i_space > i_next) ? i_next : i_space;
-
-        if( i > 0 ) {
-            tag = tag.substring(0, i);
-        }
-
+        int i = (i_next != -1 && i_space > i_next) ? i_next : i_space;
+        if( i > 0 ) tag = tag.substring(0, i);
         return tag;
     }
 
