@@ -63,8 +63,7 @@
             <item
                 android:id="@+id/event_tagged"
                 android:title="@string/event_tag"
-                app:showAsAction="never"
-                android:inputType="text" />
+                app:showAsAction="never" />
 
             <item
                 android:id="@+id/delete_filters"

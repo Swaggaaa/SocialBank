@@ -166,11 +166,12 @@ public class Event {
     }
 
     public boolean hasTag(String hashtag) {
-        /*Set<String> tags = new HashSet<String>();
-
+        Set<String> tags = new HashSet<String>();
         tags.add("hola");
-        tags.add("adeu");*/
-        //TODO: Deixar la seguent linea comentada i borrar les anteriorS que son per fer proves
+        tags.add("adeu");
+
+
+        //TODO: Deixar la seguent linea comentada i borrar les anteriors0 que son per fer proves
         return true; //tags.contains(hashtag);
     }
 

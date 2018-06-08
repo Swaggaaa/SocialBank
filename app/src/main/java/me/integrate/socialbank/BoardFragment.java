@@ -1,19 +1,19 @@
 package me.integrate.socialbank;
 
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.android.volley.Response;
@@ -22,9 +22,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.ByteArrayOutputStream;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -60,6 +57,8 @@ public class BoardFragment extends Fragment {
     private MenuItem itemOffer;
     private MenuItem itemDemand;
     private MenuItem itemAvailable;
+    private MenuItem itemTagged;
+    private String[] tagsText;
 
     private ProgressDialog loadingDialog;
 
@@ -79,6 +78,8 @@ public class BoardFragment extends Fragment {
         allItems = new ArrayList<>();
         available = demand = other = offer = language = culture = workshops = sports = gastronomy = leisure = false;
         getAllEvents();
+        tagsText = new String[1];
+        tagsText[0] = "";
         return rootView;
     }
 
@@ -96,6 +97,7 @@ public class BoardFragment extends Fragment {
         itemOffer = menu.findItem(R.id.event_offer);
         itemDemand = menu.findItem(R.id.event_demand);
         itemAvailable = menu.findItem(R.id.event_available);
+        itemTagged = menu.findItem(R.id.event_tagged);
 
         super.onCreateOptionsMenu(menu, inflater);
     }
@@ -144,6 +146,9 @@ public class BoardFragment extends Fragment {
                 available = !item.isChecked();
                 item.setChecked(!item.isChecked());
                 break;
+            case R.id.event_tagged:
+                set_tags();
+                break;
             case R.id.delete_filters:
                 available = demand = other = offer = language = culture = workshops = sports = gastronomy = leisure = false;
                 itemLanguage.setChecked(false);
@@ -162,8 +167,31 @@ public class BoardFragment extends Fragment {
         return true;
     }
 
+    private void set_tags() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle(R.string.tag_search);
+
+        View viewInflated = LayoutInflater.from(getContext()).inflate(R.layout.fragment_input_tags,
+                (ViewGroup) getView(), false);
+
+        final EditText inputTags = (EditText) viewInflated.findViewById(R.id.inputTags);
+        builder.setView(viewInflated);
+
+        builder.setPositiveButton(android.R.string.ok, (dialog, which) -> {
+            dialog.dismiss();
+            tagsText[0] = inputTags.getText().toString();
+        });
+        builder.setNegativeButton(android.R.string.cancel, (dialog, which) -> dialog.cancel());
+
+        builder.show();
+    }
+
     private boolean checkAvailability(Event event) {
         return (!available || (available && event.isAvailable()));
+    }
+
+    private boolean checkTags(Event event) {
+        return (event.hasTag(tagsText[0]));
     }
 
     private void check(Event event) {
@@ -183,7 +211,7 @@ public class BoardFragment extends Fragment {
     private void update() {
         items.clear();
         boolean category = language || culture || workshops || sports || gastronomy || leisure || other;
-        if (category || offer || demand || available) {
+        if (category || offer || demand || available || (tagsText[0] != "")) {
             for (Event event: allItems) {
                 if (language && event.getCategory() == Event.Category.LANGUAGE) check(event);
                 else if (culture && event.getCategory() == Event.Category.CULTURE ) check(event);
@@ -193,6 +221,7 @@ public class BoardFragment extends Fragment {
                 else if (leisure && event.getCategory() == Event.Category.LEISURE) check(event);
                 else if (other && event.getCategory() == Event.Category.OTHER ) check(event);
                 else if (!category && (offer || demand || available)) check(event);
+                else if (tagsText[0] != "") checkTags(event);
             }
         } else {
             items.addAll(allItems);
