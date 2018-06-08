@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -191,6 +192,7 @@ public class BoardFragment extends Fragment {
     }
 
     private boolean checkTags(Event event) {
+        Log.v("Tag- :", event.hasTag(tagsText[0]) ? "si" : "no");
         return (event.hasTag(tagsText[0]));
     }
 

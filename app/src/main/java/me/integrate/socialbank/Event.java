@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.annotation.StringRes;
 import android.util.Base64;
+import android.util.Log;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -165,15 +166,35 @@ public class Event {
         return (iniDate == null || (iniDate.compareTo(new Date()) > 0));
     }
 
-    public boolean hasTag(String hashtag) {
+    private String getHashtag(String text) { //Returns a list with all Tags
+        String tag = text;
+        int i_space = text.indexOf(" ");
+        int i_next = text.indexOf("#");
+        int i = (i_next != -1 && i_space > i_next) ? i_next : i_space;
+        if( i > 0 ) tag = tag.substring(0, i);
+        return tag;
+    }
+
+    private Set<String> getTags(String text) { //Returns a list with all Tags
+        Set<String> tags = new HashSet<String>();
+        //Find every occurrence of '#'
+        for (int i = -1; (i = text.indexOf("#", i + 1)) != -1; i++) {
+            String tag = getHashtag( text.substring(i+1) );
+            tags.add(tag);
+        }
+        return tags;
+    }
+
+    public boolean hasTag(String hashtags) {
+        // TODO: substituir les 3 seguents linies pels "tags" propis de l'esdeveniment
         Set<String> tags = new HashSet<String>();
         tags.add("hola");
         tags.add("adeu");
+        // ---
 
-
-        //TODO: Deixar la seguent linea comentada i borrar les anteriors0 que son per fer proves
-        return true; //tags.contains(hashtag);
+        return tags.containsAll( getTags(hashtags) );
     }
+
 
     public void setDemand(Boolean demand) {
         isDemand = demand;
