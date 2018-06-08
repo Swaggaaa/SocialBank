@@ -120,5 +120,7 @@
     <string name="image_update">Image changed!</string>
     <string name="account_created">Account created!</string>
     <string name="user_balance">User balance:  </string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="change_picture">Change picture</string>
 
 </resources>

@@ -44,8 +44,7 @@ public class MyProfileFragment extends ProfileFragment {
         changeUserPhoto.setVisibility(View.VISIBLE);
         userBalance = (TextView) view.findViewById(R.id.hoursBalance);
         userBalance.setVisibility(View.VISIBLE);
-        Button reportUser = (Button) view.findViewById(R.id.buttonReportUser);
-        reportUser.setVisibility(View.GONE);
+        reportUserButton.setVisibility(View.GONE);
         isFABOpen = false;
         return view;
     }

@@ -42,15 +42,16 @@ public class ProfileFragment extends Fragment {
     private TextView userBalance;
     private TextView userDescription;
     private TextView myEvents;
+    private TextView userBalanceText;
+    private TextView reportUsserText;
+    private TextView editProfileText;
+    private TextView changePictureText;
     String emailUser;
     String nameUser;
     String lastNameUser;
     String dateUser;
     String genderUser;
     String descriptionUser;
-    Button reportUser;
-    Button confirmReport;
-    Button discardReport;
     private boolean isFABOpen;
     FloatingActionButton openMenu;
     FloatingActionButton reportUserButton;
@@ -74,16 +75,17 @@ public class ProfileFragment extends Fragment {
         userName = (TextView) rootView.findViewById(R.id.myProfileName);
         userEmailToShow = (TextView) rootView.findViewById(R.id.userEmailToShow);
         userBalance = (TextView) rootView.findViewById(R.id.hoursBalance);
+        userBalance.setVisibility(View.GONE);
         userDescription = (TextView) rootView.findViewById(R.id.aboutMe);
+        userBalanceText = (TextView) rootView.findViewById(R.id.userBalanceText);
+        userBalanceText.setVisibility(View.GONE);
         myEvents = (TextView)rootView.findViewById(R.id.events);
+        reportUsserText = (TextView) rootView.findViewById(R.id.reportUserText);
+        editProfileText = (TextView) rootView.findViewById(R.id.editProfileText);
+        changePictureText = (TextView) rootView.findViewById(R.id.changePasswordText);
         awardRecyclerView = (RecyclerView) rootView.findViewById(R.id.award_recycler_view);
         awardRecyclerView.setHasFixedSize(true);
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.my_recycler_view_user_profile);
-        reportUser = (Button)rootView.findViewById(R.id.buttonReportUser);
-        confirmReport = (Button)rootView.findViewById(R.id.confirmReport);
-        confirmReport.setVisibility(View.GONE);
-        discardReport = (Button)rootView.findViewById(R.id.discardReport);
-        discardReport.setVisibility(View.GONE);
         mRecyclerView.setHasFixedSize(true);
         isFABOpen = false;
         openMenu = (FloatingActionButton) rootView.findViewById(R.id.openMenu);
@@ -199,13 +201,16 @@ public class ProfileFragment extends Fragment {
     private void showFABMenu() {
         isFABOpen = true;
         reportUserButton.animate().translationY(-getResources().getDimension(R.dimen.standard_55));
+        reportUsserText.setVisibility(View.VISIBLE);
+        reportUsserText.animate().translationY(-getResources().getDimension(R.dimen.standard_55));
 
     }
 
     private void closeFABMenu() {
         isFABOpen = false;
         reportUserButton.animate().translationY(0);
-
+        reportUsserText.animate().translationY(0);
+        reportUsserText.setVisibility(View.GONE);
     }
 
     private void sendReportUser(HashMap<String, String> params) {
@@ -226,6 +231,8 @@ public class ProfileFragment extends Fragment {
             message = getString(R.string.Forbidden);
         else if (errorCode == 404)
             message = getString(R.string.NotFound);
+        else if (errorCode == 409)
+            message = getString(R.string.user_already_reported);
         else
             message = getString(R.string.UnexpectedError);
 
