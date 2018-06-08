@@ -110,42 +110,53 @@ public class BoardFragment extends Fragment {
                 language = !item.isChecked();
                 if (item.isChecked())item.setChecked(false);
                 else item.setChecked(true);
+                update();
                 break;
             case R.id.category_culture:
                 culture = !item.isChecked();
                 item.setChecked(!item.isChecked());
+                update();
                 break;
             case R.id.category_workshops:
                 workshops = !item.isChecked();
                 item.setChecked(!item.isChecked());
+                update();
                 break;
             case R.id.category_sports:
                 sports = !item.isChecked();
                 item.setChecked(!item.isChecked());
+                update();
+                update();
                 break;
             case R.id.category_gastronomy:
                 gastronomy = !item.isChecked();
                 item.setChecked(!item.isChecked());
+                update();
                 break;
             case R.id.category_leisure:
                 leisure = !item.isChecked();
                 item.setChecked(!item.isChecked());
+                update();
                 break;
             case R.id.category_other:
                 other = !item.isChecked();
                 item.setChecked(!item.isChecked());
+                update();
                 break;
             case R.id.event_offer:
                 offer = !item.isChecked();
                 item.setChecked(!item.isChecked());
+                update();
                 break;
             case R.id.event_demand:
                 demand = !item.isChecked();
                 item.setChecked(!item.isChecked());
+                update();
                 break;
             case R.id.event_available:
                 available = !item.isChecked();
                 item.setChecked(!item.isChecked());
+                update();
                 break;
             case R.id.event_tagged:
                 set_tags();
@@ -162,9 +173,9 @@ public class BoardFragment extends Fragment {
                 itemOffer.setChecked(false);
                 itemDemand.setChecked(false);
                 itemAvailable.setChecked(false);
+                update();
                 break;
         }
-        update();
         return true;
     }
 
@@ -181,6 +192,7 @@ public class BoardFragment extends Fragment {
         builder.setPositiveButton(android.R.string.ok, (dialog, which) -> {
             dialog.dismiss();
             tagsText[0] = inputTags.getText().toString();
+            update();
         });
         builder.setNegativeButton(android.R.string.cancel, (dialog, which) -> dialog.cancel());
 
@@ -191,23 +203,23 @@ public class BoardFragment extends Fragment {
         return (!available || (available && event.isAvailable()));
     }
 
-    private boolean checkTags(Event event) {
-        Log.v("Tag- :", event.hasTag(tagsText[0]) ? "si" : "no");
-        return (event.hasTag(tagsText[0]));
+    private void checkTags(Event event) {
+        if( (tagsText[0]!="" && event.hasTag(tagsText[0])) || (tagsText[0]==""))
+            items.add(event);
     }
 
     private void check(Event event) {
-        if (offer || demand || available) {
+        if (offer || demand || available || (tagsText[0]!="")) {
             if (offer && !event.isDemand() && checkAvailability(event)) {
-                items.add(event);
+                checkTags( event );
             }
             else if (demand && event.isDemand() && checkAvailability(event)) {
-                items.add(event);
+                checkTags( event );
             }
             else if (!offer && !demand && checkAvailability(event)) {
-                items.add(event);
+                checkTags( event );
             }
-        } else items.add(event);
+        } else checkTags( event );
     }
 
     private void update() {
