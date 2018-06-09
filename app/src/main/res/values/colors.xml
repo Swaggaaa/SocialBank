@@ -10,4 +10,6 @@
     <color name="colorNavigationSecundary">#ff0008</color>
     <color name="soft_pink">#ff1744</color>
     <color name="gum_pink">#ff616f</color>
+    <color name="negative_balance">#ff1a2d</color>
+    <color name="positive_balance">#aaff80</color>
 </resources>

@@ -33,6 +33,7 @@ public class MyProfileFragment extends ProfileFragment {
     private boolean isFABOpen;
     private TextView editProfileText;
     private TextView changePictureText;
+    private TextView userBalanceText;
     FloatingActionButton editProfile;
     FloatingActionButton changeUserPhoto;
     FloatingActionButton openMenu;
@@ -42,10 +43,12 @@ public class MyProfileFragment extends ProfileFragment {
         View view = super.onCreateView(inflater, container, savedInstanceState);
         editProfile = (FloatingActionButton) view.findViewById(R.id.editProfile);
         changeUserPhoto = (FloatingActionButton) view.findViewById(R.id.loadPicture);
+        userBalanceText = (TextView) view.findViewById(R.id.userBalanceText);
         editProfile.setVisibility(View.VISIBLE);
         changeUserPhoto.setVisibility(View.VISIBLE);
         userBalance = (TextView) view.findViewById(R.id.hoursBalance);
         userBalance.setVisibility(View.VISIBLE);
+        userBalanceText.setVisibility(View.VISIBLE);
         reportUserButton.setVisibility(View.GONE);
         editProfileText = (TextView) view.findViewById(R.id.editProfileText);
         changePictureText = (TextView) view.findViewById(R.id.changePasswordText);

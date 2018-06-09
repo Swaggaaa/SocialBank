@@ -18,7 +18,8 @@
         android:layout_marginEnd="20dp"
         android:src="@drawable/report_user"
         android:visibility="visible"
-        app:backgroundTint="@color/gum_pink" />
+        app:backgroundTint="@color/gum_pink"
+        />
 
     <TextView
         android:id="@+id/reportUserText"
@@ -29,7 +30,7 @@
         android:layout_gravity="bottom|end"
         android:layout_marginBottom="35dp"
         android:layout_marginEnd="88dp"
-        android:background="#46cc0000"
+        android:background="#ff99a2"
         android:text="@string/report_user"
         android:textColor="@android:color/background_dark"
         android:textStyle="bold" />
@@ -57,7 +58,7 @@
         android:layout_marginEnd="88dp"
         android:text="@string/edit_profile"
         android:textStyle="bold"
-        android:background="#46cc0000"
+        android:background="#ff99a2"
         android:textColor="@android:color/background_dark"
         android:visibility="gone"
         />
@@ -83,7 +84,7 @@
         android:layout_marginEnd="88dp"
         android:text="@string/change_picture"
         android:textStyle="bold"
-        android:background="#46cc0000"
+        android:background="#ff99a2"
         android:textColor="@android:color/background_dark"
         android:visibility="gone"
         />

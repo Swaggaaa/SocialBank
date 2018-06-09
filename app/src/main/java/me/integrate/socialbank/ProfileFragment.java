@@ -1,5 +1,6 @@
 package me.integrate.socialbank;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -44,6 +45,8 @@ public class ProfileFragment extends Fragment {
     private TextView myEvents;
     private TextView userBalanceText;
     private TextView reportUsserText;
+    private TextView editProfileText;
+    private TextView changePictureText;
     String emailUser;
     String nameUser;
     String lastNameUser;
@@ -79,6 +82,8 @@ public class ProfileFragment extends Fragment {
         userBalanceText.setVisibility(View.GONE);
         myEvents = (TextView)rootView.findViewById(R.id.events);
         reportUsserText = (TextView) rootView.findViewById(R.id.reportUserText);
+        editProfileText = (TextView) rootView.findViewById(R.id.editProfileText);
+        changePictureText = (TextView) rootView.findViewById(R.id.changePasswordText);
         awardRecyclerView = (RecyclerView) rootView.findViewById(R.id.award_recycler_view);
         awardRecyclerView.setHasFixedSize(true);
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.my_recycler_view_user_profile);
@@ -110,7 +115,7 @@ public class ProfileFragment extends Fragment {
 
     private void getUserInfo(String emailUser) {
         APICommunicator apiCommunicator = new APICommunicator();
-        Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response -> {
+        @SuppressLint("ResourceAsColor") Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response -> {
             JSONObject jsonObject;
             Float balance = null;
             try{
@@ -126,6 +131,8 @@ public class ProfileFragment extends Fragment {
                 userName.setText(completeName);
                 balance = BigDecimal.valueOf(jsonObject.getDouble("balance")).floatValue();
                 userBalance.setText(balance.toString());
+                if (balance < 0) userBalance.setTextColor(this.getResources().getColor(R.color.negative_balance));
+                else if (balance > 0) userBalance.setTextColor(this.getResources().getColor(R.color.positive_balance));
                 userEmailToShow.setText(jsonObject.getString("email"));
                 if(!descriptionUser.equals("null")) userDescription.setText(descriptionUser);
                 String image = jsonObject.getString("image");
@@ -148,9 +155,8 @@ public class ProfileFragment extends Fragment {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            if (balance < 0) userBalance.setTextColor(Color.RED);
-            else if (balance > 0) userBalance.setTextColor(Color.GREEN);
-            else userBalance.setTextColor(Color.BLUE);
+
+
 
         };
         Response.ErrorListener errorListener = error -> {
@@ -300,7 +306,7 @@ public class ProfileFragment extends Fragment {
 
     private Bitmap getImageRounded(Bitmap image) {
         image = ImageHelper.cropBitmapToSquare(image);
-        image = ImageHelper.getRoundedCornerBitmap(image, 220);
+        image = ImageHelper.getRoundedCornerBitmap(image, 420);
         return image;
 
     }
