@@ -24,9 +24,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-
 
 public class BoardFragment extends Fragment {
 
@@ -84,7 +82,6 @@ public class BoardFragment extends Fragment {
         return rootView;
     }
 
-
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.filter_options, menu);
@@ -108,8 +105,7 @@ public class BoardFragment extends Fragment {
         switch (item.getItemId()) {
             case R.id.category_language:
                 language = !item.isChecked();
-                if (item.isChecked())item.setChecked(false);
-                else item.setChecked(true);
+                item.setChecked(!item.isChecked());
                 update();
                 break;
             case R.id.category_culture:
@@ -245,7 +241,6 @@ public class BoardFragment extends Fragment {
 
     //Call to the API
     public void getAllEvents() {
-
         APICommunicator apiCommunicator = new APICommunicator();
         Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response -> {
             JSONArray jsonArray;
@@ -255,7 +250,6 @@ public class BoardFragment extends Fragment {
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
                     items.add(new Event(jsonObject));
-
                 }
 
                 mAdapter = new EventAdapter(items, getActivity(), (v1, position) -> {
@@ -263,11 +257,13 @@ public class BoardFragment extends Fragment {
                     Event event = items.get(position);
                     bundle.putInt("id", event.getId());
                     Fragment eventFragment;
-                    if (event.getCreatorEmail().equals(SharedPreferencesManager.INSTANCE.read(getActivity(),"user_email"))
-                            && correctDate(event.getIniDate())) {
-                        eventFragment = MyEventFragment.newInstance(bundle);
-                    }
-                    else eventFragment = EventFragment.newInstance(bundle);
+                    boolean eventCreator = event.getCreatorEmail().equals(SharedPreferencesManager.INSTANCE.read(getActivity(),"user_email"));
+                    if( eventCreator && event.stillEditable() )
+                            eventFragment = MyEventFragment.newInstance(bundle);
+                    else if( !eventCreator && event.isAvailable() )
+                        eventFragment = MyJoinEventFragment.newInstance(bundle);
+                    else
+                        eventFragment = EventFragment.newInstance(bundle);
                     FragmentChangeListener fc = (FragmentChangeListener) getActivity();
                     fc.replaceFragment(eventFragment);
                 });
@@ -296,15 +292,4 @@ public class BoardFragment extends Fragment {
         };
         apiCommunicator.getRequest(getActivity().getApplicationContext(), URL, responseListener, errorListener, null);
     }
-
-    private boolean correctDate(Date iniDate) {
-        if (iniDate == null) return true;
-        else {
-            Date currentDate = new Date();
-            long hours = iniDate.getTime() - currentDate.getTime();
-            hours = hours/ 1000 / 60 / 60;
-            return hours >= 24;
-        }
-    }
-
 }
