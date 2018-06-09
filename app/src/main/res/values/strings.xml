@@ -123,5 +123,7 @@
     <string name="event_tag">Tags</string>
     <string name="input_tags">#writeyourtags</string>
     <string name="tag_search">Search by tag</string>
+    <string name="join_msg">Join to SocialBank and let\'s go to \'</string>
+    <string name="event">event</string>
 
 </resources>

@@ -59,4 +59,6 @@ class User {
     public void setImage(Bitmap image) {
         this.image = image;
     }
+
+
 }

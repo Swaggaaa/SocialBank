@@ -1,6 +1,8 @@
 package me.integrate.socialbank;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -68,7 +70,12 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
     @Override
     public void onBindViewHolder(EventViewHolder viewHolder, int i) {
 
-        viewHolder.imagen.setImageBitmap(items.get(i).getImage());
+        Bitmap image = (items.get(i).getImage());
+        if (image == null) viewHolder.imagen.setImageResource(R.drawable.ic_camera_alt);
+        else {
+            image = getImageRounded(image);
+            viewHolder.imagen.setImageBitmap(image);
+        }
         viewHolder.title.setText(items.get(i).getTitle());
         viewHolder.initDate.setText(dateToString(items.get(i).getIniDate()));
         viewHolder.finishDate.setText(dateToString(items.get(i).getEndDate()));
@@ -76,6 +83,13 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
         viewHolder.demand.setText(getDemandOrOffer(items.get(i).getDemand()));
         String hours = getHours(items.get(i).getIniDate(), items.get(i).getEndDate()) + " " + context.getResources().getString(R.string.time_hours);
         viewHolder.hours.setText(hours);
+    }
+
+    private Bitmap getImageRounded(Bitmap image) {
+        image = ImageHelper.cropBitmapToSquare(image);
+        image = ImageHelper.getRoundedCornerBitmap(image, 120);
+        return image;
+
     }
 
     private String getHours(Date hourIni, Date hourEnd) {
