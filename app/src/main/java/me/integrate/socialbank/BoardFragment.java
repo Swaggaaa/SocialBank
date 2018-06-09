@@ -187,7 +187,6 @@ public class BoardFragment extends Fragment {
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
                     items.add(new Event(jsonObject));
-                    Log.v("TEST: ", String.valueOf(jsonObject));
                 }
 
                 mAdapter = new EventAdapter(items, getActivity(), (v1, position) -> {
