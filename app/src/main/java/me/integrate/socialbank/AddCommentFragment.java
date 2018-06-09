@@ -29,7 +29,8 @@ import java.util.Map;
 public class AddCommentFragment extends DialogFragment {
     private static final String URL = "/events";
     private EditText comment;
-    private Button submit;
+
+    private int id;
 
     public AlertDialog addCommentFragment() {
 
@@ -39,23 +40,15 @@ public class AddCommentFragment extends DialogFragment {
         View rootView = inflater.inflate(R.layout.fragment_add_comment, null);
         builder.setView(rootView);
         comment = (EditText) rootView.findViewById(R.id.new_comment);
-        submit = (Button) rootView.findViewById(R.id.button_comment);
+        id = getArguments().getInt("id");
 
-        submit.setOnClickListener(v -> {
-            DialogInterface dialog;
-            submit.setEnabled(false);
+        builder.setPositiveButton(getResources().getString(R.string.submit), (dialogInterface, i) -> {
             if (comment.getText().toString().length() != 0) {
                 postComment(comment.getText().toString());
             }
-
         });
-        comment.addTextChangedListener(new TextWatcher() {
-            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
-            @Override
-            public void afterTextChanged(Editable s) {
-                enableButton();
-            }
+        builder.setNegativeButton(getResources().getString(R.string.cancel), (dialogInterface, i) -> {
+
         });
         return builder.create();
     }
@@ -72,7 +65,6 @@ public class AddCommentFragment extends DialogFragment {
 
         APICommunicator apiCommunicator = new APICommunicator();
         Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response -> {
-
             Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.new_comment_created), Toast.LENGTH_LONG).show();
 
         };
@@ -80,7 +72,7 @@ public class AddCommentFragment extends DialogFragment {
         Map<String, String> params = new HashMap<>();
         params.put("content", comment);
 
-        apiCommunicator.postRequest(getActivity().getApplicationContext(), URL + '/' + "comments", responseListener, errorListener, params);
+        apiCommunicator.postRequest(getActivity().getApplicationContext(), URL + '/' + id + '/' + "comments", responseListener, errorListener, params);
     }
 
     private void errorTreatment(int errorCode) {
@@ -96,15 +88,5 @@ public class AddCommentFragment extends DialogFragment {
 
         Toast.makeText(getActivity().getApplicationContext(), message, Toast.LENGTH_LONG).show();
     }
-
-    private boolean areFilled() {
-        return !comment.getText().toString().isEmpty();
-    }
-
-    //Se extrae en función externa por si se quiere modificar el estilo
-    private void enableButton() {
-        submit.setEnabled(areFilled());
-    }
-
 
 }

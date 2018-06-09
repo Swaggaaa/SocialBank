@@ -1,5 +1,6 @@
 package me.integrate.socialbank;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -11,13 +12,22 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.android.volley.Response;
+
 import java.util.List;
 
 import org.json.JSONException;
 
+import static me.integrate.socialbank.App.getContext;
+
 class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentViewHolder> {
 
     private List<Comment> items;
+
+    private static final String URL = "/comments";
+
 
     private Context context;
     private CustomItemClickListener listener;
@@ -58,11 +68,43 @@ class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentViewHold
         viewHolder.text.setText(items.get(i).getComment());
         if (items.get(i).getEmailCreator().equals(SharedPreferencesManager.INSTANCE.read(this.context, "user_email"))){
             viewHolder.delete.setVisibility(View.VISIBLE);
+            viewHolder.delete.setOnClickListener(v->{
+
+                deletedComment(items.get(i).getId());
+
+            });
         }
     }
 
     @Override
     public int getItemCount() {
         return items.size();
+    }
+
+    private void deletedComment(int id) {
+
+        APICommunicator apiCommunicator = new APICommunicator();
+        Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response -> {
+
+            Toast.makeText(getContext().getApplicationContext(), getContext().getResources().getString(R.string.deleted_comment), Toast.LENGTH_LONG).show();
+
+        };
+        Response.ErrorListener errorListener = error -> errorTreatment(error.networkResponse.statusCode);
+
+        apiCommunicator.deleteRequest(getContext().getApplicationContext(), URL + '/' + id , responseListener, errorListener, null);
+    }
+
+    private void errorTreatment(int errorCode) {
+        String message;
+        if (errorCode == 401)
+            message = getContext().getResources().getString(R.string.Unauthorized);
+        else if (errorCode == 403)
+            message = getContext().getResources().getString(R.string.Forbidden);
+        else if (errorCode == 404)
+            message = getContext().getResources().getString(R.string.NotFound);
+        else
+            message = getContext().getResources().getString(R.string.UnexpectedError);
+
+        Toast.makeText(getContext().getApplicationContext(), message, Toast.LENGTH_LONG).show();
     }
 }

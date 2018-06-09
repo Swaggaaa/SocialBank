@@ -1,7 +1,6 @@
 package me.integrate.socialbank;
 
 
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -13,7 +12,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -49,7 +47,6 @@ public class EventFragment extends Fragment {
     private TextView textStartDate;
     private TextView textEndDate;
     protected EditText editDescription;
-    private Button deleted_comment;
 
 
     private RecyclerView mRecyclerView;
@@ -87,17 +84,17 @@ public class EventFragment extends Fragment {
         textEndDate = (TextView) rootView.findViewById(R.id.end_date);
         editDescription = (EditText) rootView.findViewById(R.id.editDescription);
         addComment = (ImageView) rootView.findViewById(R.id.addComment);
-        deleted_comment = (Button) rootView.findViewById(R.id.delete_comment_button);
 
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view_comment);
         mRecyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(getContext()));
 
-       // loadingDialog = ProgressDialog.show(getActivity(), "",
+
+        // loadingDialog = ProgressDialog.show(getActivity(), "",
            //     getString(R.string.loadingMessage), true);
 
-        //TODO call to the api
         id = getArguments().getInt("id");
         getComments();
         showEventInformation();
@@ -118,25 +115,18 @@ public class EventFragment extends Fragment {
             FragmentChangeListener fc = (FragmentChangeListener) getActivity();
             fc.replaceFragment(profileFragment);
         });
+
+        //TODO flujo
         addComment.setOnClickListener(v ->
         {
+            Bundle b = new Bundle();
+            b.putInt("id", id);
             FragmentManager fm  = getFragmentManager();
             AddCommentFragment addCommentFragment = new AddCommentFragment();
+            addCommentFragment.setArguments(b);
             addCommentFragment.show(fm, "prova");
         });
-        deleted_comment.setOnClickListener(v->
-        {
-            AlertDialog.Builder dialogDelete = new AlertDialog.Builder(getContext());
-            dialogDelete.setTitle(getResources().getString(R.string.are_sure));
-            dialogDelete.setMessage(getResources().getString(R.string.confirm_delete_event));
-            dialogDelete.setCancelable(false);
-            dialogDelete.setPositiveButton(getResources().getString(R.string.confirm), (dialogInterface, i) -> {
-                deletedComment();
-            });
-            dialogDelete.setNegativeButton(getResources().getString(R.string.discard), (dialogInterface, i) -> {
-            });
-            dialogDelete.show();
-        });
+
     }
 
         //Call API to obtain event's information
@@ -194,18 +184,6 @@ public class EventFragment extends Fragment {
             DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm");
             return df.format(date);
         }
-    }
-
-    //TODO acabar
-    void deletedComment() {
-
-        APICommunicator apiCommunicator = new APICommunicator();
-        Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response -> {
-
-        };
-        Response.ErrorListener errorListener = error -> errorTreatment(error.networkResponse.statusCode);
-
-        apiCommunicator.deleteRequest(getActivity().getApplicationContext(), URL + '/' + id, responseListener, errorListener, null);
     }
 
     void getComments() {

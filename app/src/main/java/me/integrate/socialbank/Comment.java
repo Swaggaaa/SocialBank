@@ -13,6 +13,7 @@ public class Comment {
     private String text;
     private String surname;
     private String emailCreator;
+    private int id;
 
     Comment(JSONObject jsonObject) {
         try {
@@ -20,11 +21,16 @@ public class Comment {
             this.surname = jsonObject.getString("userSurname");
             this.text = jsonObject.getString("content");
             this.emailCreator = jsonObject.getString("creatorEmail");
+            this.id = jsonObject.getInt("id");
         }
         catch (JSONException ex) {
             ex.printStackTrace();
         }
     }
+
+    public int getId() { return id;}
+
+    public void setId (int id) { this.id = id;}
 
     public String getUser() {
         return user;

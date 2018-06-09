@@ -83,7 +83,7 @@
     <string name="category_other">Other</string>
     <string name="time_hours">Hours</string>
     <string name="delete">Delete</string>
-    <string name="delete_event">Event delete</string>
+    <string name="delete_event">Event deleted</string>
     <string name="are_sure">Are you sure?</string>
     <string name="confirm_delete_event">Do you want delete this event?</string>
     <string name="confirm_report_user">Do you want report this user?</string>
@@ -123,5 +123,7 @@
     <string name="something_wrong">Something went wrong</string>
     <string name="image_update">Image changed!</string>
     <string name="account_created">Account created!</string>
+    <string name="deleted_comment">Comment deleted</string>
+    <string name="cancel">Cancel</string>
 
 </resources>
