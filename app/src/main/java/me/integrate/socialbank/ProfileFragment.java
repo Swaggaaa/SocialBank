@@ -58,6 +58,7 @@ public class ProfileFragment extends Fragment {
 
     private List<String> items = new ArrayList<>();
 
+    protected Float balance;
     private ProgressDialog loadingDialog;
 
 
@@ -87,6 +88,7 @@ public class ProfileFragment extends Fragment {
         mRecyclerView.setLayoutManager(mLayoutManager);
         loadingDialog = ProgressDialog.show(getActivity(), "",
                 getString(R.string.loadingMessage), true);
+        balance = null;
         fillFields();
         getUserEvents();
         return rootView;
@@ -151,7 +153,7 @@ public class ProfileFragment extends Fragment {
 
         };
         Response.ErrorListener errorListener = error -> {
-            Toast.makeText(getActivity().getApplicationContext(), getString(R.string.something_wrong), Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity().getApplicationContext(), "Something went wrong", Toast.LENGTH_LONG).show();
             Fragment boardFragment = new BoardFragment();
             FragmentChangeListener fc = (FragmentChangeListener) getActivity();
             fc.replaceFragment(boardFragment);
@@ -238,10 +240,11 @@ public class ProfileFragment extends Fragment {
                     bundle.putInt("id", event.getId());
                     bundle.putBoolean("MyProfile", true);
                     Fragment eventFragment;
-                    if (event.getCreatorEmail().equals(emailUser) && correctDate(event.getIniDate())) {
+                    if (event.getCreatorEmail().equals(SharedPreferencesManager.INSTANCE.read(getActivity(),"user_email"))
+                            && correctDate(event.getIniDate())) {
                         eventFragment = MyEventFragment.newInstance(bundle);
-                    }
-                    else eventFragment = EventFragment.newInstance(bundle);
+                    } else if (event.getCreatorEmail().equals(SharedPreferencesManager.INSTANCE.read(getActivity(), "user_email"))) eventFragment = EventFragment.newInstance(bundle);
+                    else eventFragment = MyJoinEventFragment.newInstance(bundle);
                     FragmentChangeListener fc = (FragmentChangeListener) getActivity();
                     fc.replaceFragment(eventFragment);
                 });
