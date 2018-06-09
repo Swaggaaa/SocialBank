@@ -44,8 +44,6 @@ public class ProfileFragment extends Fragment {
     private TextView myEvents;
     private TextView userBalanceText;
     private TextView reportUsserText;
-    private TextView editProfileText;
-    private TextView changePictureText;
     String emailUser;
     String nameUser;
     String lastNameUser;
@@ -81,8 +79,6 @@ public class ProfileFragment extends Fragment {
         userBalanceText.setVisibility(View.GONE);
         myEvents = (TextView)rootView.findViewById(R.id.events);
         reportUsserText = (TextView) rootView.findViewById(R.id.reportUserText);
-        editProfileText = (TextView) rootView.findViewById(R.id.editProfileText);
-        changePictureText = (TextView) rootView.findViewById(R.id.changePasswordText);
         awardRecyclerView = (RecyclerView) rootView.findViewById(R.id.award_recycler_view);
         awardRecyclerView.setHasFixedSize(true);
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.my_recycler_view_user_profile);
@@ -202,6 +198,7 @@ public class ProfileFragment extends Fragment {
         isFABOpen = true;
         reportUserButton.animate().translationY(-getResources().getDimension(R.dimen.standard_55));
         reportUsserText.setVisibility(View.VISIBLE);
+        reportUsserText.bringToFront();
         reportUsserText.animate().translationY(-getResources().getDimension(R.dimen.standard_55));
 
     }

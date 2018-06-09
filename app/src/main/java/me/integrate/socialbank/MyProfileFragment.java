@@ -31,6 +31,8 @@ public class MyProfileFragment extends ProfileFragment {
     private TextView userBalance;
     private boolean thereisPic;
     private boolean isFABOpen;
+    private TextView editProfileText;
+    private TextView changePictureText;
     FloatingActionButton editProfile;
     FloatingActionButton changeUserPhoto;
     FloatingActionButton openMenu;
@@ -45,6 +47,8 @@ public class MyProfileFragment extends ProfileFragment {
         userBalance = (TextView) view.findViewById(R.id.hoursBalance);
         userBalance.setVisibility(View.VISIBLE);
         reportUserButton.setVisibility(View.GONE);
+        editProfileText = (TextView) view.findViewById(R.id.editProfileText);
+        changePictureText = (TextView) view.findViewById(R.id.changePasswordText);
         isFABOpen = false;
         return view;
     }
@@ -74,7 +78,13 @@ public class MyProfileFragment extends ProfileFragment {
 
     private void showFABMenu() {
         isFABOpen = true;
+        editProfileText.bringToFront();
+        editProfileText.setVisibility(View.VISIBLE);
+        editProfileText.animate().translationY(-getResources().getDimension(R.dimen.standard_55));
         editProfile.animate().translationY(-getResources().getDimension(R.dimen.standard_55));
+        changePictureText.bringToFront();
+        changePictureText.setVisibility(View.VISIBLE);
+        changePictureText.animate().translationY(-getResources().getDimension(R.dimen.standard_105));
         changeUserPhoto.animate().translationY(-getResources().getDimension(R.dimen.standard_105));
     }
 
@@ -82,6 +92,10 @@ public class MyProfileFragment extends ProfileFragment {
         isFABOpen = false;
         editProfile.animate().translationY(0);
         changeUserPhoto.animate().translationY(0);
+        editProfileText.animate().translationY(0);
+        editProfileText.setVisibility(View.GONE);
+        changePictureText.animate().translationY(0);
+        changePictureText.setVisibility(View.GONE);
     }
 
     private void updateProfile() {
