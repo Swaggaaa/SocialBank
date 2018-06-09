@@ -204,11 +204,13 @@ public class BoardFragment extends Fragment {
                     Event event = items.get(position);
                     bundle.putInt("id", event.getId());
                     Fragment eventFragment;
-                    if (event.getCreatorEmail().equals(SharedPreferencesManager.INSTANCE.read(getActivity(),"user_email"))
-                            && correctDate(event.getIniDate())) {
-                        eventFragment = MyEventFragment.newInstance(bundle);
-                    } else if (event.getCreatorEmail().equals(SharedPreferencesManager.INSTANCE.read(getActivity(), "user_email"))) eventFragment = EventFragment.newInstance(bundle);
-                    else eventFragment = MyJoinEventFragment.newInstance(bundle);
+                    boolean eventCreator = event.getCreatorEmail().equals(SharedPreferencesManager.INSTANCE.read(getActivity(),"user_email"));
+                    if( eventCreator && event.stillEditable() )
+                            eventFragment = MyEventFragment.newInstance(bundle);
+                    else if( !eventCreator && event.isAvailable() )
+                        eventFragment = MyJoinEventFragment.newInstance(bundle);
+                    else
+                        eventFragment = EventFragment.newInstance(bundle);
                     FragmentChangeListener fc = (FragmentChangeListener) getActivity();
                     fc.replaceFragment(eventFragment);
                 });

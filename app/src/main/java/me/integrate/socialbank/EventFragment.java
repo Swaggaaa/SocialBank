@@ -123,7 +123,6 @@ public class EventFragment extends Fragment {
                 textEventHours.setText(hours);
                 textStartDate.setText(dateToString(iniDate));
                 textEndDate.setText(dateToString(endDate));
-
             } catch (JSONException e) {
                 Toast.makeText(EventFragment.this.getActivity().getApplicationContext(), R.string.JSONException, Toast.LENGTH_LONG).show();
             }
