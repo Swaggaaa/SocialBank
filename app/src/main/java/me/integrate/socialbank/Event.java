@@ -16,6 +16,8 @@ import java.util.Date;
 public class Event {
 
     private int id;
+    private int capacity;
+    private int numberEnrolled;
     private String creatorEmail;
     private Date iniDate, endDate;
     private String location;
@@ -29,6 +31,8 @@ public class Event {
 
     public Event(JSONObject object) throws JSONException {
         this.id = object.getInt("id");
+        this.capacity = object.getInt("capacity");
+        this.numberEnrolled = object.getInt("numberEnrolled");
         this.creatorEmail = object.getString("creatorEmail");
         this.location = object.getString("location");
         this.title = object.getString("title");
@@ -42,8 +46,10 @@ public class Event {
     }
 
 
-    public Event(String creatorEmail, boolean demand, String description, Date finishDate, int id, Bitmap decodedByte, Date initDate, double latitude, String location, double longitude, String title) {
+    public Event(String creatorEmail, boolean demand, String description, Date finishDate, int id, int capacity, int numberEnrolled, Bitmap decodedByte, Date initDate, double latitude, String location, double longitude, String title) {
         this.id = id;
+        this.capacity = capacity;
+        this.numberEnrolled = numberEnrolled;
         this.title = title;
         this.iniDate = initDate;
         this.image = decodedByte;
@@ -110,6 +116,14 @@ public class Event {
         return id;
     }
 
+    public int getCapacity() {
+        return capacity;
+    }
+
+    public int getNumberEnrolled() {
+        return numberEnrolled;
+    }
+
     public void setId(int id) {
         this.id = id;
     }
@@ -173,6 +187,10 @@ public class Event {
 
     public void setCategory(Category category) {
         this.category = category;
+    }
+
+    public boolean isIndividual() {
+        return capacity == 1;
     }
 
     enum Category {

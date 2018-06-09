@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,7 @@ import org.json.JSONObject;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 
 public class EventFragment extends Fragment {
 
@@ -43,7 +45,10 @@ public class EventFragment extends Fragment {
     private TextView textEndDate;
     protected EditText editDescription;
 
-    private String creator;
+    private Integer capacity;
+    private Integer numberEnrolled;
+
+    protected String creator;
     protected int id;
     protected String descriptionEvent;
     protected Date iniDate;
@@ -74,7 +79,6 @@ public class EventFragment extends Fragment {
         textEndDate = (TextView) rootView.findViewById(R.id.end_date);
         editDescription = (EditText) rootView.findViewById(R.id.editDescription);
 
-
         join_button = (Button) rootView.findViewById(R.id.join_button);
 
         id = getArguments().getInt("id");
@@ -82,8 +86,8 @@ public class EventFragment extends Fragment {
         return rootView;
     }
 
-        //Call API to obtain event's information
-    void showEventInformation() {
+    //Call API to obtain event's information
+    private void showEventInformation() {
         APICommunicator apiCommunicator = new APICommunicator();
         Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response -> {
             try {
@@ -102,9 +106,15 @@ public class EventFragment extends Fragment {
 
                 editDescription.setText(descriptionEvent);
 
-                //TODO not hardcoded this values
-                textIndividualOrGroup.setText("Individual");
-                textViewNumberPersonsEvent.setText("1/1");
+                capacity = event.getCapacity();
+                numberEnrolled = event.getNumberEnrolled();
+
+                if(event.isIndividual())
+                    textIndividualOrGroup.setText(R.string.individual);
+                else
+                    textIndividualOrGroup.setText(R.string.groupal);
+
+                textViewNumberPersonsEvent.setText(numberEnrolled+"/"+capacity);
 
                 iniDate = event.getIniDate();
                 endDate = event.getEndDate();
@@ -144,6 +154,20 @@ public class EventFragment extends Fragment {
             hours = diff/1000/ 60 / 60;
         }
         return hours;
+    }
+
+    protected String getCreator() {
+        return creator;
+    }
+
+    protected void changesEnrollment(boolean join) {
+        if (join) numberEnrolled++;
+        else  numberEnrolled--;
+        textViewNumberPersonsEvent.setText(numberEnrolled+"/"+capacity);
+    }
+
+    protected boolean isEventFull() {
+        return capacity == numberEnrolled;
     }
 
     private String dateToString(Date date) {

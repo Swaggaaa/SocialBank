@@ -67,8 +67,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/colorTransparent"
-                android:visibility="gone"
-                android:textColor="@color/colorTextForgot" />
+                android:textColor="@color/colorTextForgot"
+                android:visibility="gone" />
 
             <TextView
                 android:id="@+id/start_date"
