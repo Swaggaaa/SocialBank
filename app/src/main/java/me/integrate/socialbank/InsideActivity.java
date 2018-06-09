@@ -59,6 +59,9 @@ public class InsideActivity extends AppCompatActivity implements FragmentChangeL
                         case R.id.logout:
                             logout();
                             break;
+                        case R.id.myAccount:
+                            replaceFragment(new MyAccountFragment());
+                            break;
                         case R.id.newEvent:
                             replaceFragment(new CreateEventFragment());
                             break;
@@ -114,6 +117,7 @@ public class InsideActivity extends AppCompatActivity implements FragmentChangeL
     private void logout() {
         SharedPreferencesManager.INSTANCE.remove(this, "token");
         startActivity(new Intent(this, MainActivity.class));
+        finish();
     }
 
     @Override

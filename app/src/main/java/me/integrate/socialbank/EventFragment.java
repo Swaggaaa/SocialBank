@@ -127,23 +127,24 @@ public class EventFragment extends Fragment {
                 Toast.makeText(EventFragment.this.getActivity().getApplicationContext(), R.string.JSONException, Toast.LENGTH_LONG).show();
             }
         };
-        Response.ErrorListener errorListener = error -> {
-            String message;
-            int errorCode = error.networkResponse.statusCode;
-            if (errorCode == 401)
-                message = getString(R.string.Unauthorized);
-            else if(errorCode == 403)
-                message = getString(R.string.Forbidden);
-            else if(errorCode == 404)
-                message = getString(R.string.NotFound);
-            else
-                message = getString(R.string.UnexpectedError);
-
-            Toast.makeText(getActivity().getApplicationContext(), message, Toast.LENGTH_LONG).show();
-        };
+        Response.ErrorListener errorListener = error -> errorTreatment(error.networkResponse.statusCode);
 
         apiCommunicator.getRequest(getActivity().getApplicationContext(), URL+'/'+ id, responseListener, errorListener, null);
 
+    }
+
+    private void errorTreatment(int errorCode) {
+        String message;
+        if (errorCode == 401)
+            message = getString(R.string.Unauthorized);
+        else if (errorCode == 403)
+            message = getString(R.string.Forbidden);
+        else if (errorCode == 404)
+            message = getString(R.string.NotFound);
+        else
+            message = getString(R.string.UnexpectedError);
+
+        Toast.makeText(getActivity().getApplicationContext(), message, Toast.LENGTH_LONG).show();
     }
 
     protected long getHours(Date hourIni, Date hourEnd) {
@@ -185,12 +186,7 @@ public class EventFragment extends Fragment {
             Bundle b = new Bundle();
             b.putString("email", creator);
             Fragment profileFragment;
-            if (!creator.equals(SharedPreferencesManager.INSTANCE.read(getActivity(),"user_email"))){
-                 profileFragment = new ProfileFragment();
-            }
-            else {
-                profileFragment = new MyProfileFragment();
-            }
+            profileFragment = !creator.equals(SharedPreferencesManager.INSTANCE.read(getActivity(), "user_email")) ? new ProfileFragment() : new MyProfileFragment();
             profileFragment.setArguments(b);
             FragmentChangeListener fc = (FragmentChangeListener) getActivity();
             fc.replaceFragment(profileFragment);

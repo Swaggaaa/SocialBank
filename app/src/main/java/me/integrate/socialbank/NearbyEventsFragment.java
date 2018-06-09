@@ -165,23 +165,23 @@ public class NearbyEventsFragment extends Fragment {
                 Toast.makeText(getActivity().getApplicationContext(), R.string.JSONException, Toast.LENGTH_LONG).show();
             }
         };
-        Response.ErrorListener errorListener = error -> {
-            String message;
-            int errorCode = error.networkResponse.statusCode;
-            if (errorCode == 401)
-                message = getString(R.string.Unauthorized);
-            else if(errorCode == 403)
-                message = getString(R.string.Forbidden);
-            else if(errorCode == 404)
-                message = getString(R.string.NotFound);
-            else
-                message = getString(R.string.UnexpectedError);
-
-            Toast.makeText(getActivity().getApplicationContext(), message, Toast.LENGTH_LONG).show();
-        };
+        Response.ErrorListener errorListener = error -> errorTreatment(error.networkResponse.statusCode);
 
         apiCommunicator.getRequest(getActivity().getApplicationContext(), URL, responseListener, errorListener, null);
 
+    }
+
+    private void errorTreatment(int errorCode) {
+        String message;
+        if (errorCode == 401)
+            message = getString(R.string.Unauthorized);
+        else if (errorCode == 403)
+            message = getString(R.string.Forbidden);
+        else if (errorCode == 404)
+            message = getString(R.string.NotFound);
+        else
+            message = getString(R.string.UnexpectedError);
+        Toast.makeText(getActivity().getApplicationContext(), message, Toast.LENGTH_LONG).show();
     }
 
 

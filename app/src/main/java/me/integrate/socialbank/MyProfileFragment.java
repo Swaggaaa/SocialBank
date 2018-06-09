@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.TextView;
@@ -39,6 +40,8 @@ public class MyProfileFragment extends ProfileFragment {
         changeUserPhoto.setVisibility(View.VISIBLE);
         userBalance = (TextView) view.findViewById(R.id.hoursBalance);
         userBalance.setVisibility(View.VISIBLE);
+        Button reportUser = (Button)view.findViewById(R.id.buttonReportUser);
+        reportUser.setVisibility(View.GONE);
         return view;
     }
 
@@ -76,10 +79,10 @@ public class MyProfileFragment extends ProfileFragment {
     private void putCredentials(HashMap<String, String> params) {
         APICommunicator apiCommunicator = new APICommunicator();
         Response.Listener responseListener = response -> {
-            Toast.makeText(getActivity().getApplicationContext(), "Image changed!", Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity().getApplicationContext(), getString(R.string.image_update), Toast.LENGTH_LONG).show();
 
         };
-        Response.ErrorListener errorListener = error -> Toast.makeText(getActivity().getApplicationContext(), "Something went wrong", Toast.LENGTH_LONG).show();
+        Response.ErrorListener errorListener = error -> Toast.makeText(getActivity().getApplicationContext(), getString(R.string.something_wrong), Toast.LENGTH_LONG).show();
 
 
         apiCommunicator.putRequest(getActivity().getApplicationContext(), URL + '/' + emailUser, responseListener, errorListener, params);

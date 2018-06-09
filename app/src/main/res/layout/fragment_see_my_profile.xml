@@ -6,7 +6,9 @@
     android:layout_height="match_parent"
     tools:context=".ProfileFragment">
 
-
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -52,6 +54,12 @@
                     android:visibility="gone" />
 
             </LinearLayout>
+
+            <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/award_recycler_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
 
             <TextView
                 android:id="@+id/userEmailToShow"
@@ -116,6 +124,36 @@
             </FrameLayout>
         </LinearLayout>
 
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorTransparent"
+            android:text="@string/report_user"
+            android:id="@+id/buttonReportUser"
+            android:textColor="#8d0c0c" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorTransparent"
+                android:text="@string/confirm"
+                android:id="@+id/confirmReport"
+                android:textColor="#8d0c0c"
+                android:layout_weight="1"/>
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorTransparent"
+                android:text="@string/discard"
+                android:id="@+id/discardReport"
+                android:textColor="#8d0c0c"
+                android:layout_weight="1"/>
+        </LinearLayout>
+
     </LinearLayout>
+    </ScrollView>
 
 </android.support.constraint.ConstraintLayout>
