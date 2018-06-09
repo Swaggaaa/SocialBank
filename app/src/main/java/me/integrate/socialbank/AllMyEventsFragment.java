@@ -143,7 +143,6 @@ public class AllMyEventsFragment extends Fragment {
 
     //Call to the api for the join events
     private void getJoinEvents() {
-
         APICommunicator apiCommunicator = new APICommunicator();
         Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response -> {
             JSONArray jsonArray;
