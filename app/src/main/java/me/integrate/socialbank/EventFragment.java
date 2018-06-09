@@ -1,6 +1,7 @@
 package me.integrate.socialbank;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -54,6 +55,8 @@ public class EventFragment extends Fragment {
     protected Date iniDate;
     protected Date endDate;
 
+    private Button invite;
+
     public static EventFragment newInstance(Bundle params) {
         EventFragment eventFragment = new EventFragment();
         eventFragment.setArguments(params);
@@ -79,6 +82,7 @@ public class EventFragment extends Fragment {
         textEndDate = (TextView) rootView.findViewById(R.id.end_date);
         editDescription = (EditText) rootView.findViewById(R.id.editDescription);
 
+        invite = (Button)rootView.findViewById(R.id.invite_button);
         join_button = (Button) rootView.findViewById(R.id.join_button);
 
         id = getArguments().getInt("id");
@@ -86,8 +90,8 @@ public class EventFragment extends Fragment {
         return rootView;
     }
 
-    //Call API to obtain event's information
-    private void showEventInformation() {
+        //Call API to obtain event's information
+    void showEventInformation() {
         APICommunicator apiCommunicator = new APICommunicator();
         Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response -> {
             try {
@@ -191,5 +195,18 @@ public class EventFragment extends Fragment {
             FragmentChangeListener fc = (FragmentChangeListener) getActivity();
             fc.replaceFragment(profileFragment);
         });
+        view.findViewById(R.id.invite_button).setOnClickListener(v ->
+        {
+            inviteWhatsapp();
+        });
+    }
+
+    private void inviteWhatsapp() {
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.join_msg) + textEventTitle.getText().toString() + "' " + getString(R.string.event) + "!");
+        sendIntent.setType("text/plain");
+        sendIntent.setPackage("com.whatsapp");
+        startActivity(sendIntent);
     }
 }
