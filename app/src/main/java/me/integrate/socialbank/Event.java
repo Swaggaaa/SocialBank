@@ -26,7 +26,6 @@ public class Event {
     private String description;
     private Bitmap image;
     private boolean isDemand;
-    private boolean closed;
     private double latitude;
     private double longitude;
     private Category category;
@@ -41,14 +40,13 @@ public class Event {
         this.description = object.getString("description");
         this.image = getImageFromString(object.getString("image"));
         this.isDemand = object.getBoolean("demand");
-        this.closed = object.getBoolean("closed");
         this.latitude = object.getDouble("latitude");
         this.longitude = object.getDouble("longitude");
         this.category = Category.valueOf(object.getString("category"));
         getDates(object);
     }
 
-    public Event(String creatorEmail, boolean demand, boolean closed, String description, Date finishDate, int id, int capacity, int numberEnrolled, Bitmap decodedByte, Date initDate, double latitude, String location, double longitude, String title) {
+    public Event(String creatorEmail, boolean demand, String description, Date finishDate, int id, int capacity, int numberEnrolled, Bitmap decodedByte, Date initDate, double latitude, String location, double longitude, String title) {
         this.id = id;
         this.capacity = capacity;
         this.numberEnrolled = numberEnrolled;
@@ -59,7 +57,6 @@ public class Event {
         this.description = description;
         this.endDate = finishDate;
         this.isDemand = demand;
-        this.closed = closed;
         this.longitude = longitude;
         this.latitude = latitude;
         this.creatorEmail = creatorEmail;
@@ -109,10 +106,6 @@ public class Event {
 
     public boolean getDemand() {
         return isDemand;
-    }
-
-    public boolean getClosed() {
-        return closed;
     }
 
     public String getDescription() {

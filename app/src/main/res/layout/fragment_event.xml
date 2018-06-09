@@ -62,13 +62,31 @@
                 android:layout_marginBottom="@dimen/activity_horizontal_margin" />
 
 
-            <Button
-                android:id="@+id/join_button"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/colorTransparent"
-                android:textColor="@color/colorTextForgot"
-                android:visibility="gone" />
+                android:orientation="horizontal"
+                android:visibility="visible">
+
+                <Button
+                    android:id="@+id/join_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@color/colorTransparent"
+                    android:textColor="@color/colorTextForgot"
+                    android:visibility="gone" />
+
+                <Button
+                    android:id="@+id/invite_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@color/colorTransparent"
+                    android:text="@string/invite"
+                    android:textColor="@color/colorTextForgot"
+                    android:visibility="visible" />
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/start_date"

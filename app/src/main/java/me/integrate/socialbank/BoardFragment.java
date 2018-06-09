@@ -1,8 +1,6 @@
 package me.integrate.socialbank;
 
-
 import android.app.ProgressDialog;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -22,13 +20,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.ByteArrayOutputStream;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-
 
 public class BoardFragment extends Fragment {
 
@@ -80,7 +73,6 @@ public class BoardFragment extends Fragment {
         return rootView;
     }
 
-
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.filter_options, menu);
@@ -93,7 +85,6 @@ public class BoardFragment extends Fragment {
         itemOther = menu.findItem(R.id.category_other);
         itemOffer = menu.findItem(R.id.event_offer);
         itemDemand = menu.findItem(R.id.event_demand);
-
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -187,7 +178,6 @@ public class BoardFragment extends Fragment {
 
     //Call to the API
     public void getAllEvents() {
-
         APICommunicator apiCommunicator = new APICommunicator();
         Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response -> {
             JSONArray jsonArray;
@@ -197,6 +187,7 @@ public class BoardFragment extends Fragment {
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
                     items.add(new Event(jsonObject));
+                    Log.v("TEST: ", String.valueOf(jsonObject));
                 }
 
                 mAdapter = new EventAdapter(items, getActivity(), (v1, position) -> {
@@ -239,15 +230,4 @@ public class BoardFragment extends Fragment {
         };
         apiCommunicator.getRequest(getActivity().getApplicationContext(), URL, responseListener, errorListener, null);
     }
-
-    private boolean correctDate(Date iniDate) {
-        if (iniDate == null) return true;
-        else {
-            Date currentDate = new Date();
-            long hours = iniDate.getTime() - currentDate.getTime();
-            hours = hours/ 1000 / 60 / 60;
-            return hours >= 24;
-        }
-    }
-
 }
