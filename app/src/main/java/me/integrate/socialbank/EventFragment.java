@@ -54,7 +54,6 @@ public class EventFragment extends Fragment {
     protected Date iniDate;
     protected Date endDate;
 
-    private Button invite;
 
     public static EventFragment newInstance(Bundle params) {
         EventFragment eventFragment = new EventFragment();
@@ -81,7 +80,6 @@ public class EventFragment extends Fragment {
         textEndDate = (TextView) rootView.findViewById(R.id.end_date);
         editDescription = (EditText) rootView.findViewById(R.id.editDescription);
 
-        invite = (Button)rootView.findViewById(R.id.invite_button);
         join_button = (Button) rootView.findViewById(R.id.join_button);
 
         id = getArguments().getInt("id");
