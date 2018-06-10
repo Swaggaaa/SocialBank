@@ -173,7 +173,7 @@ public class EventFragment extends Fragment {
     private void inviteWhatsapp() {
         Intent sendIntent = new Intent();
         sendIntent.setAction(Intent.ACTION_SEND);
-        sendIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.join_msg, textEventTitle.getText().toString(), SOCIALBANK_URL));
+        sendIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.join_msg, textEventTitle.getText().toString(), SOCIALBANK_URL, id));
         sendIntent.setType("text/plain");
         sendIntent.setPackage("com.whatsapp");
         startActivity(sendIntent);
