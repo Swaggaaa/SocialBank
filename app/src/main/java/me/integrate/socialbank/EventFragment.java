@@ -1,6 +1,7 @@
 package me.integrate.socialbank;
 
 
+import android.content.Intent;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -12,6 +13,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -32,6 +34,7 @@ import java.util.List;
 public class EventFragment extends Fragment {
 
     private static final String URL = "/events";
+    private static final String SOCIALBANK_URL = "http://socialbank.com";
 
     protected ImageView imageView;
     private ImageView addComment;
@@ -101,35 +104,7 @@ public class EventFragment extends Fragment {
         return rootView;
     }
 
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        addComment.setVisibility(View.VISIBLE);
-        view.findViewById(R.id.textEventOrganizer).setOnClickListener(v ->
-        {
-            Bundle b = new Bundle();
-            b.putString("email", creator);
-            Fragment profileFragment;
-            profileFragment = !creator.equals(SharedPreferencesManager.INSTANCE.read(getActivity(), "user_email")) ? new ProfileFragment() : new MyProfileFragment();
-            profileFragment.setArguments(b);
-            FragmentChangeListener fc = (FragmentChangeListener) getActivity();
-            fc.replaceFragment(profileFragment);
-        });
-
-        //TODO flujo
-        addComment.setOnClickListener(v ->
-        {
-            Bundle b = new Bundle();
-            b.putInt("id", id);
-            FragmentManager fm  = getFragmentManager();
-            AddCommentFragment addCommentFragment = new AddCommentFragment();
-            addCommentFragment.setArguments(b);
-            addCommentFragment.show(fm, "prova");
-        });
-
-    }
-
-        //Call API to obtain event's information
+            //Call API to obtain event's information
     void showEventInformation() {
         APICommunicator apiCommunicator = new APICommunicator();
         Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response -> {
@@ -168,6 +143,20 @@ public class EventFragment extends Fragment {
 
     }
 
+    private void errorTreatment(int errorCode) {
+        String message;
+        if (errorCode == 401)
+            message = getString(R.string.Unauthorized);
+        else if (errorCode == 403)
+            message = getString(R.string.Forbidden);
+        else if (errorCode == 404)
+            message = getString(R.string.NotFound);
+        else
+            message = getString(R.string.UnexpectedError);
+
+        Toast.makeText(getActivity().getApplicationContext(), message, Toast.LENGTH_LONG).show();
+    }
+
     private String getHours(Date hourIni, Date hourEnd) {
         if (hourIni != null && hourEnd != null ) {
             long diff = hourEnd.getTime() - hourIni.getTime();
@@ -186,6 +175,42 @@ public class EventFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        view.findViewById(R.id.textEventOrganizer).setOnClickListener(v ->
+        {
+            Bundle b = new Bundle();
+            b.putString("email", creator);
+            Fragment profileFragment;
+            profileFragment = !creator.equals(SharedPreferencesManager.INSTANCE.read(getActivity(), "user_email")) ? new ProfileFragment() : new MyProfileFragment();
+            profileFragment.setArguments(b);
+            FragmentChangeListener fc = (FragmentChangeListener) getActivity();
+            fc.replaceFragment(profileFragment);
+        });
+        view.findViewById(R.id.invite_button).setOnClickListener(v ->
+        {
+            shareEvent();
+        });
+        //TODO flujo
+        addComment.setOnClickListener(v ->
+        {
+            Bundle b = new Bundle();
+            b.putInt("id", id);
+            FragmentManager fm  = getFragmentManager();
+            AddCommentFragment addCommentFragment = new AddCommentFragment();
+            addCommentFragment.setArguments(b);
+            addCommentFragment.show(fm, "prova");
+        });
+
+    }
+
+    private void shareEvent() {
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.join_msg, textEventTitle.getText().toString(), SOCIALBANK_URL, id));
+        sendIntent.setType("text/plain");
+        startActivity(sendIntent);
     void getComments() {
         APICommunicator apiCommunicator = new APICommunicator();
         Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response -> {
@@ -221,19 +246,4 @@ public class EventFragment extends Fragment {
         apiCommunicator.getRequest(getActivity().getApplicationContext(), URL + '/' + id + '/' + "comments", responseListener, errorListener, null);
 
     }
-
-    private void errorTreatment(int errorCode) {
-        String message;
-        if (errorCode == 401)
-            message = getString(R.string.Unauthorized);
-        else if (errorCode == 403)
-            message = getString(R.string.Forbidden);
-        else if (errorCode == 404)
-            message = getString(R.string.NotFound);
-        else
-            message = getString(R.string.UnexpectedError);
-
-        Toast.makeText(getActivity().getApplicationContext(), message, Toast.LENGTH_LONG).show();
-    }
-
 }

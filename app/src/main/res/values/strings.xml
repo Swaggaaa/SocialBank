@@ -115,7 +115,6 @@
     <string name="standard">STANDARD</string>
     <string name="verification_requested">verification requested</string>
     <string name="awaiting_approval">Already requested. Awaiting approval</string>
-    <string name="delete_comment">DELETE</string>
     <string name="Pick_hour_msg">Pick a right hour</string>
     <string name="Wrong_date_msg">Start date must be minor than End date and greater than current date</string>
     <string name="Not_hours_msg">You do not have enough hours to create this event</string>
@@ -125,5 +124,9 @@
     <string name="account_created">Account created!</string>
     <string name="deleted_comment">Comment deleted</string>
     <string name="cancel">Cancel</string>
+    <string name="user_balance">User balance:  </string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="change_picture">Change picture</string>
+    <string name="join_msg">Join to SocialBank and let\s go to \'%1$s\' event! Find out more on %2$s\/%3$s</string>
 
 </resources>

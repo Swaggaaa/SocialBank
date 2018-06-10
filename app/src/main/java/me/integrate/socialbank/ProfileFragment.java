@@ -1,5 +1,6 @@
 package me.integrate.socialbank;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -8,6 +9,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -41,15 +43,19 @@ public class ProfileFragment extends Fragment {
     private TextView userBalance;
     private TextView userDescription;
     private TextView myEvents;
+    private TextView userBalanceText;
+    private TextView reportUsserText;
+    private TextView editProfileText;
+    private TextView changePictureText;
     String emailUser;
     String nameUser;
     String lastNameUser;
     String dateUser;
     String genderUser;
     String descriptionUser;
-    Button reportUser;
-    Button confirmReport;
-    Button discardReport;
+    private boolean isFABOpen;
+    FloatingActionButton openMenu;
+    FloatingActionButton reportUserButton;
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
 
@@ -70,23 +76,26 @@ public class ProfileFragment extends Fragment {
         userName = (TextView) rootView.findViewById(R.id.myProfileName);
         userEmailToShow = (TextView) rootView.findViewById(R.id.userEmailToShow);
         userBalance = (TextView) rootView.findViewById(R.id.hoursBalance);
+        userBalance.setVisibility(View.GONE);
         userDescription = (TextView) rootView.findViewById(R.id.aboutMe);
+        userBalanceText = (TextView) rootView.findViewById(R.id.userBalanceText);
+        userBalanceText.setVisibility(View.GONE);
         myEvents = (TextView)rootView.findViewById(R.id.events);
+        reportUsserText = (TextView) rootView.findViewById(R.id.reportUserText);
+        editProfileText = (TextView) rootView.findViewById(R.id.editProfileText);
+        changePictureText = (TextView) rootView.findViewById(R.id.changePasswordText);
         awardRecyclerView = (RecyclerView) rootView.findViewById(R.id.award_recycler_view);
         awardRecyclerView.setHasFixedSize(true);
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.my_recycler_view_user_profile);
-        reportUser = (Button)rootView.findViewById(R.id.buttonReportUser);
-        confirmReport = (Button)rootView.findViewById(R.id.confirmReport);
-        confirmReport.setVisibility(View.GONE);
-        discardReport = (Button)rootView.findViewById(R.id.discardReport);
-        discardReport.setVisibility(View.GONE);
         mRecyclerView.setHasFixedSize(true);
+        isFABOpen = false;
+        openMenu = (FloatingActionButton) rootView.findViewById(R.id.openMenu);
+        reportUserButton = (FloatingActionButton) rootView.findViewById(R.id.reportProfile);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
         RecyclerView.LayoutManager awardLayoutManager = new LinearLayoutManager(getContext(),LinearLayoutManager.HORIZONTAL, false);
         awardRecyclerView.setLayoutManager(awardLayoutManager);
         mRecyclerView.setLayoutManager(mLayoutManager);
-        loadingDialog = ProgressDialog.show(getActivity(), "",
-                getString(R.string.loadingMessage), true);
+        loadingDialog = ProgressDialog.show(getActivity(), "", getString(R.string.loadingMessage), true);
         fillFields();
         getUserEvents();
         return rootView;
@@ -106,7 +115,7 @@ public class ProfileFragment extends Fragment {
 
     private void getUserInfo(String emailUser) {
         APICommunicator apiCommunicator = new APICommunicator();
-        Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response -> {
+        @SuppressLint("ResourceAsColor") Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response -> {
             JSONObject jsonObject;
             Float balance = null;
             try{
@@ -122,13 +131,14 @@ public class ProfileFragment extends Fragment {
                 userName.setText(completeName);
                 balance = BigDecimal.valueOf(jsonObject.getDouble("balance")).floatValue();
                 userBalance.setText(balance.toString());
+                if (balance < 0) userBalance.setTextColor(this.getResources().getColor(R.color.negative_balance));
+                else if (balance > 0) userBalance.setTextColor(this.getResources().getColor(R.color.positive_balance));
                 userEmailToShow.setText(jsonObject.getString("email"));
                 if(!descriptionUser.equals("null")) userDescription.setText(descriptionUser);
                 String image = jsonObject.getString("image");
-                if (!image.equals("")) {
+                if (!image.equals("")&& !image.equals("null")) {
                     byte[] decodeString = Base64.decode(image, Base64.DEFAULT);
-                    userPicture.setImageBitmap(BitmapFactory.decodeByteArray(
-                            decodeString, 0, decodeString.length));
+                    userPicture.setImageBitmap(getImageRounded(BitmapFactory.decodeByteArray(decodeString, 0, decodeString.length)));
                 }
 
                 JSONArray jsonArray = jsonObject.getJSONArray("awards");
@@ -145,9 +155,8 @@ public class ProfileFragment extends Fragment {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            if (balance < 0) userBalance.setTextColor(Color.RED);
-            else if (balance > 0) userBalance.setTextColor(Color.GREEN);
-            else userBalance.setTextColor(Color.BLUE);
+
+
 
         };
         Response.ErrorListener errorListener = error -> {
@@ -162,7 +171,7 @@ public class ProfileFragment extends Fragment {
 
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        reportUser.setOnClickListener(v -> {
+        reportUserButton.setOnClickListener(v -> {
             AlertDialog.Builder dialogDelete = new AlertDialog.Builder(getContext());
             dialogDelete.setTitle(getResources().getString(R.string.are_sure));
             dialogDelete.setMessage(getResources().getString(R.string.confirm_report_user));
@@ -182,6 +191,29 @@ public class ProfileFragment extends Fragment {
             });
             dialogDelete.show();
         });
+        view.findViewById(R.id.openMenu).setOnClickListener(view1 -> {
+            if (!isFABOpen) {
+                showFABMenu();
+            } else {
+                closeFABMenu();
+            }
+        });
+    }
+
+    private void showFABMenu() {
+        isFABOpen = true;
+        reportUserButton.animate().translationY(-getResources().getDimension(R.dimen.standard_55));
+        reportUsserText.setVisibility(View.VISIBLE);
+        reportUsserText.bringToFront();
+        reportUsserText.animate().translationY(-getResources().getDimension(R.dimen.standard_55));
+
+    }
+
+    private void closeFABMenu() {
+        isFABOpen = false;
+        reportUserButton.animate().translationY(0);
+        reportUsserText.animate().translationY(0);
+        reportUsserText.setVisibility(View.GONE);
     }
 
     private void sendReportUser(HashMap<String, String> params) {
@@ -202,6 +234,8 @@ public class ProfileFragment extends Fragment {
             message = getString(R.string.Forbidden);
         else if (errorCode == 404)
             message = getString(R.string.NotFound);
+        else if (errorCode == 409)
+            message = getString(R.string.user_already_reported);
         else
             message = getString(R.string.UnexpectedError);
 
@@ -268,6 +302,13 @@ public class ProfileFragment extends Fragment {
             hours = hours/ 1000 / 60 / 60;
             return hours >= 24;
         }
+    }
+
+    private Bitmap getImageRounded(Bitmap image) {
+        image = ImageHelper.cropBitmapToSquare(image);
+        image = ImageHelper.getRoundedCornerBitmap(image, 420);
+        return image;
+
     }
 
 }
