@@ -175,7 +175,6 @@ public class EventFragment extends Fragment {
         sendIntent.setAction(Intent.ACTION_SEND);
         sendIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.join_msg, textEventTitle.getText().toString(), SOCIALBANK_URL, id));
         sendIntent.setType("text/plain");
-        sendIntent.setPackage("com.whatsapp");
         startActivity(sendIntent);
     }
 }
