@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +26,7 @@ import java.util.Date;
 public class EventFragment extends Fragment {
 
     private static final String URL = "/events";
+    private static final String SOCIALBANK_URL = "http://socialbank.com";
 
     protected ImageView imageView;
     private TextView textEventTitle;
@@ -173,7 +173,7 @@ public class EventFragment extends Fragment {
     private void inviteWhatsapp() {
         Intent sendIntent = new Intent();
         sendIntent.setAction(Intent.ACTION_SEND);
-        sendIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.join_msg) + textEventTitle.getText().toString() + "' " + getString(R.string.event) + "!");
+        sendIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.join_msg, textEventTitle.getText().toString(), SOCIALBANK_URL));
         sendIntent.setType("text/plain");
         sendIntent.setPackage("com.whatsapp");
         startActivity(sendIntent);
