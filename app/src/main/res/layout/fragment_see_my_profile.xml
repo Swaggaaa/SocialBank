@@ -33,7 +33,8 @@
         android:background="#ff99a2"
         android:text="@string/report_user"
         android:textColor="@android:color/background_dark"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:visibility="gone"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/editProfile"
