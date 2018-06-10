@@ -1,18 +1,20 @@
 package me.integrate.socialbank;
 
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.android.volley.Response;
@@ -21,13 +23,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.ByteArrayOutputStream;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-
 
 public class BoardFragment extends Fragment {
 
@@ -47,6 +44,7 @@ public class BoardFragment extends Fragment {
     private boolean other;
     private boolean offer;
     private boolean demand;
+    private boolean available;
 
     private MenuItem itemLanguage;
     private MenuItem itemCulture;
@@ -57,6 +55,9 @@ public class BoardFragment extends Fragment {
     private MenuItem itemOther;
     private MenuItem itemOffer;
     private MenuItem itemDemand;
+    private MenuItem itemAvailable;
+    private MenuItem itemTagged;
+    private String[] tagsText;
 
     private ProgressDialog loadingDialog;
 
@@ -74,11 +75,12 @@ public class BoardFragment extends Fragment {
                 getString(R.string.loadingMessage), true);
         items = new ArrayList<>();
         allItems = new ArrayList<>();
-        demand = other = offer = language = culture = workshops = sports = gastronomy = leisure = false;
+        available = demand = other = offer = language = culture = workshops = sports = gastronomy = leisure = false;
         getAllEvents();
+        tagsText = new String[1];
+        tagsText[0] = "";
         return rootView;
     }
-
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -92,6 +94,8 @@ public class BoardFragment extends Fragment {
         itemOther = menu.findItem(R.id.category_other);
         itemOffer = menu.findItem(R.id.event_offer);
         itemDemand = menu.findItem(R.id.event_demand);
+        itemAvailable = menu.findItem(R.id.event_available);
+        itemTagged = menu.findItem(R.id.event_tagged);
 
         super.onCreateOptionsMenu(menu, inflater);
     }
@@ -101,44 +105,60 @@ public class BoardFragment extends Fragment {
         switch (item.getItemId()) {
             case R.id.category_language:
                 language = !item.isChecked();
-                if (item.isChecked())item.setChecked(false);
-                else item.setChecked(true);
+                item.setChecked(!item.isChecked());
+                update();
                 break;
             case R.id.category_culture:
                 culture = !item.isChecked();
                 item.setChecked(!item.isChecked());
+                update();
                 break;
             case R.id.category_workshops:
                 workshops = !item.isChecked();
                 item.setChecked(!item.isChecked());
+                update();
                 break;
             case R.id.category_sports:
                 sports = !item.isChecked();
                 item.setChecked(!item.isChecked());
+                update();
+                update();
                 break;
             case R.id.category_gastronomy:
                 gastronomy = !item.isChecked();
                 item.setChecked(!item.isChecked());
+                update();
                 break;
             case R.id.category_leisure:
                 leisure = !item.isChecked();
                 item.setChecked(!item.isChecked());
+                update();
                 break;
             case R.id.category_other:
                 other = !item.isChecked();
                 item.setChecked(!item.isChecked());
+                update();
                 break;
             case R.id.event_offer:
                 offer = !item.isChecked();
                 item.setChecked(!item.isChecked());
-
+                update();
                 break;
             case R.id.event_demand:
                 demand = !item.isChecked();
                 item.setChecked(!item.isChecked());
+                update();
+                break;
+            case R.id.event_available:
+                available = !item.isChecked();
+                item.setChecked(!item.isChecked());
+                update();
+                break;
+            case R.id.event_tagged:
+                set_tags();
                 break;
             case R.id.delete_filters:
-                demand = other = offer = language = culture = workshops = sports = gastronomy = leisure = false;
+                available = demand = other = offer = language = culture = workshops = sports = gastronomy = leisure = false;
                 itemLanguage.setChecked(false);
                 itemCulture.setChecked(false);
                 itemWorkshops.setChecked(false);
@@ -148,36 +168,70 @@ public class BoardFragment extends Fragment {
                 itemOther.setChecked(false);
                 itemOffer.setChecked(false);
                 itemDemand.setChecked(false);
+                itemAvailable.setChecked(false);
+                update();
                 break;
         }
-        update();
         return true;
+    }
 
+    private void set_tags() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle(R.string.tag_search);
+
+        View viewInflated = LayoutInflater.from(getContext()).inflate(R.layout.fragment_input_tags,
+                (ViewGroup) getView(), false);
+
+        final EditText inputTags = (EditText) viewInflated.findViewById(R.id.inputTags);
+        builder.setView(viewInflated);
+
+        builder.setPositiveButton(android.R.string.ok, (dialog, which) -> {
+            dialog.dismiss();
+            tagsText[0] = inputTags.getText().toString();
+            update();
+        });
+        builder.setNegativeButton(android.R.string.cancel, (dialog, which) -> dialog.cancel());
+
+        builder.show();
+    }
+
+    private boolean checkAvailability(Event event) {
+        return (!available || (available && event.isAvailable()));
+    }
+
+    private void checkTags(Event event) {
+        if( (tagsText[0]!="" && event.hasTag(tagsText[0])) || (tagsText[0]==""))
+            items.add(event);
     }
 
     private void check(Event event) {
-        if (offer || demand) {
-            if (offer && !event.isDemand()) items.add(event);
-            else if (demand && event.isDemand()) items.add(event);
-        } else items.add(event);
+        if (offer || demand || available || (tagsText[0]!="")) {
+            if (offer && !event.isDemand() && checkAvailability(event)) {
+                checkTags( event );
+            }
+            else if (demand && event.isDemand() && checkAvailability(event)) {
+                checkTags( event );
+            }
+            else if (!offer && !demand && checkAvailability(event)) {
+                checkTags( event );
+            }
+        } else checkTags( event );
     }
 
     private void update() {
         items.clear();
         boolean category = language || culture || workshops || sports || gastronomy || leisure || other;
-        if (category || offer || demand) {
+        if (category || offer || demand || available || (tagsText[0] != "")) {
             for (Event event: allItems) {
-                if (language &&  event.getCategory() == Event.Category.LANGUAGE) check(event);
+                if (language && event.getCategory() == Event.Category.LANGUAGE) check(event);
                 else if (culture && event.getCategory() == Event.Category.CULTURE ) check(event);
                 else if (workshops && event.getCategory() == Event.Category.WORKSHOPS ) check(event);
                 else if (sports && event.getCategory() == Event.Category.SPORTS ) check(event);
                 else if (gastronomy && event.getCategory() == Event.Category.GASTRONOMY ) check(event);
                 else if (leisure && event.getCategory() == Event.Category.LEISURE) check(event);
                 else if (other && event.getCategory() == Event.Category.OTHER ) check(event);
-                else if (!category && (offer || demand )) {
-                    if (offer && !event.isDemand()) items.add(event);
-                    else if (demand && event.isDemand()) items.add(event);
-                }
+                else if (!category && (offer || demand || available)) check(event);
+                else if (tagsText[0] != "") checkTags(event);
             }
         } else {
             items.addAll(allItems);
@@ -187,7 +241,6 @@ public class BoardFragment extends Fragment {
 
     //Call to the API
     public void getAllEvents() {
-
         APICommunicator apiCommunicator = new APICommunicator();
         Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response -> {
             JSONArray jsonArray;
@@ -197,7 +250,6 @@ public class BoardFragment extends Fragment {
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
                     items.add(new Event(jsonObject));
-
                 }
 
                 mAdapter = new EventAdapter(items, getActivity(), (v1, position) -> {
@@ -205,11 +257,13 @@ public class BoardFragment extends Fragment {
                     Event event = items.get(position);
                     bundle.putInt("id", event.getId());
                     Fragment eventFragment;
-                    if (event.getCreatorEmail().equals(SharedPreferencesManager.INSTANCE.read(getActivity(),"user_email"))
-                            && correctDate(event.getIniDate())) {
-                        eventFragment = MyEventFragment.newInstance(bundle);
-                    }
-                    else eventFragment = EventFragment.newInstance(bundle);
+                    boolean eventCreator = event.getCreatorEmail().equals(SharedPreferencesManager.INSTANCE.read(getActivity(),"user_email"));
+                    if( eventCreator && event.stillEditable() )
+                            eventFragment = MyEventFragment.newInstance(bundle);
+                    else if( !eventCreator && event.isAvailable() )
+                        eventFragment = MyJoinEventFragment.newInstance(bundle);
+                    else
+                        eventFragment = EventFragment.newInstance(bundle);
                     FragmentChangeListener fc = (FragmentChangeListener) getActivity();
                     fc.replaceFragment(eventFragment);
                 });
@@ -238,15 +292,4 @@ public class BoardFragment extends Fragment {
         };
         apiCommunicator.getRequest(getActivity().getApplicationContext(), URL, responseListener, errorListener, null);
     }
-
-    private boolean correctDate(Date iniDate) {
-        if (iniDate == null) return true;
-        else {
-            Date currentDate = new Date();
-            long hours = iniDate.getTime() - currentDate.getTime();
-            hours = hours/ 1000 / 60 / 60;
-            return hours >= 24;
-        }
-    }
-
 }

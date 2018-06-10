@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,10 +24,13 @@ import org.json.JSONObject;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 
 public class EventFragment extends Fragment {
 
     private static final String URL = "/events";
+
+    protected Button join_button;
 
     protected ImageView imageView;
     private TextView textEventTitle;
@@ -42,9 +46,14 @@ public class EventFragment extends Fragment {
     private TextView textEndDate;
     protected EditText editDescription;
 
-    private String creator;
+    private Integer capacity;
+    private Integer numberEnrolled;
+
+    protected String creator;
     protected int id;
     protected String descriptionEvent;
+    protected Date iniDate;
+    protected Date endDate;
 
     private Button invite;
 
@@ -74,6 +83,7 @@ public class EventFragment extends Fragment {
         editDescription = (EditText) rootView.findViewById(R.id.editDescription);
 
         invite = (Button)rootView.findViewById(R.id.invite_button);
+        join_button = (Button) rootView.findViewById(R.id.join_button);
 
         id = getArguments().getInt("id");
         showEventInformation();
@@ -87,7 +97,9 @@ public class EventFragment extends Fragment {
             try {
                 Event event = new Event(new JSONObject(response.response));
                 textEventTitle.setText(event.getTitle());
+
                 creator = event.getCreatorEmail();
+
                 textEventOrganizer.setText(creator);
                 textEventCategory.setText(event.getCategory().toString());
                 descriptionEvent = event.getDescription();
@@ -98,17 +110,23 @@ public class EventFragment extends Fragment {
 
                 editDescription.setText(descriptionEvent);
 
-                //TODO not hardcoded this values
-                textIndividualOrGroup.setText("Individual");
-                textViewNumberPersonsEvent.setText("1/1");
+                capacity = event.getCapacity();
+                numberEnrolled = event.getNumberEnrolled();
 
-                Date iniDate = event.getIniDate();
-                Date endDate = event.getEndDate();
-                String hours = getHours(iniDate, endDate) + " " + getResources().getString(R.string.time_hours);
+                if(event.isIndividual())
+                    textIndividualOrGroup.setText(R.string.individual);
+                else
+                    textIndividualOrGroup.setText(R.string.groupal);
+
+                textViewNumberPersonsEvent.setText(numberEnrolled+"/"+capacity);
+
+                iniDate = event.getIniDate();
+                endDate = event.getEndDate();
+                long hoursL = getHours(iniDate, endDate);
+                String hours =  (hoursL > 0) ? String.valueOf(hoursL) : getResources().getString(R.string.notHour) + " " + getResources().getString(R.string.time_hours);
                 textEventHours.setText(hours);
                 textStartDate.setText(dateToString(iniDate));
                 textEndDate.setText(dateToString(endDate));
-
             } catch (JSONException e) {
                 Toast.makeText(EventFragment.this.getActivity().getApplicationContext(), R.string.JSONException, Toast.LENGTH_LONG).show();
             }
@@ -133,14 +151,27 @@ public class EventFragment extends Fragment {
         Toast.makeText(getActivity().getApplicationContext(), message, Toast.LENGTH_LONG).show();
     }
 
-    private String getHours(Date hourIni, Date hourEnd) {
+    protected long getHours(Date hourIni, Date hourEnd) {
+        long hours = 0;
         if (hourIni != null && hourEnd != null ) {
             long diff = hourEnd.getTime() - hourIni.getTime();
-            long seconds = diff/1000;
-            long minutes = seconds/60;
-            long hours = minutes/60;
-            return String.valueOf(hours);
-        } else return getResources().getString(R.string.notHour);
+            hours = diff/1000/ 60 / 60;
+        }
+        return hours;
+    }
+
+    protected String getCreator() {
+        return creator;
+    }
+
+    protected void changesEnrollment(boolean join) {
+        if (join) numberEnrolled++;
+        else  numberEnrolled--;
+        textViewNumberPersonsEvent.setText(numberEnrolled+"/"+capacity);
+    }
+
+    protected boolean isEventFull() {
+        return capacity == numberEnrolled;
     }
 
     private String dateToString(Date date) {

@@ -5,7 +5,7 @@
     <item android:id="@+id/item1"
         android:title="Item"
         android:icon="@drawable/ic_filter"
-        app:showAsAction="always">
+        app:showAsAction="ifRoom">
 
         <menu>
             <item android:id="@+id/categories"
@@ -53,6 +53,17 @@
                 android:title="@string/demand"
                 app:showAsAction="never"
                 android:checkable="true"/>
+
+            <item
+                android:id="@+id/event_available"
+                android:title="@string/available"
+                app:showAsAction="never"
+                android:checkable="true"/>
+
+            <item
+                android:id="@+id/event_tagged"
+                android:title="@string/event_tag"
+                app:showAsAction="never" />
 
             <item
                 android:id="@+id/delete_filters"

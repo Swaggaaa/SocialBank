@@ -83,7 +83,7 @@
     <string name="category_other">Other</string>
     <string name="time_hours">Hours</string>
     <string name="delete">Delete</string>
-    <string name="delete_event">Event delete</string>
+    <string name="delete_event">Event deleted</string>
     <string name="are_sure">Are you sure?</string>
     <string name="confirm_delete_event">Do you want delete this event?</string>
     <string name="confirm_report_user">Do you want report this user?</string>
@@ -100,6 +100,17 @@
     <string name="EditAccount">Account</string>
     <string name="account_status">Account Status:</string>
     <string name="categories">Categories</string>
+    <string name="filter">Filter</string>
+    <string name="join_events">Join events</string>
+    <string name="disjoin">Disjoin</string>
+    <string name="confirm_disjoin_event">Do you want un unenroll this event?</string>
+    <string name="not_hours_msg">You do not have enough hours to enroll this event</string>
+    <string name="joined_msg">You have joined to this event</string>
+    <string name="cancel_btn">CANCEL</string>
+    <string name="canceljoin_msg">You have canceled your enrollment to this event</string>
+    <string name="individual">Individual</string>
+    <string name="groupal">Groupal</string>
+    <string name="event_full_msg">That event is already full</string>
     <string name="report_user">Report user</string>
     <string name="user_reported">User reported</string>
     <string name="user_already_reported">User already reported</string>
@@ -119,6 +130,10 @@
     <string name="something_wrong">Something went wrong</string>
     <string name="image_update">Image changed!</string>
     <string name="account_created">Account created!</string>
+    <string name="available">Available</string>
+    <string name="event_tag">Tags</string>
+    <string name="input_tags">#writeyourtags</string>
+    <string name="tag_search">Search by tag</string>
     <string name="join_msg">Join to SocialBank and let\'s go to \'</string>
     <string name="event">event</string>
 

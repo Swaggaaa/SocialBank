@@ -9,6 +9,12 @@
             android:icon="@drawable/ic_account_circle"
             android:id="@+id/myProfile"
             android:title="@string/my_profile" />
+
+        <item
+            android:icon="@drawable/ic_list"
+            android:id="@+id/myEvents"
+            android:title="@string/my_events" />
+
         <item
             android:icon="@drawable/crosshairs_gps"
             android:id="@+id/nearbyEvents"
