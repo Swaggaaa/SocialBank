@@ -122,5 +122,7 @@
     <string name="user_balance">User balance:  </string>
     <string name="edit_profile">Edit Profile</string>
     <string name="change_picture">Change picture</string>
+    <string name="join_msg">Join to SocialBank and let\'s go to \'</string>
+    <string name="event">event</string>
 
 </resources>
