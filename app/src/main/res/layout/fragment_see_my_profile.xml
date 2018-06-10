@@ -1,159 +1,236 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ProfileFragment">
 
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/reportProfile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_gravity="bottom|end"
+        android:layout_marginBottom="20dp"
+        android:layout_marginEnd="20dp"
+        android:src="@drawable/report_user"
+        android:visibility="visible"
+        app:backgroundTint="@color/gum_pink"
+        />
+
+    <TextView
+        android:id="@+id/reportUserText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_gravity="bottom|end"
+        android:layout_marginBottom="35dp"
+        android:layout_marginEnd="88dp"
+        android:background="#ff99a2"
+        android:text="@string/report_user"
+        android:textColor="@android:color/background_dark"
+        android:textStyle="bold"
+        android:visibility="gone"/>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/editProfile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_gravity="bottom|end"
+        android:layout_marginBottom="20dp"
+        android:layout_marginEnd="20dp"
+        android:src="@drawable/ic_edit_black_24dp"
+        android:visibility="visible"
+        app:backgroundTint="@color/gum_pink" />
+    <TextView
+        android:id="@+id/editProfileText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_gravity="bottom|end"
+        android:layout_marginBottom="35dp"
+        android:layout_marginEnd="88dp"
+        android:text="@string/edit_profile"
+        android:textStyle="bold"
+        android:background="#ff99a2"
+        android:textColor="@android:color/background_dark"
+        android:visibility="gone"
+        />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/loadPicture"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/editProfile"
+        android:layout_alignTop="@+id/editProfile"
+        android:layout_gravity="bottom|end"
+        android:src="@drawable/ic_camera_alt_black_24dp"
+        android:visibility="visible"
+        app:backgroundTint="@color/gum_pink" />
+    <TextView
+        android:id="@+id/changePasswordText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_gravity="bottom|end"
+        android:layout_marginBottom="35dp"
+        android:layout_marginEnd="88dp"
+        android:text="@string/change_picture"
+        android:textStyle="bold"
+        android:background="#ff99a2"
+        android:textColor="@android:color/background_dark"
+        android:visibility="gone"
+        />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/openMenu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/editProfile"
+        android:layout_alignTop="@+id/editProfile"
+        android:layout_gravity="bottom|end"
+        android:src="@drawable/more_options"
+        android:visibility="visible"
+        app:backgroundTint="@color/soft_pink" />
+
+
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    <LinearLayout
-        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <ImageView
-            android:id="@+id/myProfileImage"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            app:srcCompat="@android:drawable/ic_menu_camera" />
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginEnd="20dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="20dp"
-            android:backgroundTint="@android:color/background_light"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
+
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp">
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="10dp"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:id="@+id/myProfileImage"
+                        android:layout_width="match_parent"
+                        android:layout_height="200dp"
+                        app:srcCompat="@android:drawable/ic_menu_camera" />
+
+                    <TextView
+                        android:id="@+id/myProfileName"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_weight="1"
+                        android:text="@string/user_name"
+                        android:textSize="24sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/userEmailToShow"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/email" />
+
+                    <TextView
+                        android:id="@+id/aboutMe"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginTop="10dp"
+                        android:maxLines="5"
+                        android:text=""
+                        android:textStyle="italic" />
+
+                    <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+                        android:id="@+id/award_recycler_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/userBalanceText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/user_balance"
+                            android:textSize="20sp" />
+
+                        <TextView
+                            android:id="@+id/hoursBalance"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            android:text="@string/hours"
+                            android:textSize="20sp"
+                            android:textStyle="bold"
+                            android:visibility="visible" />
+                    </LinearLayout>
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:layout_height="match_parent"
+                android:layout_margin="20dp"
+                android:backgroundTint="@android:color/background_light"
+                android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/myProfileName"
+                    android:id="@+id/events"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/user_name"
-                    android:textSize="24sp"
+                    android:text="@string/my_events"
                     android:textStyle="bold" />
 
-                <ImageView
-                    android:id="@+id/loadPicture"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:maxHeight="42dp"
-                    android:maxWidth="42dp"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/ic_camera_alt_black_24dp"
-                    android:visibility="gone" />
+                <View
+                    android:id="@+id/divider"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="?android:attr/listDivider" />
 
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/my_recycler_view_user_profile"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" />
+
+
+                </FrameLayout>
             </LinearLayout>
 
-            <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
-                android:id="@+id/award_recycler_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-
-
-            <TextView
-                android:id="@+id/userEmailToShow"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/email" />
-
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/about_me"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/aboutMe"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:maxLines="5"
-                android:text="" />
-
-            <TextView
-                android:id="@+id/hoursBalance"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/hours"
-                android:textSize="24sp"
-                android:textStyle="bold"
-                android:visibility="gone"/>
-
-            <View
-                android:id="@+id/divider"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="?android:attr/listDivider" />
-
-            <TextView
-                android:id="@+id/events"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/my_events"
-                android:textStyle="bold" />
-
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/my_recycler_view_user_profile"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
-
-                <android.support.design.widget.FloatingActionButton
-                    android:id="@+id/editProfile"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="bottom|end"
-                    android:layout_margin="16dp"
-                    android:src="@drawable/ic_edit_black_24dp"
-                    android:visibility="gone" />
-
-            </FrameLayout>
         </LinearLayout>
 
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/colorTransparent"
-            android:text="@string/report_user"
-            android:id="@+id/buttonReportUser"
-            android:textColor="#8d0c0c" />
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/colorTransparent"
-                android:text="@string/confirm"
-                android:id="@+id/confirmReport"
-                android:textColor="#8d0c0c"
-                android:layout_weight="1"/>
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/colorTransparent"
-                android:text="@string/discard"
-                android:id="@+id/discardReport"
-                android:textColor="#8d0c0c"
-                android:layout_weight="1"/>
-        </LinearLayout>
-
-    </LinearLayout>
     </ScrollView>
 
-</android.support.constraint.ConstraintLayout>
+
+</RelativeLayout>
+

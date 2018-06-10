@@ -77,22 +77,23 @@
             android:lines="5"
             android:scrollbars="vertical"
             android:visibility="gone"/>
+
         <Button
             android:id="@+id/button_send_request"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="#c50e29"
             android:text="@string/send_request"
-            android:background="@android:color/holo_blue_dark"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
         <Button
             android:id="@+id/button_buy_hours"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/buy_more_hours"
-            android:background="@android:color/holo_blue_dark"
             android:layout_marginTop="10dp"
-            android:visibility="gone"/>
+            android:background="#c50e29"
+            android:text="@string/buy_more_hours"
+            android:visibility="gone" />
 
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>
