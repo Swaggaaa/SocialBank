@@ -21,7 +21,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class AllMyEventsFragment extends Fragment {
@@ -56,10 +55,10 @@ public class AllMyEventsFragment extends Fragment {
         joinEvents = new ArrayList<>();
         items = new ArrayList<>();
         emailUser = SharedPreferencesManager.INSTANCE.read(getActivity(),"user_email");
+
+        getJoinEvents();
         getAllEventsByUser();
 
-        //TODO modificar
-        getJoinEvents();
         return rootView;
     }
 
@@ -81,8 +80,11 @@ public class AllMyEventsFragment extends Fragment {
             case R.id.my_events:
                 items.clear();
                 if (item.isChecked()) {
-                    items.addAll(events);
-                    items.addAll(joinEvents);
+                    if (itemMyJoinEvents.isChecked()) items.addAll(joinEvents);
+                    else {
+                        items.addAll(events);
+                        items.addAll(joinEvents);
+                    }
                     item.setChecked(false);
                 }
                 else {
@@ -94,8 +96,11 @@ public class AllMyEventsFragment extends Fragment {
             case R.id.my_events_join:
                 items.clear();
                 if (item.isChecked()) {
-                    items.addAll(events);
-                    items.addAll(joinEvents);
+                    if (itemMyEvents.isChecked()) items.addAll(events);
+                    else {
+                        items.addAll(events);
+                        items.addAll(joinEvents);
+                    }
                     item.setChecked(false);
                 }
                 else {
@@ -125,12 +130,33 @@ public class AllMyEventsFragment extends Fragment {
             JSONArray jsonArray;
             try {
                 jsonArray = new JSONArray(response.response);
-                System.out.println(String.valueOf(jsonArray.length()));
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
                     events.add(new Event(jsonObject));
 
                 }
+                items.addAll(events);
+                mAdapter = new EventAdapter(items, getActivity(), (v1, position) -> {
+                    Bundle bundle = new Bundle();
+                    Event event = items.get(position);
+
+                    bundle.putInt("id", event.getId());
+                    bundle.putBoolean("MyProfile", true);
+                    Fragment eventFragment;
+                    boolean eventCreator = event.getCreatorEmail().equals(SharedPreferencesManager.INSTANCE.read(getActivity(),"user_email"));
+                    if( eventCreator && event.stillEditable() )
+                        eventFragment = MyEventFragment.newInstance(bundle);
+                    else if( !eventCreator && event.isAvailable() )
+                        eventFragment = MyJoinEventFragment.newInstance(bundle);
+                    else
+                        eventFragment = EventFragment.newInstance(bundle);
+                    FragmentChangeListener fc = (FragmentChangeListener) getActivity();
+                    fc.replaceFragment(eventFragment);
+                });
+
+                mRecyclerView.setAdapter(mAdapter);
+                loadingDialog.dismiss();
+
 
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -149,32 +175,31 @@ public class AllMyEventsFragment extends Fragment {
             JSONArray jsonArray;
             try {
                 jsonArray = new JSONArray(response.response);
-                System.out.println(String.valueOf(jsonArray.length()));
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
                     joinEvents.add(new Event(jsonObject));
 
                 }
                 items.addAll(joinEvents);
-                items.addAll(events);
                 mAdapter = new EventAdapter(items, getActivity(), (v1, position) -> {
                     Bundle bundle = new Bundle();
                     Event event = items.get(position);
 
                     bundle.putInt("id", event.getId());
-                    bundle.putBoolean("MyEvents", true);
+                    bundle.putBoolean("MyProfile", true);
                     Fragment eventFragment;
-                    if (event.getCreatorEmail().equals(SharedPreferencesManager.INSTANCE.read(getActivity(),"user_email"))
-                            && correctDate(event.getIniDate())) {
+                    boolean eventCreator = event.getCreatorEmail().equals(SharedPreferencesManager.INSTANCE.read(getActivity(),"user_email"));
+                    if( eventCreator && event.stillEditable() )
                         eventFragment = MyEventFragment.newInstance(bundle);
-                    } else if (event.getCreatorEmail().equals(SharedPreferencesManager.INSTANCE.read(getActivity(), "user_email"))) eventFragment = EventFragment.newInstance(bundle);
-                    else eventFragment = MyJoinEventFragment.newInstance(bundle);
+                    else if( !eventCreator && event.isAvailable() )
+                        eventFragment = MyJoinEventFragment.newInstance(bundle);
+                    else
+                        eventFragment = EventFragment.newInstance(bundle);
                     FragmentChangeListener fc = (FragmentChangeListener) getActivity();
                     fc.replaceFragment(eventFragment);
                 });
 
                 mRecyclerView.setAdapter(mAdapter);
-                loadingDialog.dismiss();
 
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -182,7 +207,7 @@ public class AllMyEventsFragment extends Fragment {
         };
         Response.ErrorListener errorListener = error -> errorTreatment(error.networkResponse.statusCode);
 
-        apiCommunicator.getRequest(getActivity().getApplicationContext(), URL +'/'+ emailUser + "/events", responseListener, errorListener, null);
+        apiCommunicator.getRequest(getActivity().getApplicationContext(), URL +'/'+ emailUser + "/enrollments", responseListener, errorListener, null);
     }
 
     private void errorTreatment(int errorCode) {
@@ -200,13 +225,4 @@ public class AllMyEventsFragment extends Fragment {
         Toast.makeText(getActivity().getApplicationContext(), message, Toast.LENGTH_LONG).show();
     }
 
-    private boolean correctDate(Date iniDate) {
-        if (iniDate == null) return true;
-        else {
-            Date currentDate = new Date();
-            long hours = iniDate.getTime() - currentDate.getTime();
-            hours = hours/ 1000 / 60 / 60;
-            return hours >= 24;
-        }
-    }
 }

@@ -45,6 +45,7 @@ public class NearbyEventsFragment extends Fragment {
     private EditText address;
     private Button searchButton;
     private Map<Marker, Event> eventsMap;
+    private boolean verified;
 
 
     @SuppressLint("MissingPermission")
@@ -54,6 +55,7 @@ public class NearbyEventsFragment extends Fragment {
         address = (EditText) rootView.findViewById(R.id.editText);
         searchButton = (Button)rootView.findViewById(R.id.search_button);
         enableButton();
+        verified = Boolean.parseBoolean(SharedPreferencesManager.INSTANCE.read(getActivity(),"verified"));
 
         mMapView = (MapView) rootView.findViewById(R.id.mapView);
         mMapView.onCreate(savedInstanceState);
@@ -77,11 +79,13 @@ public class NearbyEventsFragment extends Fragment {
                 Bundle bundle = new Bundle();
                 bundle.putInt("id", event.getId());
                 Fragment eventFragment;
-                if (event.getCreatorEmail().equals(SharedPreferencesManager.INSTANCE.read(getActivity(),"user_email"))
-                        && correctDate(event.getIniDate())) {
+                boolean eventCreator = event.getCreatorEmail().equals(SharedPreferencesManager.INSTANCE.read(getActivity(),"user_email"));
+                if( eventCreator && event.stillEditable() )
                     eventFragment = MyEventFragment.newInstance(bundle);
-                } else if (event.getCreatorEmail().equals(SharedPreferencesManager.INSTANCE.read(getActivity(), "user_email"))) eventFragment = EventFragment.newInstance(bundle);
-                else eventFragment = MyJoinEventFragment.newInstance(bundle);
+                else if( !eventCreator && event.isAvailable() && !verified)
+                    eventFragment = MyJoinEventFragment.newInstance(bundle);
+                else
+                    eventFragment = EventFragment.newInstance(bundle);
                 FragmentChangeListener fc = (FragmentChangeListener) getActivity();
                 fc.replaceFragment(eventFragment);
 
@@ -137,16 +141,6 @@ public class NearbyEventsFragment extends Fragment {
                 enableButton();
             }
         });
-    }
-
-    private boolean correctDate(Date iniDate) {
-        if (iniDate == null) return true;
-        else {
-            Date currentDate = new Date();
-            long hours = iniDate.getTime() - currentDate.getTime();
-            hours = hours/ 1000 / 60 / 60;
-            return hours >= 24;
-        }
     }
 
     private void showNearbyEvents() {

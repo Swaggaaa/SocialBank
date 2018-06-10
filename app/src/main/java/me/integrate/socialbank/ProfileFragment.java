@@ -54,6 +54,7 @@ public class ProfileFragment extends Fragment {
     String genderUser;
     String descriptionUser;
     private boolean isFABOpen;
+    private boolean verified;
     FloatingActionButton openMenu;
     FloatingActionButton reportUserButton;
     private RecyclerView mRecyclerView;
@@ -131,6 +132,7 @@ public class ProfileFragment extends Fragment {
                 userName.setText(completeName);
                 balance = BigDecimal.valueOf(jsonObject.getDouble("balance")).floatValue();
                 userBalance.setText(balance.toString());
+                verified = jsonObject.getBoolean("verified");
                 if (balance < 0) userBalance.setTextColor(this.getResources().getColor(R.color.negative_balance));
                 else if (balance > 0) userBalance.setTextColor(this.getResources().getColor(R.color.positive_balance));
                 userEmailToShow.setText(jsonObject.getString("email"));
@@ -272,10 +274,13 @@ public class ProfileFragment extends Fragment {
                     bundle.putInt("id", event.getId());
                     bundle.putBoolean("MyProfile", true);
                     Fragment eventFragment;
-                    if (event.getCreatorEmail().equals(emailUser) && correctDate(event.getIniDate())) {
+                    boolean eventCreator = event.getCreatorEmail().equals(SharedPreferencesManager.INSTANCE.read(getActivity(),"user_email"));
+                    if( eventCreator && event.stillEditable() )
                         eventFragment = MyEventFragment.newInstance(bundle);
-                    }
-                    else eventFragment = EventFragment.newInstance(bundle);
+                    else if( !eventCreator && event.isAvailable() && !verified)
+                        eventFragment = MyJoinEventFragment.newInstance(bundle);
+                    else
+                        eventFragment = EventFragment.newInstance(bundle);
                     FragmentChangeListener fc = (FragmentChangeListener) getActivity();
                     fc.replaceFragment(eventFragment);
                 });
@@ -292,16 +297,6 @@ public class ProfileFragment extends Fragment {
             errorTreatment(error.networkResponse.statusCode);
         };
         apiCommunicator.getRequest(getActivity().getApplicationContext(), URL +'/'+ emailUser + "/events", responseListener, errorListener, params);
-    }
-
-    private boolean correctDate(Date iniDate) {
-        if (iniDate == null) return true;
-        else {
-            Date currentDate = new Date();
-            long hours = iniDate.getTime() - currentDate.getTime();
-            hours = hours/ 1000 / 60 / 60;
-            return hours >= 24;
-        }
     }
 
     private Bitmap getImageRounded(Bitmap image) {

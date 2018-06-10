@@ -26,6 +26,8 @@ import java.util.List;
 public class BoardFragment extends Fragment {
 
     private static final String URL = "/events";
+    private static final String URL_users = "/users";
+
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
 
@@ -41,6 +43,9 @@ public class BoardFragment extends Fragment {
     private boolean other;
     private boolean offer;
     private boolean demand;
+    private boolean verified;
+    private String emailUser;
+
 
     private MenuItem itemLanguage;
     private MenuItem itemCulture;
@@ -67,6 +72,7 @@ public class BoardFragment extends Fragment {
         loadingDialog = ProgressDialog.show(getActivity(), "", getString(R.string.loadingMessage), true);
         items = new ArrayList<>();
         allItems = new ArrayList<>();
+        emailUser = SharedPreferencesManager.INSTANCE.read(getActivity(),"user_email");
         demand = other = offer = language = culture = workshops = sports = gastronomy = leisure = false;
         getAllEvents();
         return rootView;
@@ -193,10 +199,10 @@ public class BoardFragment extends Fragment {
                     Event event = items.get(position);
                     bundle.putInt("id", event.getId());
                     Fragment eventFragment;
-                    boolean eventCreator = event.getCreatorEmail().equals(SharedPreferencesManager.INSTANCE.read(getActivity(),"user_email"));
+                    boolean eventCreator = event.getCreatorEmail().equals(emailUser);
                     if( eventCreator && event.stillEditable() )
                             eventFragment = MyEventFragment.newInstance(bundle);
-                    else if( !eventCreator && event.isAvailable() )
+                    else if( !eventCreator && event.isAvailable() && !verified)
                         eventFragment = MyJoinEventFragment.newInstance(bundle);
                     else
                         eventFragment = EventFragment.newInstance(bundle);
@@ -205,27 +211,48 @@ public class BoardFragment extends Fragment {
                 });
                 allItems.addAll(items);
                 mRecyclerView.setAdapter(mAdapter);
-                loadingDialog.dismiss();
+                getUserInfo();
 
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         };
         Response.ErrorListener errorListener = error -> {
-            String message;
-            int errorCode = error.networkResponse.statusCode;
-            if (errorCode == 401)
-                message = "Unauthorized";
-            else if (errorCode == 403)
-                message = "Forbidden";
-            else if (errorCode == 404)
-                message = "Not Found";
-            else
-                message = "Unexpected error";
-
             loadingDialog.dismiss();
-            Toast.makeText(getActivity().getApplicationContext(), message, Toast.LENGTH_LONG).show();
+            errorTreatment(error.networkResponse.statusCode);
         };
         apiCommunicator.getRequest(getActivity().getApplicationContext(), URL, responseListener, errorListener, null);
+    }
+
+    private void getUserInfo() {
+        APICommunicator apiCommunicator = new APICommunicator();
+        Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response -> {
+            JSONObject jsonObject;
+            try{
+                jsonObject = new JSONObject(response.response);
+                verified = jsonObject.getBoolean("verified");
+                SharedPreferencesManager.INSTANCE.store(getActivity(), "verified", (verified) ? "true" : "false");
+                loadingDialog.dismiss();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        };
+        Response.ErrorListener errorListener = error ->  errorTreatment(error.networkResponse.statusCode);
+
+        apiCommunicator.getRequest(getActivity().getApplicationContext(), URL_users +'/'+ emailUser, responseListener, errorListener, null);
+    }
+
+    private void errorTreatment(int errorCode) {
+        String message;
+        if (errorCode == 401)
+            message = getString(R.string.Unauthorized);
+        else if(errorCode == 403)
+            message = getString(R.string.Forbidden);
+        else if(errorCode == 404)
+            message = getString(R.string.NotFound);
+        else
+            message = getString(R.string.UnexpectedError);
+
+        Toast.makeText(getActivity().getApplicationContext(), errorCode + " - " + message, Toast.LENGTH_LONG).show();
     }
 }

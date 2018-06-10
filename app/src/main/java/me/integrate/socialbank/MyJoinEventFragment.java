@@ -21,10 +21,10 @@ import java.util.HashMap;
 public class MyJoinEventFragment extends EventFragment {
 
     private static final String URL = "/users";
+    private static final String URL_events = "/events";
     private String emailUser;
 
     private float balance;
-    private boolean verified;
     private boolean joined;
 
     public static MyJoinEventFragment newInstance(Bundle params) {
@@ -38,7 +38,7 @@ public class MyJoinEventFragment extends EventFragment {
         View view = super.onCreateView(inflater, container, savedInstanceState);
         emailUser = SharedPreferencesManager.INSTANCE.read(getActivity(),"user_email");
         getUserInfo();
-        if(!verified) joinedOrNot();
+        joinedOrNot();
         return view;
     }
 
@@ -78,7 +78,6 @@ public class MyJoinEventFragment extends EventFragment {
             try{
                 jsonObject = new JSONObject(response.response);
                 balance = BigDecimal.valueOf(jsonObject.getDouble("balance")).floatValue();
-                verified = jsonObject.getBoolean("verified");
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -118,7 +117,7 @@ public class MyJoinEventFragment extends EventFragment {
             changesEnrollment(true);
         };
         Response.ErrorListener errorListener = error ->  errorTreatment(error.networkResponse.statusCode);
-        apiCommunicator.postRequest(getActivity().getApplicationContext(), "/events/" + id + "/enrollments", responseListener, errorListener, params);
+        apiCommunicator.postRequest(getActivity().getApplicationContext(), URL_events +'/' + id + "/enrollments", responseListener, errorListener, params);
     }
 
     //To CANCEL your enrollment to an event
@@ -130,7 +129,7 @@ public class MyJoinEventFragment extends EventFragment {
             changesEnrollment(false);
         };
         Response.ErrorListener errorListener = error ->  errorTreatment(error.networkResponse.statusCode);
-        apiCommunicator.deleteRequest(getActivity().getApplicationContext(), "/events/" + id + "/enrollments", responseListener, errorListener, params);
+        apiCommunicator.deleteRequest(getActivity().getApplicationContext(), URL_events +'/' + id + "/enrollments", responseListener, errorListener, params);
     }
 
     //Check if that user is already joined
@@ -140,7 +139,7 @@ public class MyJoinEventFragment extends EventFragment {
             loadJoinButton(response.response);
         };
         Response.ErrorListener errorListener = error ->  errorTreatment(error.networkResponse.statusCode);
-        apiCommunicator.getRequest(getActivity().getApplicationContext(), "/events/" + id + "/enrollments", responseListener, errorListener, null);
+        apiCommunicator.getRequest(getActivity().getApplicationContext(), URL_events +'/' + id + "/enrollments", responseListener, errorListener, null);
     }
 
     private void loadJoinButton(String users) {
