@@ -166,11 +166,11 @@ public class EventFragment extends Fragment {
         });
         view.findViewById(R.id.invite_button).setOnClickListener(v ->
         {
-            inviteWhatsapp();
+            shareEvent();
         });
     }
 
-    private void inviteWhatsapp() {
+    private void shareEvent() {
         Intent sendIntent = new Intent();
         sendIntent.setAction(Intent.ACTION_SEND);
         sendIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.join_msg, textEventTitle.getText().toString(), SOCIALBANK_URL, id));
