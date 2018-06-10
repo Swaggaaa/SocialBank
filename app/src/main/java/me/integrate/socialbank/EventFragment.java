@@ -90,7 +90,7 @@ public class EventFragment extends Fragment {
         return rootView;
     }
 
-        //Call API to obtain event's information
+    //Call API to obtain event's information
     void showEventInformation() {
         APICommunicator apiCommunicator = new APICommunicator();
         Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response -> {

@@ -82,6 +82,7 @@ public class BoardFragment extends Fragment {
         return rootView;
     }
 
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.filter_options, menu);
