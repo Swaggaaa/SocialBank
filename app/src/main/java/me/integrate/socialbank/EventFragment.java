@@ -5,8 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +27,7 @@ import java.util.HashMap;
 public class EventFragment extends Fragment {
 
     private static final String URL = "/events";
+    private static final String SOCIALBANK_URL = "http://socialbank.com";
 
     protected Button join_button;
 
@@ -97,9 +96,7 @@ public class EventFragment extends Fragment {
             try {
                 Event event = new Event(new JSONObject(response.response));
                 textEventTitle.setText(event.getTitle());
-
                 creator = event.getCreatorEmail();
-
                 textEventOrganizer.setText(creator);
                 textEventCategory.setText(event.getCategory().toString());
                 descriptionEvent = event.getDescription();
@@ -127,6 +124,7 @@ public class EventFragment extends Fragment {
                 textEventHours.setText(hours);
                 textStartDate.setText(dateToString(iniDate));
                 textEndDate.setText(dateToString(endDate));
+
             } catch (JSONException e) {
                 Toast.makeText(EventFragment.this.getActivity().getApplicationContext(), R.string.JSONException, Toast.LENGTH_LONG).show();
             }
@@ -197,16 +195,15 @@ public class EventFragment extends Fragment {
         });
         view.findViewById(R.id.invite_button).setOnClickListener(v ->
         {
-            inviteWhatsapp();
+            shareEvent();
         });
     }
 
-    private void inviteWhatsapp() {
+    private void shareEvent() {
         Intent sendIntent = new Intent();
         sendIntent.setAction(Intent.ACTION_SEND);
-        sendIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.join_msg) + textEventTitle.getText().toString() + "' " + getString(R.string.event) + "!");
+        sendIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.join_msg, textEventTitle.getText().toString(), SOCIALBANK_URL, id));
         sendIntent.setType("text/plain");
-        sendIntent.setPackage("com.whatsapp");
         startActivity(sendIntent);
     }
 }
