@@ -136,7 +136,7 @@ public class ProfileFragment extends Fragment {
                 userEmailToShow.setText(jsonObject.getString("email"));
                 if(!descriptionUser.equals("null")) userDescription.setText(descriptionUser);
                 String image = jsonObject.getString("image");
-                if (!image.equals("")) {
+                if (!image.equals("")&& !image.equals("null")) {
                     byte[] decodeString = Base64.decode(image, Base64.DEFAULT);
                     userPicture.setImageBitmap(getImageRounded(BitmapFactory.decodeByteArray(decodeString, 0, decodeString.length)));
                 }
