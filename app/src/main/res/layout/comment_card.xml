@@ -45,7 +45,8 @@
                     android:layout_height="35dp"
                     android:background="@color/colorTransparent"
                     android:text="@string/delete"
-                    android:textColor="@color/colorTextForgot"/>
+                    android:textColor="@color/colorTextForgot"
+                    android:visibility="gone"/>
 
             </LinearLayout>
 
