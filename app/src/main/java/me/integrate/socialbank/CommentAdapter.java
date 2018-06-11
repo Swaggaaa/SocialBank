@@ -1,16 +1,12 @@
 package me.integrate.socialbank;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
-import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
+
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,7 +14,6 @@ import com.android.volley.Response;
 
 import java.util.List;
 
-import org.json.JSONException;
 
 import static me.integrate.socialbank.App.getContext;
 
@@ -63,14 +58,15 @@ class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentViewHold
 
     @Override
     public void onBindViewHolder(CommentViewHolder viewHolder, int i) {
-        String name = items.get(i).getUser().concat(" ").concat(items.get(i).getSurname());
-        viewHolder.user.setText(name);
+        viewHolder.user.setText(items.get(i).getUser());
         viewHolder.text.setText(items.get(i).getComment());
         if (items.get(i).getEmailCreator().equals(SharedPreferencesManager.INSTANCE.read(this.context, "user_email"))){
             viewHolder.delete.setVisibility(View.VISIBLE);
             viewHolder.delete.setOnClickListener(v->{
 
                 deletedComment(items.get(i).getId());
+                items.remove(items.get(i));
+                notifyDataSetChanged();
 
             });
         }

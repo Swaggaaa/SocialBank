@@ -42,11 +42,10 @@
                 <Button
                     android:id="@+id/delete_comment_button"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="35dp"
                     android:background="@color/colorTransparent"
-                    android:text="@string/delete_comment"
-                    android:textColor="@color/colorTextForgot"
-                    android:visibility="gone"/>
+                    android:text="@string/delete"
+                    android:textColor="@color/colorTextForgot"/>
 
             </LinearLayout>
 

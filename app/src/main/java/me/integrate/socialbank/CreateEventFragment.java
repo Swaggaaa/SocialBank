@@ -455,8 +455,6 @@ public class CreateEventFragment extends Fragment {
         newFragment.show(getActivity().getSupportFragmentManager(), "timePicker");
     }
 
-    //TODO añadir flujo comentarios
-
     private void showEndHourPickerDialog() {
         TimePickerFragment newFragment = TimePickerFragment.newInstance((timePicker, h, m) -> {
             endHour = h;

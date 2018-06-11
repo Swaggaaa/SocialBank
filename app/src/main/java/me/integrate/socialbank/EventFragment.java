@@ -31,7 +31,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class EventFragment extends Fragment {
+public class EventFragment extends Fragment implements AddCommentFragment.OnCommentSelected {
 
     private static final String URL = "/events";
     private static final String SOCIALBANK_URL = "http://socialbank.com";
@@ -57,6 +57,7 @@ public class EventFragment extends Fragment {
     private ProgressDialog loadingDialog;
 
 
+    private List<Comment> comments;
     private String creator;
     private Date iniDate;
     protected int id;
@@ -92,8 +93,9 @@ public class EventFragment extends Fragment {
         mRecyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(getContext()));
+        mRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(getContext(), false));
 
+        comments = new ArrayList<>();
 
         // loadingDialog = ProgressDialog.show(getActivity(), "",
            //     getString(R.string.loadingMessage), true);
@@ -192,13 +194,13 @@ public class EventFragment extends Fragment {
         {
             shareEvent();
         });
-        //TODO flujo
         addComment.setOnClickListener(v ->
         {
             Bundle b = new Bundle();
             b.putInt("id", id);
             FragmentManager fm  = getFragmentManager();
             AddCommentFragment addCommentFragment = new AddCommentFragment();
+            addCommentFragment.setTargetFragment(EventFragment.this, 1);
             addCommentFragment.setArguments(b);
             addCommentFragment.show(fm, "prova");
         });
@@ -211,10 +213,11 @@ public class EventFragment extends Fragment {
         sendIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.join_msg, textEventTitle.getText().toString(), SOCIALBANK_URL, id));
         sendIntent.setType("text/plain");
         startActivity(sendIntent);
-    void getComments() {
+    }
+
+    public void getComments() {
         APICommunicator apiCommunicator = new APICommunicator();
         Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response -> {
-            List<Comment> comments = new ArrayList<>();
             JSONArray jsonArray;
             try {
 
@@ -245,5 +248,11 @@ public class EventFragment extends Fragment {
         Response.ErrorListener errorListener = error -> errorTreatment(error.networkResponse.statusCode);
         apiCommunicator.getRequest(getActivity().getApplicationContext(), URL + '/' + id + '/' + "comments", responseListener, errorListener, null);
 
+    }
+
+    @Override
+    public void sendComment() {
+        comments.clear();
+        getComments();
     }
 }

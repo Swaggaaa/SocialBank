@@ -1,9 +1,5 @@
 package me.integrate.socialbank;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.util.Base64;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
