@@ -122,6 +122,7 @@
     <string name="something_wrong">Something went wrong</string>
     <string name="image_update">Image changed!</string>
     <string name="account_created">Account created!</string>
+    <string name="search_location_here">Search location here...</string>
     <string name="deleted_comment">Comment deleted</string>
     <string name="cancel">Cancel</string>
     <string name="user_balance">User balance:  </string>
