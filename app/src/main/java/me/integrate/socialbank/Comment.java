@@ -3,12 +3,18 @@ package me.integrate.socialbank;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class Comment {
 
     private String user;
     private String text;
     private String surname;
     private String emailCreator;
+    private Date createDate;
     private int id;
 
     Comment(JSONObject jsonObject) {
@@ -18,11 +24,29 @@ public class Comment {
             this.text = jsonObject.getString("content");
             this.emailCreator = jsonObject.getString("creatorEmail");
             this.id = jsonObject.getInt("id");
+            getDates(jsonObject);
         }
         catch (JSONException ex) {
             ex.printStackTrace();
         }
     }
+
+    private void getDates(JSONObject object) throws JSONException {
+        String iniDate = object.getString("createdAt");
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss.SSS");
+        if (iniDate.equals("null")) this.createDate = null;
+        else {
+            try {
+                this.createDate = df.parse(iniDate);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public Date getCreateDate() {return createDate;}
+
+    public void setCreateDate(Date createDate) { this.createDate = createDate;}
 
     public int getId() { return id;}
 

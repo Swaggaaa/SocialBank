@@ -28,6 +28,8 @@ import org.json.JSONObject;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -227,6 +229,12 @@ public class EventFragment extends Fragment implements AddCommentFragment.OnComm
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
                     comments.add(new Comment(jsonObject));
                 }
+                Collections.sort(comments, new Comparator<Comment>() {
+                    @Override
+                    public int compare(Comment comment, Comment t1) {
+                        return t1.getCreateDate().compareTo(comment.getCreateDate());
+                    }
+                });
                 mAdapter = new CommentAdapter(comments, getActivity(), (v1, position) -> {
                     Bundle bundle = new Bundle();
                     String email = comments.get(position).getEmailCreator();
