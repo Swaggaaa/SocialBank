@@ -68,6 +68,7 @@ public class MyAccountFragment extends Fragment implements PaymentMethodNonceCre
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_my_account, container, false);
+        hoursPackages = new ArrayList<>();
         hoursPackages.add(new HoursPackage("Basic Package", 99.9, 100));
         hoursPackages.add(new HoursPackage("Professional Organization Package", 399.9, 500));
         hoursPackages.add(new HoursPackage("Premium Organization Package", 1199.9, 2000));
