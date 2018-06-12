@@ -90,7 +90,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
-            android:background="@android:color/holo_blue_dark"
+            android:background="#c50e29"
             android:text="@string/update"
             tools:enabled="false" />
     </LinearLayout>

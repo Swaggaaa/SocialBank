@@ -1,10 +1,10 @@
 package me.integrate.socialbank;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +26,7 @@ import java.util.Date;
 public class EventFragment extends Fragment {
 
     private static final String URL = "/events";
+    private static final String SOCIALBANK_URL = "http://socialbank.com";
 
     protected ImageView imageView;
     private TextView textEventTitle;
@@ -44,6 +45,8 @@ public class EventFragment extends Fragment {
     private String creator;
     protected int id;
     protected String descriptionEvent;
+
+    private Button invite;
 
     public static EventFragment newInstance(Bundle params) {
         EventFragment eventFragment = new EventFragment();
@@ -70,7 +73,7 @@ public class EventFragment extends Fragment {
         textEndDate = (TextView) rootView.findViewById(R.id.end_date);
         editDescription = (EditText) rootView.findViewById(R.id.editDescription);
 
-
+        invite = (Button)rootView.findViewById(R.id.invite_button);
 
         id = getArguments().getInt("id");
         showEventInformation();
@@ -110,23 +113,24 @@ public class EventFragment extends Fragment {
                 Toast.makeText(EventFragment.this.getActivity().getApplicationContext(), R.string.JSONException, Toast.LENGTH_LONG).show();
             }
         };
-        Response.ErrorListener errorListener = error -> {
-            String message;
-            int errorCode = error.networkResponse.statusCode;
-            if (errorCode == 401)
-                message = getString(R.string.Unauthorized);
-            else if(errorCode == 403)
-                message = getString(R.string.Forbidden);
-            else if(errorCode == 404)
-                message = getString(R.string.NotFound);
-            else
-                message = getString(R.string.UnexpectedError);
-
-            Toast.makeText(getActivity().getApplicationContext(), message, Toast.LENGTH_LONG).show();
-        };
+        Response.ErrorListener errorListener = error -> errorTreatment(error.networkResponse.statusCode);
 
         apiCommunicator.getRequest(getActivity().getApplicationContext(), URL+'/'+ id, responseListener, errorListener, null);
 
+    }
+
+    private void errorTreatment(int errorCode) {
+        String message;
+        if (errorCode == 401)
+            message = getString(R.string.Unauthorized);
+        else if (errorCode == 403)
+            message = getString(R.string.Forbidden);
+        else if (errorCode == 404)
+            message = getString(R.string.NotFound);
+        else
+            message = getString(R.string.UnexpectedError);
+
+        Toast.makeText(getActivity().getApplicationContext(), message, Toast.LENGTH_LONG).show();
     }
 
     private String getHours(Date hourIni, Date hourEnd) {
@@ -160,5 +164,17 @@ public class EventFragment extends Fragment {
             FragmentChangeListener fc = (FragmentChangeListener) getActivity();
             fc.replaceFragment(profileFragment);
         });
+        view.findViewById(R.id.invite_button).setOnClickListener(v ->
+        {
+            shareEvent();
+        });
+    }
+
+    private void shareEvent() {
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.join_msg, textEventTitle.getText().toString(), SOCIALBANK_URL, id));
+        sendIntent.setType("text/plain");
+        startActivity(sendIntent);
     }
 }

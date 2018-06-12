@@ -99,9 +99,8 @@ public class MyAccountFragment extends Fragment implements PaymentMethodNonceCre
                 balance = BigDecimal.valueOf(jsonObject.getDouble("balance")).floatValue();
                 userBalance.setText(balance.toString());
                 userBalance.setVisibility(View.VISIBLE);
-                if (balance < 0) userBalance.setTextColor(Color.RED);
-                else if (balance > 0) userBalance.setTextColor(Color.GREEN);
-                else userBalance.setTextColor(Color.BLUE);
+                if (balance < 0) userBalance.setTextColor(this.getResources().getColor(R.color.negative_balance));
+                else if (balance > 0) userBalance.setTextColor(this.getResources().getColor(R.color.positive_balance));
                 if (verified) {
                     accountStatusImage.setVisibility(View.VISIBLE);
                     accountStatus.setText(R.string.verified);
@@ -119,22 +118,7 @@ public class MyAccountFragment extends Fragment implements PaymentMethodNonceCre
             }
 
         };
-        Response.ErrorListener errorListener = error -> {
-            String message;
-            int errorCode = error.networkResponse.statusCode;
-            if (errorCode == 401)
-                message = getString(R.string.unauthorized);
-            else if (errorCode == 403)
-                message = getString(R.string.forbidden);
-            else if (errorCode == 404)
-                message = getString(R.string.NotFound);
-            else if (errorCode == 409)
-                message = getString(R.string.user_already_reported);
-            else
-                message = getString(R.string.unexpectedError);
-            loadingDialog.dismiss();
-            Toast.makeText(getActivity().getApplicationContext(), message, Toast.LENGTH_LONG).show();
-        };
+        Response.ErrorListener errorListener = error -> errorTreatment(error.networkResponse.statusCode);
 
         apiCommunicator.getRequest(getActivity().getApplicationContext(), URL + '/' + emailUser, responseListener, errorListener, null);
     }
@@ -159,25 +143,24 @@ public class MyAccountFragment extends Fragment implements PaymentMethodNonceCre
             loadingDialog.dismiss();
             Toast.makeText(getActivity().getApplicationContext(), R.string.verification_requested, Toast.LENGTH_LONG).show();
         };
-        Response.ErrorListener errorListener = error -> {
-            loadingDialog.dismiss();
-            String message;
-            int errorCode = error.networkResponse.statusCode;
-            if (errorCode == 401)
-                message = getString(R.string.unauthorized);
-            else if (errorCode == 403)
-                message = getString(R.string.forbidden);
-            else if (errorCode == 404)
-                message = getString(R.string.NotFound);
-            else if (errorCode == 409)
-                message = getString(R.string.awaiting_approval);
-            else
-                message = getString(R.string.unexpectedError);
-            Toast.makeText(getActivity().getApplicationContext(), message, Toast.LENGTH_LONG).show();
+        Response.ErrorListener errorListener = error -> errorTreatment(error.networkResponse.statusCode);
 
-        };
+        apiCommunicator.postRequest(getActivity().getApplicationContext(), URL+'/'+email+"/verified", responseListener, errorListener, params);
+    }
 
-        apiCommunicator.postRequest(getActivity().getApplicationContext(), URL + '/' + email + "/verified", responseListener, errorListener, params);
+    private void errorTreatment(int errorCode) {
+        String message;
+        if (errorCode == 401)
+            message = getString(R.string.Unauthorized);
+        else if (errorCode == 403)
+            message = getString(R.string.Forbidden);
+        else if (errorCode == 404)
+            message = getString(R.string.NotFound);
+        else
+            message = getString(R.string.UnexpectedError);
+
+        loadingDialog.dismiss();
+        Toast.makeText(getActivity().getApplicationContext(), message, Toast.LENGTH_LONG).show();
     }
 
     private void purchaseHours() {

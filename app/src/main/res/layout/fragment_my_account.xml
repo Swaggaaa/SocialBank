@@ -77,12 +77,11 @@
             android:lines="5"
             android:scrollbars="vertical"
             android:visibility="gone"/>
-
         <Button
             android:id="@+id/button_send_request"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/holo_blue_dark"
+            android:background="#c50e29"
             android:text="@string/send_request"
             android:visibility="gone" />
 
@@ -91,7 +90,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:background="@android:color/holo_blue_dark"
+            android:background="#c50e29"
             android:text="@string/buy_more_hours"
             android:visibility="gone" />
 
