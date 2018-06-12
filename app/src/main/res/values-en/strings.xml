@@ -116,5 +116,10 @@
     <string name="image_update">Image changed!</string>
     <string name="account_created">Account created!</string>
     <string name="language">Language</string>
-    <string name="personal_events_ES"></string>
+    <string name="personal_events_ES"> </string>
+    <string name="search_location_here">Search location here…</string>
+    <string name="user_balance">User balance:  </string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="change_picture">Change picture</string>
+    <string name="join_msg">Join to SocialBank and let\s go to \'%1$s\' event! Find out more on %2$s\/%3$s</string>
 </resources>

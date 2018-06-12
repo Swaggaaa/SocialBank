@@ -117,10 +117,10 @@
     <string name="account_created">¡Cuenta creada!</string>
     <string name="language">Idioma</string>
     <string name="personal_events_ES">Eventos de</string>
-    <string name="search_location_here">Search location here...</string>
-    <string name="user_balance">User balance:  </string>
-    <string name="edit_profile">Edit Profile</string>
-    <string name="change_picture">Change picture</string>
-    <string name="join_msg">Join to SocialBank and let\s go to \'%1$s\' event! Find out more on %2$s\/%3$s</string>
+    <string name="search_location_here">Busca la ubicación aquí…</string>
+    <string name="user_balance">Balance del usuario:  </string>
+    <string name="edit_profile">Editar perfil</string>
+    <string name="change_picture">Cambiar imagen</string>
+    <string name="join_msg">Únete a SocialBank y vayamos al evento de \'%1$s\'. Encuentra más información en %2$s\/%3$s</string>
 
 </resources>

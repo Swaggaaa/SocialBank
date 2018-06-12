@@ -117,4 +117,9 @@
     <string name="account_created">Compte creat!</string>
     <string name="language">Idioma</string>
     <string name="personal_events_ES">Esdeveniments de:</string>
+    <string name="search_location_here">Busca aquí la localització…</string>
+    <string name="user_balance">Balarç de l\'usuari:  </string>
+    <string name="edit_profile">Editar perfil</string>
+    <string name="change_picture">Canviar imatge</string>
+    <string name="join_msg">Uneix-te a SocialBank i anem-hi a l\'esdeveniment de \'%1$s\' Troba més informació a %2$s\/%3$s</string>
 </resources>
