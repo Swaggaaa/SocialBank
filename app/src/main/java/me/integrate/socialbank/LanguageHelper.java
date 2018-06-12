@@ -1,6 +1,5 @@
 package me.integrate.socialbank;
 
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 
@@ -23,12 +22,9 @@ public class LanguageHelper {
 
 
     public static void changeLocale(Resources res, int position) {
-        Configuration config;
-        config = new Configuration(res.getConfiguration());
-        language.get(position);
+        Configuration config = new Configuration(res.getConfiguration());
         config.locale = new Locale(language.get(position));
         res.updateConfiguration(config, res.getDisplayMetrics());
-
     }
 
     public static int getPosition(String lang) {
