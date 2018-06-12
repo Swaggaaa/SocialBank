@@ -23,7 +23,7 @@
     <string name="welcome">Benvingut</string>
     <string name="new_event">Nou esdeveniment</string>
     <string name="create_event">CREAR</string>
-    <string name="event_type">Tipus del esdeveniment</string>
+    <string name="event_type">Tipus de l\'esdeveniment</string>
     <string name="ask">DEMANDA</string>
     <string name="offer">OFERTA</string>
     <string name="yes">SI</string>

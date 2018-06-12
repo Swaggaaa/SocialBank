@@ -1,8 +1,8 @@
 package me.integrate.socialbank;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
-import android.content.res.Configuration;
-import android.content.res.Resources;
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -24,7 +24,7 @@ import org.json.JSONObject;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
-import java.util.Locale;
+
 
 public class MyAccountFragment extends Fragment {
     private static final String URL = "/users";
@@ -33,7 +33,6 @@ public class MyAccountFragment extends Fragment {
     private TextView verifyAccountHint;
     private EditText sendRequestText;
     private Button sendRequestButton;
-    private TextView accountBalanceHint;
     private TextView userBalance;
     private Button buyHours;
     private boolean verified;
@@ -41,17 +40,18 @@ public class MyAccountFragment extends Fragment {
     private String email;
     private Spinner languageSpinner;
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        new LanguageHelper();
         View rootView = inflater.inflate(R.layout.fragment_my_account, container, false);
         accountStatus = (TextView) rootView.findViewById(R.id.AccountStatus);
         accountStatusImage = (TextView) rootView.findViewById(R.id.account_verified);
         verifyAccountHint = (TextView) rootView.findViewById(R.id.account_verify_hint);
         sendRequestText = (EditText) rootView.findViewById(R.id.editText_request);
         sendRequestButton = (Button) rootView.findViewById(R.id.button_send_request);
-        accountBalanceHint = (TextView) rootView.findViewById(R.id.account_balance_hint);
         userBalance = (TextView) rootView.findViewById(R.id.user_balance);
         buyHours = (Button) rootView.findViewById(R.id.button_buy_hours);
         languageSpinner = (Spinner) rootView.findViewById(R.id.language_spinner);
@@ -66,13 +66,13 @@ public class MyAccountFragment extends Fragment {
     private void loadScreen(String emailUser) {
 
         APICommunicator apiCommunicator = new APICommunicator();
-        Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response -> {
+        @SuppressLint("SetTextI18n") Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response -> {
             JSONObject jsonObject;
 
             try {
                 jsonObject = new JSONObject(response.response);
                 verified = jsonObject.getBoolean("verified");
-                Float balance = null;
+                Float balance;
                 balance = BigDecimal.valueOf(jsonObject.getDouble("balance")).floatValue();
                 userBalance.setText(balance.toString());
                 userBalance.setVisibility(View.VISIBLE);
@@ -121,9 +121,14 @@ public class MyAccountFragment extends Fragment {
         {
             @Override
             public void onItemSelected(AdapterView adapter, View v, int i, long lng) {
-
+                int previousLocale = LanguageHelper.getPosition(getResources().getConfiguration().locale.toString());
                 LanguageHelper.changeLocale(getContext().getResources(), i);
+                if (previousLocale != i) {
+                    Intent refresh = new Intent(getActivity(), MainActivity.class);
+                    startActivity(refresh);
+                }
             }
+
             @Override
             public void onNothingSelected(AdapterView<?> parentView)
             {
@@ -159,13 +164,5 @@ public class MyAccountFragment extends Fragment {
         Toast.makeText(getActivity().getApplicationContext(), message, Toast.LENGTH_LONG).show();
     }
 
-    private void updateResources(String language) {
-        Locale locale = new Locale(language);
-        Locale.setDefault(locale);
 
-        Resources res = this.getContext().getResources();
-        Configuration config = new Configuration(res.getConfiguration());
-        config.locale = locale;
-        res.updateConfiguration(config, res.getDisplayMetrics());
-    }
 }
