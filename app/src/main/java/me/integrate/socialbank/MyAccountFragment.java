@@ -76,9 +76,8 @@ public class MyAccountFragment extends Fragment {
                 balance = BigDecimal.valueOf(jsonObject.getDouble("balance")).floatValue();
                 userBalance.setText(balance.toString());
                 userBalance.setVisibility(View.VISIBLE);
-                if (balance < 0) userBalance.setTextColor(Color.RED);
-                else if (balance > 0) userBalance.setTextColor(Color.GREEN);
-                else userBalance.setTextColor(Color.BLUE);
+                if (balance < 0) userBalance.setTextColor(this.getResources().getColor(R.color.negative_balance));
+                else if (balance > 0) userBalance.setTextColor(this.getResources().getColor(R.color.positive_balance));
                 if (verified) {
                     accountStatusImage.setVisibility(View.VISIBLE);
                     accountStatus.setText(R.string.verified);
