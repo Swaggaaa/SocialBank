@@ -228,10 +228,10 @@
 
                 <TextView
                     android:id="@+id/comments"
+                    android:text="@string/comments"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.2"
-                    android:text="@string/comments"
                     android:layout_marginBottom="10dp"
                     android:textColor="@color/colorNavigation"
                     android:textSize="15sp"

@@ -96,13 +96,13 @@ class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentViewHold
     private void errorTreatment(int errorCode) {
         String message;
         if (errorCode == 401)
-            message = getContext().getResources().getString(R.string.Unauthorized);
+            message = getContext().getString(R.string.unauthorized);
         else if (errorCode == 403)
-            message = getContext().getResources().getString(R.string.Forbidden);
+            message = getContext().getString(R.string.forbidden);
         else if (errorCode == 404)
-            message = getContext().getResources().getString(R.string.NotFound);
+            message = getContext().getString(R.string.not_found);
         else
-            message = getContext().getResources().getString(R.string.UnexpectedError);
+            message = getContext().getString(R.string.unexpectedError);
 
         Toast.makeText(getContext().getApplicationContext(), message, Toast.LENGTH_LONG).show();
     }
