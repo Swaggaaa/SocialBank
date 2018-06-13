@@ -300,7 +300,7 @@ public class ProfileFragment extends Fragment {
         apiCommunicator.getRequest(getActivity().getApplicationContext(), URL +'/'+ emailUser + "/events", responseListener, errorListener, params);
     }
 
-    private Bitmap getImageRounded(Bitmap image) {
+    protected Bitmap getImageRounded(Bitmap image) {
         image = ImageHelper.cropBitmapToSquare(image);
         image = ImageHelper.getRoundedCornerBitmap(image, 420);
         return image;
