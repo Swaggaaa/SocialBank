@@ -132,6 +132,7 @@ public class EventFragment extends Fragment implements AddCommentFragment.OnComm
                 textDemandEvent.setText(event.getDemand() ? R.string.demand : R.string.offer);
                 imageView.setImageBitmap(event.getImage());
 
+
                 editDescription.setText(descriptionEvent);
 
                 capacity = event.getCapacity();
