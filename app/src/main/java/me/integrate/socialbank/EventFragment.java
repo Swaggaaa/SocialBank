@@ -2,9 +2,12 @@ package me.integrate.socialbank;
 
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.DisplayMetrics;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -94,7 +97,7 @@ public class EventFragment extends Fragment {
                 textEventDescription.setText(descriptionEvent);
                 textLocation.setText(event.getLocation());
                 textDemandEvent.setText(event.getDemand() ? R.string.demand : R.string.offer);
-                imageView.setImageBitmap(event.getImage());
+                imageView.setImageBitmap(getImage(event.getImage()));
 
                 editDescription.setText(descriptionEvent);
 
@@ -150,6 +153,31 @@ public class EventFragment extends Fragment {
             return df.format(date);
         }
     }
+
+    protected Bitmap getImage(Bitmap bitmap)
+    {
+        if (bitmap != null) {
+            double originWidth = bitmap.getWidth();
+            double originHeight = bitmap.getHeight();
+
+            DisplayMetrics displayMetrics = new DisplayMetrics();
+            getActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+            double displayWidht = displayMetrics.widthPixels;
+
+            if (displayWidht > originWidth) {
+                double destHeight = originHeight * (displayWidht / originWidth);
+                System.out.println("ANCHO ORIGNE" + String.valueOf(originWidth));
+                System.out.println("ANCHO NUEVO" + String.valueOf(displayWidht));
+                System.out.println("FACTOR MULTIPLICATIVO" + String.valueOf(displayWidht / originWidth));
+                System.out.println("ALTO ORIGNE" + String.valueOf(originHeight));
+                System.out.println("ALTO NUEVO" + String.valueOf(destHeight));
+                bitmap = Bitmap.createScaledBitmap(bitmap, (int) displayWidht, (int) destHeight, false);
+                imageView.setImageBitmap(bitmap);
+            }
+        }
+        return bitmap;
+    }
+
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {

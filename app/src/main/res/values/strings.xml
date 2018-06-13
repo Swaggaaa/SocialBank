@@ -122,5 +122,7 @@
     <string name="edit_profile">Editar perfil</string>
     <string name="change_picture">Cambiar imagen</string>
     <string name="join_msg">Únete a SocialBank y vayamos al evento de \'%1$s\'. Encuentra más información en %2$s\/%3$s</string>
+    <string name="information_event">Información del evento</string>
+    <string name="edit_event">Editar evento</string>
 
 </resources>

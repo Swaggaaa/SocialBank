@@ -248,7 +248,7 @@ public class MyEventFragment extends EventFragment {
 
     private void loadImageFromUri(Uri imageUri) {
         try {
-            imageView.setImageBitmap(MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), imageUri));
+            imageView.setImageBitmap(getImage(MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), imageUri)));
         } catch (IOException e) {
             e.printStackTrace();
         }
