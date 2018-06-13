@@ -6,7 +6,11 @@ import android.content.DialogInterface;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Base64;
@@ -58,6 +62,10 @@ public class MyAccountFragment extends Fragment implements PaymentMethodNonceCre
     private List<HoursPackage> hoursPackages;
     private HoursPackage chosenHoursPackage;
 
+    private ViewPager viewPager;
+    private TabLayout tabs;
+    private Adapter adapter;
+
 
     enum TransactionResults {
         ACCEPTED, REJECTED
@@ -84,7 +92,55 @@ public class MyAccountFragment extends Fragment implements PaymentMethodNonceCre
         loadingDialog = ProgressDialog.show(getActivity(), "",
                 getString(R.string.loadingMessage), true);
         loadScreen(email);
+        adapter = new Adapter(getChildFragmentManager());
+        viewPager = (ViewPager) rootView.findViewById(R.id.viewpager);
+        setupViewPager(viewPager);
+        tabs = (TabLayout) rootView.findViewById(R.id.result_tabs);
+        tabs.setupWithViewPager(viewPager);
         return rootView;
+    }
+
+    private void setupViewPager(ViewPager viewPager) {
+
+
+
+        adapter.addFragment(new Package100Fragment(), "Package 100");
+        adapter.addFragment(new Package500Fragment(), "Package 500");
+        adapter.addFragment(new Package2000Fragment(), "Package 2000");
+        viewPager.setAdapter(adapter);
+
+
+
+
+    }
+
+    static class Adapter extends FragmentPagerAdapter {
+        private final List<Fragment> mFragmentList = new ArrayList<>();
+        private final List<String> mFragmentTitleList = new ArrayList<>();
+
+        public Adapter(FragmentManager manager) {
+            super(manager);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return mFragmentList.get(position);
+        }
+
+        @Override
+        public int getCount() {
+            return mFragmentList.size();
+        }
+
+        public void addFragment(Fragment fragment, String title) {
+            mFragmentList.add(fragment);
+            mFragmentTitleList.add(title);
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return mFragmentTitleList.get(position);
+        }
     }
 
     private void loadScreen(String emailUser) {
@@ -100,12 +156,16 @@ public class MyAccountFragment extends Fragment implements PaymentMethodNonceCre
                 balance = BigDecimal.valueOf(jsonObject.getDouble("balance")).floatValue();
                 userBalance.setText(balance.toString());
                 userBalance.setVisibility(View.VISIBLE);
-                if (balance < 0) userBalance.setTextColor(this.getResources().getColor(R.color.negative_balance));
-                else if (balance > 0) userBalance.setTextColor(this.getResources().getColor(R.color.positive_balance));
+                if (balance < 0)
+                    userBalance.setTextColor(this.getResources().getColor(R.color.negative_balance));
+                else if (balance > 0)
+                    userBalance.setTextColor(this.getResources().getColor(R.color.positive_balance));
                 if (verified) {
                     accountStatusImage.setVisibility(View.VISIBLE);
                     accountStatus.setText(R.string.verified);
                     purchaseHoursButton.setVisibility(View.VISIBLE);
+                    viewPager.setVisibility(View.VISIBLE);
+                    tabs.setVisibility(View.VISIBLE);
                 } else {
                     accountStatus.setText(R.string.standard);
                     verifyAccountHint.setVisibility(View.VISIBLE);
@@ -136,6 +196,7 @@ public class MyAccountFragment extends Fragment implements PaymentMethodNonceCre
         purchaseHoursButton.setOnClickListener(v -> {
             purchaseHours();
         });
+
     }
 
     private void sendRequest(HashMap<String, String> params) {
@@ -146,7 +207,7 @@ public class MyAccountFragment extends Fragment implements PaymentMethodNonceCre
         };
         Response.ErrorListener errorListener = error -> errorTreatment(error.networkResponse.statusCode);
 
-        apiCommunicator.postRequest(getActivity().getApplicationContext(), URL+'/'+email+"/verified", responseListener, errorListener, params);
+        apiCommunicator.postRequest(getActivity().getApplicationContext(), URL + '/' + email + "/verified", responseListener, errorListener, params);
     }
 
     private void errorTreatment(int errorCode) {
@@ -173,8 +234,7 @@ public class MyAccountFragment extends Fragment implements PaymentMethodNonceCre
 
         mBrainTreeFragment.addListener(this);
 
-        //TODO: JOAN; AQUI MARCA EL PACKAGE KLK
-        chosenHoursPackage = hoursPackages.get(0);
+        chosenHoursPackage = hoursPackages.get(tabs.getSelectedTabPosition());
 
         PayPalRequest paypalRequest = new PayPalRequest(String.valueOf(chosenHoursPackage.getPrice()))
                 .currencyCode("EUR")

@@ -127,5 +127,9 @@
     <string name="edit_profile">Edit Profile</string>
     <string name="change_picture">Change picture</string>
     <string name="join_msg">Join to SocialBank and let\s go to \'%1$s\' event! Find out more on %2$s\/%3$s</string>
+    <string name="package_100">Package 100</string>
+    <string name="package_500">Package 500</string>
+    <string name="package_2000">Package 2000</string>
+    <string name="get_hours">hours</string>
 
 </resources>
