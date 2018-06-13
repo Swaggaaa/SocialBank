@@ -15,7 +15,7 @@ import java.util.Map;
 
 class APICommunicator {
 
-    private static final String API_URL = "http://10.0.2.2:8080";
+    private static final String API_URL = BuildConfig.API_ENDPOINT;
     private static final String CONTENT_TYPE = "application/json; charset=utf-8";
     private static final String CHARSET = "utf-8";
 

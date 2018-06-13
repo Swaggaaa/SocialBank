@@ -1,9 +1,8 @@
 package me.integrate.socialbank;
 
-import android.app.AlertDialog;
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
-import android.graphics.BitmapFactory;
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
@@ -13,12 +12,13 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -71,16 +71,19 @@ public class MyAccountFragment extends Fragment implements PaymentMethodNonceCre
     enum TransactionResults {
         ACCEPTED, REJECTED
     }
+    private Spinner languageSpinner;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_my_account, container, false);
+        new LanguageHelper();
         hoursPackages = new ArrayList<>();
         hoursPackages.add(new HoursPackage("Basic Package", 99.9, 100));
         hoursPackages.add(new HoursPackage("Professional Organization Package", 399.9, 500));
         hoursPackages.add(new HoursPackage("Premium Organization Package", 1199.9, 2000));
+        View rootView = inflater.inflate(R.layout.fragment_my_account, container, false);
         accountStatus = (TextView) rootView.findViewById(R.id.AccountStatus);
         accountStatusImage = (TextView) rootView.findViewById(R.id.account_verified);
         verifyAccountHint = (TextView) rootView.findViewById(R.id.account_verify_hint);
@@ -89,7 +92,9 @@ public class MyAccountFragment extends Fragment implements PaymentMethodNonceCre
         purchaseHoursButton = (Button) rootView.findViewById(R.id.button_buy_hours);
         accountBalanceHint = (TextView) rootView.findViewById(R.id.account_balance_hint);
         userBalance = (TextView) rootView.findViewById(R.id.user_balance);
-        email = SharedPreferencesManager.INSTANCE.read(getActivity(), "user_email");
+        languageSpinner = (Spinner) rootView.findViewById(R.id.language_spinner);
+        languageSpinner.setSelection(LanguageHelper.getPosition(getResources().getConfiguration().locale.toString()));
+        email = SharedPreferencesManager.INSTANCE.read(getActivity(),"user_email");
         loadingDialog = ProgressDialog.show(getActivity(), "",
                 getString(R.string.loadingMessage), true);
         loadScreen(email);
@@ -147,13 +152,13 @@ public class MyAccountFragment extends Fragment implements PaymentMethodNonceCre
     private void loadScreen(String emailUser) {
 
         APICommunicator apiCommunicator = new APICommunicator();
-        Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response -> {
+        @SuppressLint("SetTextI18n") Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response -> {
             JSONObject jsonObject;
 
             try {
                 jsonObject = new JSONObject(response.response);
                 verified = jsonObject.getBoolean("verified");
-                Float balance = null;
+                Float balance;
                 balance = BigDecimal.valueOf(jsonObject.getDouble("balance")).floatValue();
                 userBalance.setText(balance.toString());
                 userBalance.setVisibility(View.VISIBLE);
@@ -197,6 +202,28 @@ public class MyAccountFragment extends Fragment implements PaymentMethodNonceCre
         purchaseHoursButton.setOnClickListener(v -> {
             purchaseHours();
         });
+
+
+
+        languageSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
+        {
+            @Override
+            public void onItemSelected(AdapterView adapter, View v, int i, long lng) {
+                int previousLocale = LanguageHelper.getPosition(getResources().getConfiguration().locale.toString());
+                LanguageHelper.changeLocale(getContext().getResources(), i);
+                if (previousLocale != i) {
+                    Intent refresh = new Intent(getActivity(), MainActivity.class);
+                    startActivity(refresh);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView)
+            {
+
+            }
+        });
+
     }
 
     private void sendRequest(HashMap<String, String> params) {
@@ -213,13 +240,13 @@ public class MyAccountFragment extends Fragment implements PaymentMethodNonceCre
     private void errorTreatment(int errorCode) {
         String message;
         if (errorCode == 401)
-            message = getString(R.string.Unauthorized);
+            message = getString(R.string.unauthorized);
         else if (errorCode == 403)
-            message = getString(R.string.Forbidden);
+            message = getString(R.string.forbidden);
         else if (errorCode == 404)
-            message = getString(R.string.NotFound);
+            message = getString(R.string.not_found);
         else
-            message = getString(R.string.UnexpectedError);
+            message = getString(R.string.unexpectedError);
 
         loadingDialog.dismiss();
         Toast.makeText(getActivity().getApplicationContext(), message, Toast.LENGTH_LONG).show();
