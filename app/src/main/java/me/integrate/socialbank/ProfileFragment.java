@@ -310,7 +310,6 @@ public class ProfileFragment extends Fragment {
         }
     }
 
-
     protected Bitmap getImageRounded(Bitmap image) {
         image = ImageHelper.cropBitmapToSquare(image);
         image = ImageHelper.getRoundedCornerBitmap(image, 420);
