@@ -1,6 +1,7 @@
 package me.integrate.socialbank;
 
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -158,7 +159,7 @@ public class MyProfileFragment extends ProfileFragment {
 
     private void loadImageFromUri(Uri imageUri) {
         try {
-            userPicture.setImageBitmap(MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), imageUri));
+            userPicture.setImageBitmap(getImageRounded(MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), imageUri)));
         } catch (IOException e) {
             e.printStackTrace();
         }

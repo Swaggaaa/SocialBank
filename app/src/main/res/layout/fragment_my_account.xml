@@ -77,7 +77,6 @@
             android:lines="5"
             android:scrollbars="vertical"
             android:visibility="gone"/>
-
         <Button
             android:id="@+id/button_send_request"
             android:layout_width="match_parent"
@@ -85,6 +84,20 @@
             android:background="#c50e29"
             android:text="@string/send_request"
             android:visibility="gone" />
+
+        <android.support.design.widget.TabLayout
+            android:id="@+id/result_tabs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:tabMode="scrollable"
+            android:visibility="gone"/>
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/viewpager"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            android:visibility="gone"/>
 
         <Button
             android:id="@+id/button_buy_hours"
@@ -112,7 +125,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:entries="@array/languages"
-                android:textColor="@color/material_blue_grey_800" />
+                android:textColor="@color/material_blue_grey_800"/>
 
         </LinearLayout>
 

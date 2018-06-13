@@ -122,6 +122,17 @@
     <string name="edit_profile">Editar perfil</string>
     <string name="change_picture">Canviar imatge</string>
     <string name="join_msg">Uneix-te a SocialBank i anem-hi a l\'esdeveniment de \'%1$s\' Troba més informació a %2$s\/%3$s</string>
+    <string name="get_hours">hores</string>
+    <string name="thank_you_purchase">Gràcies per la teva compra!</string>
+    <string name="payment_rejected">La teva transacció ha sigut rebutjada per processor de pagaments</string>
+    <string name="verifying_payment">Verificant pagament, si us plau esperi…</string>
+    <string name="payment_not_finished">No ha finalitzat el procés de pagament!</string>
+    <string name="deleted_comment">Commentari esborrat</string>
+    <string name="cancel">Cancel·lar</string>
+    <string name="new_comment">Afegeix un nou comentari</string>
+    <string name="comments">Comentaris</string>
+    <string name="add_comment">Afegeix un comentari</string>
+
     <string name="information_event">Informació del esdeveniment</string>
     <string name="edit_event">Editar esdeveniment</string>
     <string name="update_event">Actualitzar la descripció de l\'esdeveniment</string>
