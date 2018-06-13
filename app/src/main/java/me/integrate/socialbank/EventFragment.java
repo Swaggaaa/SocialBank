@@ -55,6 +55,7 @@ public class EventFragment extends Fragment {
         EventFragment eventFragment = new EventFragment();
         eventFragment.setArguments(params);
         return eventFragment;
+
     }
 
     @Override
