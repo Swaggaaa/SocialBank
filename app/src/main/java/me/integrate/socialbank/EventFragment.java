@@ -166,11 +166,6 @@ public class EventFragment extends Fragment {
 
             if (displayWidht > originWidth) {
                 double destHeight = originHeight * (displayWidht / originWidth);
-                System.out.println("ANCHO ORIGNE" + String.valueOf(originWidth));
-                System.out.println("ANCHO NUEVO" + String.valueOf(displayWidht));
-                System.out.println("FACTOR MULTIPLICATIVO" + String.valueOf(displayWidht / originWidth));
-                System.out.println("ALTO ORIGNE" + String.valueOf(originHeight));
-                System.out.println("ALTO NUEVO" + String.valueOf(destHeight));
                 bitmap = Bitmap.createScaledBitmap(bitmap, (int) displayWidht, (int) destHeight, false);
                 imageView.setImageBitmap(bitmap);
             }
