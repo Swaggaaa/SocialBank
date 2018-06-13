@@ -2,6 +2,7 @@ package me.integrate.socialbank;
 
 import android.content.Context;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
@@ -14,7 +15,7 @@ import java.util.Map;
 
 class APICommunicator {
 
-    private static final String API_URL = "http://sandshrew.fib.upc.edu:9000";
+    private static final String API_URL = "http://10.0.2.2:8080";
     private static final String CONTENT_TYPE = "application/json; charset=utf-8";
     private static final String CHARSET = "utf-8";
 
@@ -68,6 +69,10 @@ class APICommunicator {
                 return CONTENT_TYPE;
             }
         };
+        postRequest.setRetryPolicy(new DefaultRetryPolicy(
+                10000,
+                2,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         Volley.newRequestQueue(context).add(postRequest);
     }
 

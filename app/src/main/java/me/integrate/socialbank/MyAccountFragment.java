@@ -47,6 +47,7 @@ import java.util.Map;
 public class MyAccountFragment extends Fragment implements PaymentMethodNonceCreatedListener,
         BraintreeErrorListener, BraintreeCancelListener {
     private static final String URL = "/users";
+    private static final String PURCHASE_URL = "/purchase";
     private TextView accountStatus;
     private TextView accountStatusImage;
     private TextView verifyAccountHint;
@@ -196,7 +197,6 @@ public class MyAccountFragment extends Fragment implements PaymentMethodNonceCre
         purchaseHoursButton.setOnClickListener(v -> {
             purchaseHours();
         });
-
     }
 
     private void sendRequest(HashMap<String, String> params) {
@@ -226,33 +226,24 @@ public class MyAccountFragment extends Fragment implements PaymentMethodNonceCre
     }
 
     private void purchaseHours() {
-        try {
-            mBrainTreeFragment = BraintreeFragment.newInstance(this.getActivity(), "sandbox_zr8s9syj_y3bwvxzq3zwfhvw9");
-        } catch (InvalidArgumentException ex) {
-            ex.printStackTrace();
-        }
+        APICommunicator apiCommunicator = new APICommunicator();
+        Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response -> {
+            String clientToken = response.response;
+            try {
+                mBrainTreeFragment = BraintreeFragment.newInstance(this.getActivity(), clientToken);
+            } catch (InvalidArgumentException ex) {
+                ex.printStackTrace();
+            }
 
-        mBrainTreeFragment.addListener(this);
+            mBrainTreeFragment.addListener(this);
 
         chosenHoursPackage = hoursPackages.get(tabs.getSelectedTabPosition());
 
-        PayPalRequest paypalRequest = new PayPalRequest(String.valueOf(chosenHoursPackage.getPrice()))
-                .currencyCode("EUR")
-                .displayName(chosenHoursPackage.getName())
-                .intent(PayPalRequest.INTENT_AUTHORIZE);
-        PayPal.requestOneTimePayment(mBrainTreeFragment, paypalRequest);
-    }
-
-    @Override
-    public void onPaymentMethodNonceCreated(PaymentMethodNonce paymentMethodNonce) {
-        APICommunicator apiCommunicator = new APICommunicator();
-        Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response -> {
-            TransactionResults transactionResults = TransactionResults.valueOf(response.response);
-            if (transactionResults == TransactionResults.ACCEPTED) {
-                Toast.makeText(getActivity().getApplicationContext(), R.string.thank_you_purchase, Toast.LENGTH_LONG).show();
-            } else {
-                Toast.makeText(getActivity().getApplicationContext(), R.string.payment_rejected, Toast.LENGTH_LONG).show();
-            }
+            PayPalRequest paypalRequest = new PayPalRequest(String.valueOf(chosenHoursPackage.getPrice()))
+                    .currencyCode("EUR")
+                    .displayName(chosenHoursPackage.getName())
+                    .intent(PayPalRequest.INTENT_AUTHORIZE);
+            PayPal.requestOneTimePayment(mBrainTreeFragment, paypalRequest);
         };
 
         Response.ErrorListener errorListener = error -> {
@@ -272,18 +263,69 @@ public class MyAccountFragment extends Fragment implements PaymentMethodNonceCre
         };
 
         Map<String, String> params = new HashMap<>();
+        apiCommunicator.getRequest(getActivity().getApplicationContext(), PURCHASE_URL, responseListener, errorListener, params);
+
+    }
+
+    @Override
+    public void onPaymentMethodNonceCreated(PaymentMethodNonce paymentMethodNonce) {
+        APICommunicator apiCommunicator = new APICommunicator();
+        Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response -> {
+            loadingDialog.dismiss();
+            TransactionResults transactionResults = null;
+            int hours = 0;
+            try {
+                JSONObject jsonObject = new JSONObject(response.response);
+                transactionResults = TransactionResults.valueOf(
+                        jsonObject.getString("transactionResults"));
+                hours = jsonObject.getInt("hours");
+            } catch (JSONException ex) {
+                ex.printStackTrace();
+            }
+            if (transactionResults == TransactionResults.ACCEPTED) {
+                userBalance.setText(String.valueOf(
+                        Double.valueOf(userBalance.getText().toString()) + hours));
+                Toast.makeText(getActivity().getApplicationContext(), R.string.thank_you_purchase, Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(getActivity().getApplicationContext(), R.string.payment_rejected, Toast.LENGTH_LONG).show();
+            }
+        };
+
+        Response.ErrorListener errorListener = error -> {
+            loadingDialog.dismiss();
+            String message;
+            int errorCode = error.networkResponse == null ? -1 : error.networkResponse.statusCode;
+            if (errorCode == 401)
+                message = "Unauthorized";
+            else if (errorCode == 403)
+                message = "Forbidden";
+            else if (errorCode == 404)
+                message = "Not Found";
+            else
+                message = "Unexpected error";
+
+            loadingDialog.dismiss();
+            Toast.makeText(getActivity().getApplicationContext(), message, Toast.LENGTH_LONG).show();
+        };
+
+        Map<String, String> params = new HashMap<>();
+        params.put("packageName", chosenHoursPackage.getName());
         params.put("amount", String.valueOf(chosenHoursPackage.getPrice()));
         params.put("nonce", paymentMethodNonce.getNonce());
-        apiCommunicator.postRequest(getActivity().getApplicationContext(), URL, responseListener, errorListener, params);
+        apiCommunicator.postRequest(getActivity().getApplicationContext(), PURCHASE_URL, responseListener, errorListener, params);
+        loadingDialog = ProgressDialog.show(getActivity(), "",
+                getString(R.string.verifying_payment), true);
     }
 
     @Override
     public void onCancel(int requestCode) {
+        loadingDialog.dismiss();
         Toast.makeText(getActivity().getApplicationContext(), R.string.payment_not_finished, Toast.LENGTH_LONG).show();
     }
 
     @Override
     public void onError(Exception error) {
+        loadingDialog.dismiss();
         if (error instanceof ErrorWithResponse) {
             ErrorWithResponse errorWithResponse = (ErrorWithResponse) error;
             BraintreeError cardErrors = errorWithResponse.errorFor("creditCard");
