@@ -124,4 +124,6 @@
     <string name="join_msg">Uneix-te a SocialBank i anem-hi a l\'esdeveniment de \'%1$s\' Troba més informació a %2$s\/%3$s</string>
     <string name="information_event">Informació del esdeveniment</string>
     <string name="edit_event">Editar esdeveniment</string>
+    <string name="update_event">Actualitzar la descripció de l\'esdeveniment</string>
+
 </resources>

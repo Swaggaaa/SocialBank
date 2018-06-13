@@ -10,6 +10,7 @@ import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.app.AlertDialog;
 import android.view.LayoutInflater;
@@ -30,9 +31,8 @@ import static android.app.Activity.RESULT_OK;
 import static android.content.ContentValues.TAG;
 
 
-public class MyEventFragment extends EventFragment {
+public class MyEventFragment extends EventFragment implements UpdateEventDialog.OnInputSelected {
 
-    private Button updateButton;
     private boolean isFABOpen;
     private TextView editEventText;
     private TextView changeEventPhotoText;
@@ -45,6 +45,13 @@ public class MyEventFragment extends EventFragment {
 
     private static final String URL = "/events";
 
+    public void sendInput(String input) {
+        descriptionEvent = input;
+        updateEvent();
+        textEventDescription.setText(descriptionEvent);
+
+    }
+
     public static MyEventFragment newInstance(Bundle params) {
         MyEventFragment myEventFragment = new MyEventFragment();
         myEventFragment.setArguments(params);
@@ -54,7 +61,6 @@ public class MyEventFragment extends EventFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
-        updateButton = (Button) view.findViewById(R.id.buttonUpdate);
         editEvent = (FloatingActionButton) view.findViewById(R.id.editEvent);
         changeEventPhoto = (FloatingActionButton) view.findViewById(R.id.loadPicture);
         deleteEvent = (FloatingActionButton) view.findViewById(R.id.deleteEvent);
@@ -84,10 +90,11 @@ public class MyEventFragment extends EventFragment {
         });
         editEvent.setOnClickListener(v ->
         {
-            editDescription.setVisibility(View.VISIBLE);
-            updateButton.setVisibility(View.VISIBLE);
-            textEventDescription.setVisibility(View.GONE);
-            updateButton.setEnabled(true);
+
+            FragmentManager fm  = getFragmentManager();
+            UpdateEventDialog dialog = new UpdateEventDialog();
+            dialog.setTargetFragment(MyEventFragment.this, 1);
+            dialog.show(fm, "prova");
             closeFABMenu();
 
         });
@@ -96,20 +103,6 @@ public class MyEventFragment extends EventFragment {
                 showFABMenu();
             } else {
                 closeFABMenu();
-            }
-        });
-        updateButton.setOnClickListener(v ->
-        {
-            updateButton.setEnabled(false);
-
-            if (editDescription.getText().toString().length() != 0) {
-                descriptionEvent = editDescription.getText().toString();
-                updateEvent();
-                editDescription.setVisibility(View.GONE);
-                updateButton.setVisibility(View.GONE);
-                textEventDescription.setVisibility(View.VISIBLE);
-                textEventDescription.setText(descriptionEvent);
-
             }
         });
         deleteEvent.setOnClickListener(v -> {

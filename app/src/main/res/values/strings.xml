@@ -124,5 +124,7 @@
     <string name="join_msg">Únete a SocialBank y vayamos al evento de \'%1$s\'. Encuentra más información en %2$s\/%3$s</string>
     <string name="information_event">Información del evento</string>
     <string name="edit_event">Editar evento</string>
+    <string name="update_event">Actualizar descripción del evento</string>
+
 
 </resources>

@@ -43,7 +43,6 @@ public class EventFragment extends Fragment {
     private TextView textEventHours;
     private TextView textStartDate;
     private TextView textEndDate;
-    protected EditText editDescription;
 
     private String creator;
     protected int id;
@@ -75,7 +74,6 @@ public class EventFragment extends Fragment {
         textEventHours = (TextView) rootView.findViewById(R.id.hours);
         textStartDate = (TextView) rootView.findViewById(R.id.start_date);
         textEndDate = (TextView) rootView.findViewById(R.id.end_date);
-        editDescription = (EditText) rootView.findViewById(R.id.editDescription);
 
         invite = (Button)rootView.findViewById(R.id.invite_button);
 
@@ -99,8 +97,6 @@ public class EventFragment extends Fragment {
                 textLocation.setText(event.getLocation());
                 textDemandEvent.setText(event.getDemand() ? R.string.demand : R.string.offer);
                 imageView.setImageBitmap(getImage(event.getImage()));
-
-                editDescription.setText(descriptionEvent);
 
                 //TODO not hardcoded this values
                 textIndividualOrGroup.setText("Individual");
