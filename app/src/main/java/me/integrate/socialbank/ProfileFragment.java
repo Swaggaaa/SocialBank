@@ -28,7 +28,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.ByteArrayOutputStream;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
@@ -122,8 +121,9 @@ public class ProfileFragment extends Fragment {
             try{
                 jsonObject = new JSONObject(response.response);
                 nameUser = jsonObject.getString("name");
-                String events = getString(R.string.personal_events);
-                myEvents.setText(nameUser+events);
+                String events_en = getString(R.string.personal_events);
+                String events = getString(R.string.personal_events_ES);
+                myEvents.setText(events+nameUser+events_en);
                 lastNameUser = jsonObject.getString("surname");
                 dateUser = jsonObject.getString("birthdate");
                 genderUser = jsonObject.getString("gender");
@@ -138,7 +138,7 @@ public class ProfileFragment extends Fragment {
                 userEmailToShow.setText(jsonObject.getString("email"));
                 if(!descriptionUser.equals("null")) userDescription.setText(descriptionUser);
                 String image = jsonObject.getString("image");
-                if (!image.equals("")) {
+                if (!image.equals("")&& !image.equals("null")) {
                     byte[] decodeString = Base64.decode(image, Base64.DEFAULT);
                     userPicture.setImageBitmap(getImageRounded(BitmapFactory.decodeByteArray(decodeString, 0, decodeString.length)));
                 }
@@ -231,15 +231,15 @@ public class ProfileFragment extends Fragment {
     private void errorTreatment(int errorCode) {
         String message;
         if (errorCode == 401)
-            message = getString(R.string.Unauthorized);
+            message = getString(R.string.unauthorized);
         else if (errorCode == 403)
-            message = getString(R.string.Forbidden);
+            message = getString(R.string.forbidden);
         else if (errorCode == 404)
-            message = getString(R.string.NotFound);
+            message = getString(R.string.not_found);
         else if (errorCode == 409)
             message = getString(R.string.user_already_reported);
         else
-            message = getString(R.string.UnexpectedError);
+            message = getString(R.string.unexpectedError);
 
         loadingDialog.dismiss();
         Toast.makeText(getActivity().getApplicationContext(), message, Toast.LENGTH_LONG).show();
