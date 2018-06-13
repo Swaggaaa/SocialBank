@@ -133,5 +133,10 @@
     <string name="individual">Individual</string>
     <string name="groupal">Groupal</string>
     <string name="event_full_msg">That event is already full</string>
+    <string name="deleted_comment">Comment deleted</string>
+    <string name="cancel">Cancel</string>
+    <string name="new_comment">Add new comment</string>
+    <string name="comments">Comments</string>
+    <string name="add_comment">Add comment</string>
 
 </resources>
