@@ -122,4 +122,16 @@
     <string name="edit_profile">Editar perfil</string>
     <string name="change_picture">Canviar imatge</string>
     <string name="join_msg">Uneix-te a SocialBank i anem-hi a l\'esdeveniment de \'%1$s\' Troba més informació a %2$s\/%3$s</string>
+    <string name="filter">Filtre</string>
+    <string name="join_events">Join events</string>
+    <string name="disjoin">Desapuntar-se</string>
+    <string name="confirm_disjoin_event">Vols desapuntar-te de aquest esdeveniment?</string>
+    <string name="not_hours_msg">No tens hores suficients per apuntar-te a aquest esdeveniment</string>
+    <string name="joined_msg">Ja estas apuntat a aquest esdeveniment</string>
+    <string name="cancel_btn">CANCEL·LAR</string>
+    <string name="canceljoin_msg">Ja no estas apuntat a aquest esdeveniment</string>
+    <string name="individual">Individual</string>
+    <string name="groupal">Grupal</string>
+    <string name="event_full_msg">Aquest esdeveniment esta complet</string>
+
 </resources>

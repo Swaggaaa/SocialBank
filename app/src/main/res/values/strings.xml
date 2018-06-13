@@ -63,7 +63,7 @@
     <string name="demand">Demanda</string>
     <string name="offered">Oferta</string>
     <string name="about_description">Sobre este evento</string>
-    <string name="join">Asignarse</string>
+    <string name="join">Apuntarse</string>
     <string name="invite">Invitar</string>
     <string name="hours">+- horas</string>
     <string name="about_me">Sobre mi</string>
@@ -122,5 +122,16 @@
     <string name="edit_profile">Editar perfil</string>
     <string name="change_picture">Cambiar imagen</string>
     <string name="join_msg">Únete a SocialBank y vayamos al evento de \'%1$s\'. Encuentra más información en %2$s\/%3$s</string>
+    <string name="filter">Filtro</string>
+    <string name="join_events">Disfruta del evento</string>
+    <string name="disjoin">Desapuntarse</string>
+    <string name="confirm_disjoin_event">¿Quieres desapuntarte de este evento?</string>
+    <string name="not_hours_msg">No tienes horas suficientes para apuntarte a este evento</string>
+    <string name="joined_msg">Ya estas apuntado a este evento</string>
+    <string name="cancel_btn">CANCELAR</string>
+    <string name="canceljoin_msg">Ya no estas apuntado a este evento</string>
+    <string name="individual">Individual</string>
+    <string name="groupal">Grupal</string>
+    <string name="event_full_msg">Este evento esta completo</string>
 
 </resources>
