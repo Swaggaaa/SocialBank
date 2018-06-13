@@ -193,7 +193,6 @@ public class BoardFragment extends Fragment {
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
                     items.add(new Event(jsonObject));
                 }
-
                 mAdapter = new EventAdapter(items, getActivity(), (v1, position) -> {
                     Bundle bundle = new Bundle();
                     Event event = items.get(position);
