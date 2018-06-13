@@ -23,12 +23,17 @@ public class LanguageHelper {
 
     public static void changeLocale(Resources res, int position) {
         Configuration config = new Configuration(res.getConfiguration());
-        config.locale = new Locale(language.get(position));
+        config.setLocale(new Locale(language.get(position)));
         res.updateConfiguration(config, res.getDisplayMetrics());
     }
 
     public static int getPosition(String lang) {
-        return  language.indexOf(lang);
+        for (String lan : language)
+            if (lan.toLowerCase().contains(lang.toLowerCase()) ||
+                    lang.toLowerCase().contains(lan.toLowerCase()))
+                return language.indexOf(lan);
+
+        return 0;
     }
 
 }

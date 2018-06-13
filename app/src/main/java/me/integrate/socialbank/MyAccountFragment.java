@@ -3,15 +3,13 @@ package me.integrate.socialbank;
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.Color;
+import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,7 +32,6 @@ import com.braintreepayments.api.interfaces.PaymentMethodNonceCreatedListener;
 import com.braintreepayments.api.models.PayPalRequest;
 import com.braintreepayments.api.models.PaymentMethodNonce;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -45,7 +42,8 @@ import java.util.List;
 import java.util.Map;
 
 public class MyAccountFragment extends Fragment implements PaymentMethodNonceCreatedListener,
-        BraintreeErrorListener, BraintreeCancelListener {
+        BraintreeErrorListener, BraintreeCancelListener
+{
     private static final String URL = "/users";
     private static final String PURCHASE_URL = "/purchase";
     private TextView accountStatus;
@@ -62,21 +60,25 @@ public class MyAccountFragment extends Fragment implements PaymentMethodNonceCre
     private BraintreeFragment mBrainTreeFragment;
     private List<HoursPackage> hoursPackages;
     private HoursPackage chosenHoursPackage;
+    private int currentLocale;
 
     private ViewPager viewPager;
     private TabLayout tabs;
     private Adapter adapter;
 
 
-    enum TransactionResults {
+    enum TransactionResults
+    {
         ACCEPTED, REJECTED
     }
+
     private Spinner languageSpinner;
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+                             Bundle savedInstanceState)
+    {
         // Inflate the layout for this fragment
         new LanguageHelper();
         hoursPackages = new ArrayList<>();
@@ -94,7 +96,7 @@ public class MyAccountFragment extends Fragment implements PaymentMethodNonceCre
         userBalance = (TextView) rootView.findViewById(R.id.user_balance);
         languageSpinner = (Spinner) rootView.findViewById(R.id.language_spinner);
         languageSpinner.setSelection(LanguageHelper.getPosition(getResources().getConfiguration().locale.toString()));
-        email = SharedPreferencesManager.INSTANCE.read(getActivity(),"user_email");
+        email = SharedPreferencesManager.INSTANCE.read(getActivity(), "user_email");
         loadingDialog = ProgressDialog.show(getActivity(), "",
                 getString(R.string.loadingMessage), true);
         loadScreen(email);
@@ -106,8 +108,8 @@ public class MyAccountFragment extends Fragment implements PaymentMethodNonceCre
         return rootView;
     }
 
-    private void setupViewPager(ViewPager viewPager) {
-
+    private void setupViewPager(ViewPager viewPager)
+    {
 
 
         adapter.addFragment(new Package100Fragment(), "Package 100");
@@ -116,46 +118,53 @@ public class MyAccountFragment extends Fragment implements PaymentMethodNonceCre
         viewPager.setAdapter(adapter);
 
 
-
-
     }
 
-    static class Adapter extends FragmentPagerAdapter {
+    static class Adapter extends FragmentPagerAdapter
+    {
         private final List<Fragment> mFragmentList = new ArrayList<>();
         private final List<String> mFragmentTitleList = new ArrayList<>();
 
-        public Adapter(FragmentManager manager) {
+        public Adapter(FragmentManager manager)
+        {
             super(manager);
         }
 
         @Override
-        public Fragment getItem(int position) {
+        public Fragment getItem(int position)
+        {
             return mFragmentList.get(position);
         }
 
         @Override
-        public int getCount() {
+        public int getCount()
+        {
             return mFragmentList.size();
         }
 
-        public void addFragment(Fragment fragment, String title) {
+        public void addFragment(Fragment fragment, String title)
+        {
             mFragmentList.add(fragment);
             mFragmentTitleList.add(title);
         }
 
         @Override
-        public CharSequence getPageTitle(int position) {
+        public CharSequence getPageTitle(int position)
+        {
             return mFragmentTitleList.get(position);
         }
     }
 
-    private void loadScreen(String emailUser) {
+    private void loadScreen(String emailUser)
+    {
 
         APICommunicator apiCommunicator = new APICommunicator();
-        @SuppressLint("SetTextI18n") Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response -> {
+        @SuppressLint("SetTextI18n") Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response ->
+        {
             JSONObject jsonObject;
 
-            try {
+            try
+            {
                 jsonObject = new JSONObject(response.response);
                 verified = jsonObject.getBoolean("verified");
                 Float balance;
@@ -166,13 +175,15 @@ public class MyAccountFragment extends Fragment implements PaymentMethodNonceCre
                     userBalance.setTextColor(this.getResources().getColor(R.color.negative_balance));
                 else if (balance > 0)
                     userBalance.setTextColor(this.getResources().getColor(R.color.positive_balance));
-                if (verified) {
+                if (verified)
+                {
                     accountStatusImage.setVisibility(View.VISIBLE);
                     accountStatus.setText(R.string.verified);
                     purchaseHoursButton.setVisibility(View.VISIBLE);
                     viewPager.setVisibility(View.VISIBLE);
                     tabs.setVisibility(View.VISIBLE);
-                } else {
+                } else
+                {
                     accountStatus.setText(R.string.standard);
                     verifyAccountHint.setVisibility(View.VISIBLE);
                     sendRequestText.setVisibility(View.VISIBLE);
@@ -180,7 +191,8 @@ public class MyAccountFragment extends Fragment implements PaymentMethodNonceCre
                 }
                 loadingDialog.dismiss();
 
-            } catch (JSONException e) {
+            } catch (JSONException e)
+            {
                 e.printStackTrace();
             }
 
@@ -190,31 +202,33 @@ public class MyAccountFragment extends Fragment implements PaymentMethodNonceCre
         apiCommunicator.getRequest(getActivity().getApplicationContext(), URL + '/' + emailUser, responseListener, errorListener, null);
     }
 
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState)
+    {
         super.onViewCreated(view, savedInstanceState);
-        sendRequestButton.setOnClickListener(v -> {
+        sendRequestButton.setOnClickListener(v ->
+        {
             loadingDialog = ProgressDialog.show(getActivity(), "",
                     getString(R.string.loadingMessage), true);
             HashMap<String, String> params = new HashMap<>();
             params.put("message ", sendRequestText.getText().toString());
             sendRequest(params);
         });
-        purchaseHoursButton.setOnClickListener(v -> {
+        purchaseHoursButton.setOnClickListener(v ->
+        {
             purchaseHours();
         });
 
-
+        languageSpinner.setSelected(false);
+        languageSpinner.setSelection(languageSpinner.getSelectedItemPosition(), false);
 
         languageSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
         {
             @Override
-            public void onItemSelected(AdapterView adapter, View v, int i, long lng) {
-                int previousLocale = LanguageHelper.getPosition(getResources().getConfiguration().locale.toString());
+            public void onItemSelected(AdapterView adapter, View v, int i, long lng)
+            {
                 LanguageHelper.changeLocale(getContext().getResources(), i);
-                if (previousLocale != i) {
-                    Intent refresh = new Intent(getActivity(), MainActivity.class);
-                    startActivity(refresh);
-                }
+                Intent refresh = new Intent(getActivity(), MainActivity.class);
+                startActivity(refresh);
             }
 
             @Override
@@ -226,9 +240,11 @@ public class MyAccountFragment extends Fragment implements PaymentMethodNonceCre
 
     }
 
-    private void sendRequest(HashMap<String, String> params) {
+    private void sendRequest(HashMap<String, String> params)
+    {
         APICommunicator apiCommunicator = new APICommunicator();
-        Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response -> {
+        Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response ->
+        {
             loadingDialog.dismiss();
             Toast.makeText(getActivity().getApplicationContext(), R.string.verification_requested, Toast.LENGTH_LONG).show();
         };
@@ -237,7 +253,8 @@ public class MyAccountFragment extends Fragment implements PaymentMethodNonceCre
         apiCommunicator.postRequest(getActivity().getApplicationContext(), URL + '/' + email + "/verified", responseListener, errorListener, params);
     }
 
-    private void errorTreatment(int errorCode) {
+    private void errorTreatment(int errorCode)
+    {
         String message;
         if (errorCode == 401)
             message = getString(R.string.unauthorized);
@@ -252,19 +269,23 @@ public class MyAccountFragment extends Fragment implements PaymentMethodNonceCre
         Toast.makeText(getActivity().getApplicationContext(), message, Toast.LENGTH_LONG).show();
     }
 
-    private void purchaseHours() {
+    private void purchaseHours()
+    {
         APICommunicator apiCommunicator = new APICommunicator();
-        Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response -> {
+        Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response ->
+        {
             String clientToken = response.response;
-            try {
+            try
+            {
                 mBrainTreeFragment = BraintreeFragment.newInstance(this.getActivity(), clientToken);
-            } catch (InvalidArgumentException ex) {
+            } catch (InvalidArgumentException ex)
+            {
                 ex.printStackTrace();
             }
 
             mBrainTreeFragment.addListener(this);
 
-        chosenHoursPackage = hoursPackages.get(tabs.getSelectedTabPosition());
+            chosenHoursPackage = hoursPackages.get(tabs.getSelectedTabPosition());
 
             PayPalRequest paypalRequest = new PayPalRequest(String.valueOf(chosenHoursPackage.getPrice()))
                     .currencyCode("EUR")
@@ -273,7 +294,8 @@ public class MyAccountFragment extends Fragment implements PaymentMethodNonceCre
             PayPal.requestOneTimePayment(mBrainTreeFragment, paypalRequest);
         };
 
-        Response.ErrorListener errorListener = error -> {
+        Response.ErrorListener errorListener = error ->
+        {
             String message;
             int errorCode = error.networkResponse == null ? -1 : error.networkResponse.statusCode;
             if (errorCode == 401)
@@ -295,30 +317,37 @@ public class MyAccountFragment extends Fragment implements PaymentMethodNonceCre
     }
 
     @Override
-    public void onPaymentMethodNonceCreated(PaymentMethodNonce paymentMethodNonce) {
+    public void onPaymentMethodNonceCreated(PaymentMethodNonce paymentMethodNonce)
+    {
         APICommunicator apiCommunicator = new APICommunicator();
-        Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response -> {
+        Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response ->
+        {
             loadingDialog.dismiss();
             TransactionResults transactionResults = null;
             int hours = 0;
-            try {
+            try
+            {
                 JSONObject jsonObject = new JSONObject(response.response);
                 transactionResults = TransactionResults.valueOf(
                         jsonObject.getString("transactionResults"));
                 hours = jsonObject.getInt("hours");
-            } catch (JSONException ex) {
+            } catch (JSONException ex)
+            {
                 ex.printStackTrace();
             }
-            if (transactionResults == TransactionResults.ACCEPTED) {
+            if (transactionResults == TransactionResults.ACCEPTED)
+            {
                 userBalance.setText(String.valueOf(
                         Double.valueOf(userBalance.getText().toString()) + hours));
                 Toast.makeText(getActivity().getApplicationContext(), R.string.thank_you_purchase, Toast.LENGTH_LONG).show();
-            } else {
+            } else
+            {
                 Toast.makeText(getActivity().getApplicationContext(), R.string.payment_rejected, Toast.LENGTH_LONG).show();
             }
         };
 
-        Response.ErrorListener errorListener = error -> {
+        Response.ErrorListener errorListener = error ->
+        {
             loadingDialog.dismiss();
             String message;
             int errorCode = error.networkResponse == null ? -1 : error.networkResponse.statusCode;
@@ -345,21 +374,26 @@ public class MyAccountFragment extends Fragment implements PaymentMethodNonceCre
     }
 
     @Override
-    public void onCancel(int requestCode) {
+    public void onCancel(int requestCode)
+    {
         loadingDialog.dismiss();
         Toast.makeText(getActivity().getApplicationContext(), R.string.payment_not_finished, Toast.LENGTH_LONG).show();
     }
 
     @Override
-    public void onError(Exception error) {
+    public void onError(Exception error)
+    {
         loadingDialog.dismiss();
-        if (error instanceof ErrorWithResponse) {
+        if (error instanceof ErrorWithResponse)
+        {
             ErrorWithResponse errorWithResponse = (ErrorWithResponse) error;
             BraintreeError cardErrors = errorWithResponse.errorFor("creditCard");
-            if (cardErrors != null) {
+            if (cardErrors != null)
+            {
                 // There is an issue with the credit card.
                 BraintreeError expirationMonthError = cardErrors.errorFor("expirationMonth");
-                if (expirationMonthError != null) {
+                if (expirationMonthError != null)
+                {
                     // There is an issue with the expiration month.
                     System.out.println(expirationMonthError.getMessage());
                 }

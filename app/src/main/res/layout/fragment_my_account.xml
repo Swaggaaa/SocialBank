@@ -125,7 +125,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:entries="@array/languages"
-                android:textColor="@color/material_blue_grey_800" />
+                android:textColor="@color/material_blue_grey_800"/>
 
         </LinearLayout>
 
