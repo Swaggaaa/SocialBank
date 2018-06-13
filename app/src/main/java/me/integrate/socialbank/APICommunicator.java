@@ -82,6 +82,13 @@ class APICommunicator {
                     return null;
                 }
             }
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String> headers = new HashMap<>();
+                String token = SharedPreferencesManager.INSTANCE.read(context, "token");
+                if (token != null) headers.put("Authorization", token);
+                return headers;
+            }
 
             @Override
             public String getBodyContentType() {
