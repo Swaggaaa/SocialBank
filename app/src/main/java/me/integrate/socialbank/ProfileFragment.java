@@ -88,6 +88,7 @@ public class ProfileFragment extends Fragment {
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.my_recycler_view_user_profile);
         mRecyclerView.setHasFixedSize(true);
         isFABOpen = false;
+        items.clear();
         openMenu = (FloatingActionButton) rootView.findViewById(R.id.openMenu);
         reportUserButton = (FloatingActionButton) rootView.findViewById(R.id.reportProfile);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
