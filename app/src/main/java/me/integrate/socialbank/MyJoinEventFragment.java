@@ -120,6 +120,7 @@ public class MyJoinEventFragment extends EventFragment {
         apiCommunicator.postRequest(getActivity().getApplicationContext(), URL_events +'/' + id + "/enrollments", responseListener, errorListener, params);
     }
 
+
     //To CANCEL your enrollment to an event
     private void cancelJoinEvent(HashMap<String, String> params) {
         APICommunicator apiCommunicator = new APICommunicator();
