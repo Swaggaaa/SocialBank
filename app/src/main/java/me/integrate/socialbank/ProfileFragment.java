@@ -273,7 +273,7 @@ public class ProfileFragment extends Fragment {
                     bundle.putInt("id", event.getId());
                     bundle.putBoolean("MyProfile", true);
                     Fragment eventFragment;
-                    if (event.getCreatorEmail().equals(emailUser) && correctDate(event.getIniDate())) {
+                    if (event.getCreatorEmail().equals(SharedPreferencesManager.INSTANCE.read(getActivity(), "user_email")) && correctDate(event.getIniDate())) {
                         eventFragment = MyEventFragment.newInstance(bundle);
                     }
                     else eventFragment = EventFragment.newInstance(bundle);

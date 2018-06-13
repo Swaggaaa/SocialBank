@@ -37,7 +37,7 @@ public class UserSearchFragment extends Fragment {
         mRecyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(layoutManager);
-        mRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(getContext()));
+        mRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(getContext(), true));
         SearchView mSearchView = (SearchView) rootView.findViewById(R.id.user_search);
         mSearchView.setQueryHint(getString(R.string.input_name));
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {

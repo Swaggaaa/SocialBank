@@ -10,13 +10,16 @@ import android.view.View;
 public class SimpleDividerItemDecoration extends RecyclerView.ItemDecoration {
     private Drawable mDivider;
 
-    public SimpleDividerItemDecoration(Context context) {
+    private boolean users;
+
+    public SimpleDividerItemDecoration(Context context, boolean users) {
         mDivider = context.getResources().getDrawable(R.drawable.line_divider);
+        this.users = users;
     }
 
     @Override
     public void onDrawOver(Canvas c, RecyclerView parent, RecyclerView.State state) {
-        int left = 225;  //parent.getPaddingLeft();
+        int left = (users) ? 225: parent.getPaddingLeft();
         int right = parent.getWidth() - parent.getPaddingRight() - 25   ;
 
         int childCount = parent.getChildCount();
