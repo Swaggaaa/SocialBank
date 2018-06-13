@@ -122,6 +122,11 @@
     <string name="edit_profile">Editar perfil</string>
     <string name="change_picture">Cambiar imagen</string>
     <string name="join_msg">Únete a SocialBank y vayamos al evento de \'%1$s\'. Encuentra más información en %2$s\/%3$s</string>
+    <string name="get_hours">horas</string>
+    <string name="thank_you_purchase">Gracias por su compra!</string>
+    <string name="payment_rejected">Su transacción fue rechazada por el procesador de pagos!</string>
+    <string name="verifying_payment">Verificando pago, por favor espere…</string>
+    <string name="payment_not_finished">El proceso de pago no fue finalizado!</string>
     <string name="deleted_comment">Comentario eliminado</string>
     <string name="cancel">Cancelar</string>
     <string name="new_comment">Añade un nuevo comentario</string>

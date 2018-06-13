@@ -59,12 +59,13 @@ public class ProfileFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
 
+
     private RecyclerView awardRecyclerView;
     private RecyclerView.Adapter awardAdapter;
 
     private List<String> items = new ArrayList<>();
 
-    private ProgressDialog loadingDialog;
+    protected ProgressDialog loadingDialog;
 
 
     @Override
@@ -99,6 +100,7 @@ public class ProfileFragment extends Fragment {
         loadingDialog = ProgressDialog.show(getActivity(), "", getString(R.string.loadingMessage), true);
         fillFields();
         getUserEvents();
+
         return rootView;
     }
 
@@ -153,7 +155,7 @@ public class ProfileFragment extends Fragment {
                 });
 
                 awardRecyclerView.setAdapter(awardAdapter);
-
+                loadingDialog.dismiss();
 
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -287,16 +289,13 @@ public class ProfileFragment extends Fragment {
                 });
 
                 mRecyclerView.setAdapter(mAdapter);
-                loadingDialog.dismiss();
+
 
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         };
-        Response.ErrorListener errorListener = error -> {
-            loadingDialog.dismiss();
-            errorTreatment(error.networkResponse.statusCode);
-        };
+        Response.ErrorListener errorListener = error -> errorTreatment(error.networkResponse.statusCode);
         apiCommunicator.getRequest(getActivity().getApplicationContext(), URL +'/'+ emailUser + "/events", responseListener, errorListener, params);
     }
 

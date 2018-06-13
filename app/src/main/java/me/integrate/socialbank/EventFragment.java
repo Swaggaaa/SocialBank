@@ -107,8 +107,8 @@ public class EventFragment extends Fragment implements AddCommentFragment.OnComm
 
         comments = new ArrayList<>();
 
-        // loadingDialog = ProgressDialog.show(getActivity(), "",
-           //     getString(R.string.loadingMessage), true);
+         loadingDialog = ProgressDialog.show(getActivity(), "",
+                getString(R.string.loadingMessage), true);
 
         id = getArguments().getInt("id");
         getComments();
@@ -152,7 +152,7 @@ public class EventFragment extends Fragment implements AddCommentFragment.OnComm
                 textEventHours.setText(hours);
                 textStartDate.setText(dateToString(iniDate));
                 textEndDate.setText(dateToString(endDate));
-
+                loadingDialog.dismiss();
             } catch (JSONException e) {
                 Toast.makeText(EventFragment.this.getActivity().getApplicationContext(), R.string.JSONException, Toast.LENGTH_LONG).show();
             }
@@ -173,7 +173,7 @@ public class EventFragment extends Fragment implements AddCommentFragment.OnComm
             message = getString(R.string.not_found);
         else
             message = getString(R.string.unexpectedError);
-
+        loadingDialog.dismiss();
         Toast.makeText(getActivity().getApplicationContext(), message, Toast.LENGTH_LONG).show();
     }
 
