@@ -2,6 +2,7 @@ package me.integrate.socialbank;
 
 import android.content.Context;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
@@ -68,6 +69,10 @@ class APICommunicator {
                 return CONTENT_TYPE;
             }
         };
+        postRequest.setRetryPolicy(new DefaultRetryPolicy(
+                10000,
+                2,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         Volley.newRequestQueue(context).add(postRequest);
     }
 
