@@ -18,8 +18,7 @@
             android:id="@+id/imageViewEvent"
             android:layout_width="match_parent"
             android:layout_height="200dp"
-            android:layout_gravity="center"
-            android:layout_weight="1"/>
+            android:layout_gravity="center"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -202,7 +201,7 @@
             <TextView
                 android:id="@+id/textEventDescription"
                 android:layout_width="match_parent"
-                android:layout_marginBottom="20dp"
+                android:layout_marginBottom="10dp"
                 android:layout_height="wrap_content" />
 
             <EditText
@@ -215,10 +214,51 @@
                 android:id="@+id/buttonUpdate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="50dp"
+                android:layout_marginBottom="20dp"
                 android:background="@android:color/holo_blue_dark"
                 android:text="@string/update"
-                android:visibility="gone" />
+                android:visibility="gone"/>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/comments"
+                    android:text="@string/comments"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.2"
+                    android:layout_marginBottom="10dp"
+                    android:textColor="@color/colorNavigation"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+
+                <ImageView
+                    android:id="@+id/addComment"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:maxHeight="42dp"
+                    android:maxWidth="42dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_message"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="30dp">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recycler_view_comment"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+            </LinearLayout>
 
             <Button
                 android:id="@+id/delete_event"
@@ -227,9 +267,10 @@
                 android:layout_marginBottom="50dp"
                 android:background="@android:color/holo_blue_dark"
                 android:text="@string/delete"
-                android:visibility="gone" />
+                android:visibility="gone"/>
 
         </LinearLayout>
+
 
     </LinearLayout>
 </ScrollView>

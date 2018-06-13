@@ -209,9 +209,7 @@ public class MyAccountFragment extends Fragment implements PaymentMethodNonceCre
         {
             loadingDialog = ProgressDialog.show(getActivity(), "",
                     getString(R.string.loadingMessage), true);
-            HashMap<String, String> params = new HashMap<>();
-            params.put("message ", sendRequestText.getText().toString());
-            sendRequest(params);
+            sendRequest(sendRequestText.getText().toString());
         });
         purchaseHoursButton.setOnClickListener(v ->
         {
@@ -240,8 +238,7 @@ public class MyAccountFragment extends Fragment implements PaymentMethodNonceCre
 
     }
 
-    private void sendRequest(HashMap<String, String> params)
-    {
+    private void sendRequest(String message) {
         APICommunicator apiCommunicator = new APICommunicator();
         Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response ->
         {
@@ -250,7 +247,7 @@ public class MyAccountFragment extends Fragment implements PaymentMethodNonceCre
         };
         Response.ErrorListener errorListener = error -> errorTreatment(error.networkResponse.statusCode);
 
-        apiCommunicator.postRequest(getActivity().getApplicationContext(), URL + '/' + email + "/verified", responseListener, errorListener, params);
+        apiCommunicator.postRequest(getActivity().getApplicationContext(), URL+'/'+email+"/verified", responseListener, errorListener, message);
     }
 
     private void errorTreatment(int errorCode)

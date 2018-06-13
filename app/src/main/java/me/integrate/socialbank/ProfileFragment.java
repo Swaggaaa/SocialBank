@@ -58,12 +58,13 @@ public class ProfileFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
 
+
     private RecyclerView awardRecyclerView;
     private RecyclerView.Adapter awardAdapter;
 
     private List<String> items = new ArrayList<>();
 
-    private ProgressDialog loadingDialog;
+    protected ProgressDialog loadingDialog;
 
 
     @Override
@@ -88,6 +89,7 @@ public class ProfileFragment extends Fragment {
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.my_recycler_view_user_profile);
         mRecyclerView.setHasFixedSize(true);
         isFABOpen = false;
+        items.clear();
         openMenu = (FloatingActionButton) rootView.findViewById(R.id.openMenu);
         reportUserButton = (FloatingActionButton) rootView.findViewById(R.id.reportProfile);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
@@ -97,6 +99,7 @@ public class ProfileFragment extends Fragment {
         loadingDialog = ProgressDialog.show(getActivity(), "", getString(R.string.loadingMessage), true);
         fillFields();
         getUserEvents();
+
         return rootView;
     }
 
@@ -150,7 +153,7 @@ public class ProfileFragment extends Fragment {
                 });
 
                 awardRecyclerView.setAdapter(awardAdapter);
-
+                loadingDialog.dismiss();
 
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -272,7 +275,7 @@ public class ProfileFragment extends Fragment {
                     bundle.putInt("id", event.getId());
                     bundle.putBoolean("MyProfile", true);
                     Fragment eventFragment;
-                    if (event.getCreatorEmail().equals(emailUser) && correctDate(event.getIniDate())) {
+                    if (event.getCreatorEmail().equals(SharedPreferencesManager.INSTANCE.read(getActivity(), "user_email")) && correctDate(event.getIniDate())) {
                         eventFragment = MyEventFragment.newInstance(bundle);
                     }
                     else eventFragment = EventFragment.newInstance(bundle);
@@ -281,16 +284,13 @@ public class ProfileFragment extends Fragment {
                 });
 
                 mRecyclerView.setAdapter(mAdapter);
-                loadingDialog.dismiss();
+
 
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         };
-        Response.ErrorListener errorListener = error -> {
-            loadingDialog.dismiss();
-            errorTreatment(error.networkResponse.statusCode);
-        };
+        Response.ErrorListener errorListener = error -> errorTreatment(error.networkResponse.statusCode);
         apiCommunicator.getRequest(getActivity().getApplicationContext(), URL +'/'+ emailUser + "/events", responseListener, errorListener, params);
     }
 
@@ -304,7 +304,7 @@ public class ProfileFragment extends Fragment {
         }
     }
 
-    private Bitmap getImageRounded(Bitmap image) {
+    protected Bitmap getImageRounded(Bitmap image) {
         image = ImageHelper.cropBitmapToSquare(image);
         image = ImageHelper.getRoundedCornerBitmap(image, 420);
         return image;

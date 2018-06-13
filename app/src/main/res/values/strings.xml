@@ -127,5 +127,11 @@
     <string name="payment_rejected">Su transacción fue rechazada por el procesador de pagos!</string>
     <string name="verifying_payment">Verificando pago, por favor espere…</string>
     <string name="payment_not_finished">El proceso de pago no fue finalizado!</string>
+    <string name="deleted_comment">Comentario eliminado</string>
+    <string name="cancel">Cancelar</string>
+    <string name="new_comment">Añade un nuevo comentario</string>
+    <string name="comments">Comentarios</string>
+    <string name="add_comment">Añade un comentario</string>
+
 
 </resources>

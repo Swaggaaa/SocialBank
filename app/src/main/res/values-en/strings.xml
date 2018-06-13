@@ -127,4 +127,10 @@
     <string name="payment_rejected">Your transaction was rejected by the payment processor</string>
     <string name="verifying_payment">Verifying payment, please wait…</string>
     <string name="payment_not_finished">You didn\'t finish the payment process!</string>
+    <string name="deleted_comment">Comment deleted</string>
+    <string name="cancel">Cancel</string>
+    <string name="new_comment">Add new comment</string>
+    <string name="comments">Comments</string>
+    <string name="add_comment">Add comment</string>
+
 </resources>
