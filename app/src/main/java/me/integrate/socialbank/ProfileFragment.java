@@ -300,6 +300,17 @@ public class ProfileFragment extends Fragment {
         apiCommunicator.getRequest(getActivity().getApplicationContext(), URL +'/'+ emailUser + "/events", responseListener, errorListener, params);
     }
 
+    private boolean correctDate(Date iniDate) {
+        if (iniDate == null) return true;
+        else {
+            Date currentDate = new Date();
+            long hours = iniDate.getTime() - currentDate.getTime();
+            hours = hours/ 1000 / 60 / 60;
+            return hours >= 24;
+        }
+    }
+
+
     protected Bitmap getImageRounded(Bitmap image) {
         image = ImageHelper.cropBitmapToSquare(image);
         image = ImageHelper.getRoundedCornerBitmap(image, 420);
