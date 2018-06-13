@@ -17,8 +17,9 @@
         <ImageView
             android:id="@+id/imageViewEvent"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="12dp" />
+            android:layout_height="200dp"
+            android:layout_gravity="center"
+            android:layout_weight="1"/>
 
         <LinearLayout
             android:layout_width="match_parent"
