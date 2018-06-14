@@ -151,6 +151,45 @@ public class ProfileFragment extends Fragment {
                 }
 
                 awardAdapter = new AwardAdapter(items, (v1, position) -> {
+                    String award =items.get(position);
+                    String message = "";
+                    String title = "";
+                    int icon = 0;
+                    if (award.equals(Award.DEVELOPER.name())) {
+                        message = getString(R.string.user_developer);
+                        title = getString(R.string.developer);
+                        icon = R.drawable.developer;
+                    }
+
+                    else if (award.equals(Award.TOP_ORGANIZER.name())) {
+                        title = getString(R.string.top_organizer);
+                        message = getString(R.string.user_organizer);
+                        icon = R.drawable.award;
+                    }
+
+                    else if (award.equals(Award.ACTIVE_USER.name())) {
+                        title = getString(R.string.active);
+                        message = getString(R.string.user_active);
+                        icon = R.drawable.volunteer;
+                    }
+
+                    else {
+                        title = getString(R.string.verified_account);
+                        message = getString(R.string.user_verified);
+                        icon = R.drawable.verified;
+                    }
+
+                    AlertDialog.Builder dialogAward = new AlertDialog.Builder(getContext());
+                    dialogAward.setTitle(title);
+                    dialogAward.setIcon(icon);
+                    dialogAward.setMessage(message);
+                    dialogAward.setCancelable(false);
+                    dialogAward.setPositiveButton(getResources().getString(R.string.ok), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                        }
+                    });
+                    dialogAward.show();
                 });
 
                 awardRecyclerView.setAdapter(awardAdapter);
