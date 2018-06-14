@@ -229,7 +229,7 @@ public class BoardFragment extends Fragment {
         mAdapter.notifyDataSetChanged();
     }
 
-    //Call to the API
+    //Call to API
     public void getAllEvents() {
         APICommunicator apiCommunicator = new APICommunicator();
         Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response -> {
