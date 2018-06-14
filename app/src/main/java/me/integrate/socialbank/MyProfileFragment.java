@@ -1,7 +1,6 @@
 package me.integrate.socialbank;
 
 import android.content.Intent;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -14,10 +13,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
-import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.TextView;
+
 import android.widget.Toast;
 
 import com.android.volley.Response;
@@ -30,12 +27,10 @@ import static android.content.ContentValues.TAG;
 
 public class MyProfileFragment extends ProfileFragment {
     private static final String URL = "/users";
-    private TextView userBalance;
     private boolean thereisPic;
     private boolean isFABOpen;
     private TextView editProfileText;
     private TextView changePictureText;
-    private TextView userBalanceText;
     FloatingActionButton editProfile;
     FloatingActionButton changeUserPhoto;
 
@@ -45,10 +40,10 @@ public class MyProfileFragment extends ProfileFragment {
         View view = super.onCreateView(inflater, container, savedInstanceState);
         editProfile = (FloatingActionButton) view.findViewById(R.id.editProfile);
         changeUserPhoto = (FloatingActionButton) view.findViewById(R.id.loadPicture);
-        userBalanceText = (TextView) view.findViewById(R.id.userBalanceText);
+        TextView userBalanceText = (TextView) view.findViewById(R.id.userBalanceText);
         editProfile.setVisibility(View.VISIBLE);
         changeUserPhoto.setVisibility(View.VISIBLE);
-        userBalance = (TextView) view.findViewById(R.id.hoursBalance);
+        TextView userBalance = (TextView) view.findViewById(R.id.hoursBalance);
         userBalance.setVisibility(View.VISIBLE);
         userBalanceText.setVisibility(View.VISIBLE);
         reportUserButton.setVisibility(View.GONE);
@@ -63,9 +58,7 @@ public class MyProfileFragment extends ProfileFragment {
         super.onViewCreated(view, savedInstanceState);
         thereisPic = false;
         view.findViewById(R.id.loadPicture).setOnClickListener(v ->
-        {
-            readGallery();
-        });
+                readGallery());
         view.findViewById(R.id.editProfile).setOnClickListener(v ->
         {
             Fragment boardFragment = new EditProfileFragment();
@@ -124,10 +117,7 @@ public class MyProfileFragment extends ProfileFragment {
 
     private void putCredentials(HashMap<String, Object> params) {
         APICommunicator apiCommunicator = new APICommunicator();
-        Response.Listener responseListener = response -> {
-            Toast.makeText(getActivity().getApplicationContext(), getString(R.string.image_update), Toast.LENGTH_LONG).show();
-
-        };
+        Response.Listener responseListener = response -> Toast.makeText(getActivity().getApplicationContext(), getString(R.string.image_update), Toast.LENGTH_LONG).show();
         Response.ErrorListener errorListener = error -> Toast.makeText(getActivity().getApplicationContext(), getString(R.string.something_wrong), Toast.LENGTH_LONG).show();
 
 

@@ -29,6 +29,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -337,6 +338,8 @@ public class CreateEventFragment extends Fragment {
                 ((BitmapDrawable) imageView.getDrawable()).getBitmap())
                 : "");
         params.put("capacity", capacity);
+        params.put("tags", new ArrayList<>());
+
 
         buttonCreate.setText(R.string.loading);
         buttonCreate.setEnabled(false);

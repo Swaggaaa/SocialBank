@@ -81,11 +81,7 @@ class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentViewHold
     private void deletedComment(int id) {
 
         APICommunicator apiCommunicator = new APICommunicator();
-        Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response -> {
-
-            Toast.makeText(getContext().getApplicationContext(), getContext().getResources().getString(R.string.deleted_comment), Toast.LENGTH_LONG).show();
-
-        };
+        Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response -> Toast.makeText(getContext().getApplicationContext(), getContext().getResources().getString(R.string.deleted_comment), Toast.LENGTH_LONG).show();
         Response.ErrorListener errorListener = error -> errorTreatment(error.networkResponse.statusCode);
 
         apiCommunicator.deleteRequest(getContext().getApplicationContext(), URL + '/' + id , responseListener, errorListener, null);
