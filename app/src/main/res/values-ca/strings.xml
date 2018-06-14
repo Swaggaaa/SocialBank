@@ -145,4 +145,8 @@
     <string name="groupal">Grupal</string>
     <string name="event_full_msg">Aquest esdeveniment esta complet</string>
 
+    <string name="information_event">Informació del esdeveniment</string>
+    <string name="edit_event">Editar esdeveniment</string>
+    <string name="update_event">Actualitzar la descripció de l\'esdeveniment</string>
+
 </resources>

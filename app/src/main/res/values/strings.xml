@@ -133,6 +133,9 @@
     <string name="comments">Comentarios</string>
     <string name="add_comment">Añade un comentario</string>
     <string name="initializing_paypal">Creando una conexión segura con PayPal, por favor espere…</string>
+    <string name="information_event">Información del evento</string>
+    <string name="edit_event">Editar evento</string>
+    <string name="update_event">Actualizar descripción del evento</string>
     <string name="filter">Filtro</string>
     <string name="join_events">Disfruta del evento</string>
     <string name="disjoin">Desapuntarse</string>

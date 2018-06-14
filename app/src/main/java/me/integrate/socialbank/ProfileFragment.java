@@ -17,6 +17,7 @@ import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -54,7 +55,7 @@ public class ProfileFragment extends Fragment {
     String descriptionUser;
     private boolean isFABOpen;
     private boolean verified;
-    FloatingActionButton openMenu;
+    protected FloatingActionButton openMenu;
     FloatingActionButton reportUserButton;
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
@@ -211,6 +212,7 @@ public class ProfileFragment extends Fragment {
         reportUsserText.setVisibility(View.VISIBLE);
         reportUsserText.bringToFront();
         reportUsserText.animate().translationY(-getResources().getDimension(R.dimen.standard_55));
+        openMenu.animate().rotation(45).setInterpolator(AnimationUtils.loadInterpolator(getContext(), android.R.interpolator.fast_out_slow_in)).start();
 
     }
 
@@ -219,6 +221,8 @@ public class ProfileFragment extends Fragment {
         reportUserButton.animate().translationY(0);
         reportUsserText.animate().translationY(0);
         reportUsserText.setVisibility(View.GONE);
+        openMenu.animate().rotation(0).setInterpolator(AnimationUtils.loadInterpolator(getContext(), android.R.interpolator.fast_out_slow_in)).start();
+
     }
 
     private void sendReportUser(HashMap<String, Object> params) {

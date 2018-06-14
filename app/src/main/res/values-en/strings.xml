@@ -122,6 +122,9 @@
     <string name="edit_profile">Edit Profile</string>
     <string name="change_picture">Change picture</string>
     <string name="join_msg">Join to SocialBank and let\s go to \'%1$s\' event! Find out more on %2$s\/%3$s</string>
+    <string name="information_event">Event information</string>
+    <string name="edit_event">Edit Event</string>
+    <string name="update_event">Update description\'s event</string>
     <string name="get_hours">hours</string>
     <string name="thank_you_purchase">Thank you for your purchase!</string>
     <string name="payment_rejected">Your transaction was rejected by the payment processor</string>
