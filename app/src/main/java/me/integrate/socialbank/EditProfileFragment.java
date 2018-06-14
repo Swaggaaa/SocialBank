@@ -80,7 +80,6 @@ public class EditProfileFragment extends Fragment {
                 loadingDialog.dismiss();
             }
 
-
         };
         Response.ErrorListener errorListener = error -> {
             Toast.makeText(getActivity().getApplicationContext(), "Something went wrong", Toast.LENGTH_LONG).show();
