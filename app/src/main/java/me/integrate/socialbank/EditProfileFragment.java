@@ -18,8 +18,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 
 public class EditProfileFragment extends Fragment {
     private static final String URL = "/users";
@@ -32,6 +34,7 @@ public class EditProfileFragment extends Fragment {
     private String bornDate;
     private String emailUser;
     private String image;
+    static List<String> genders;
 
     private ProgressDialog loadingDialog;
 
@@ -48,6 +51,10 @@ public class EditProfileFragment extends Fragment {
         loadingDialog = ProgressDialog.show(getActivity(), "",
                 getString(R.string.loadingMessage), true);
         getUserInfo(emailUser);
+        genders = new ArrayList<>();
+        genders.add("MALE");
+        genders.add("FEMALE");
+        genders.add("OTHER");
         return rootView;
     }
 
@@ -92,7 +99,7 @@ public class EditProfileFragment extends Fragment {
             params.put("name", newName.getText().toString());
             params.put("surname", newLastName.getText().toString());
             params.put("birthdate", bornDate);
-            params.put("gender", newGender.getSelectedItem().toString().toUpperCase());
+            params.put("gender", genders.get(newGender.getSelectedItemPosition()));
             params.put("description", newDescription.getText().toString());
             params.put("email", emailUser);
             params.put("image", image);
