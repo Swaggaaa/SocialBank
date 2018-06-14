@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -37,7 +38,7 @@ public class MyProfileFragment extends ProfileFragment {
     private TextView userBalanceText;
     FloatingActionButton editProfile;
     FloatingActionButton changeUserPhoto;
-    FloatingActionButton openMenu;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -90,6 +91,8 @@ public class MyProfileFragment extends ProfileFragment {
         changePictureText.setVisibility(View.VISIBLE);
         changePictureText.animate().translationY(-getResources().getDimension(R.dimen.standard_105));
         changeUserPhoto.animate().translationY(-getResources().getDimension(R.dimen.standard_105));
+        openMenu.animate().rotation(45).setInterpolator(AnimationUtils.loadInterpolator(getContext(), android.R.interpolator.fast_out_slow_in)).start();
+
     }
 
     private void closeFABMenu() {
@@ -100,6 +103,8 @@ public class MyProfileFragment extends ProfileFragment {
         editProfileText.setVisibility(View.GONE);
         changePictureText.animate().translationY(0);
         changePictureText.setVisibility(View.GONE);
+        openMenu.animate().rotation(0).setInterpolator(AnimationUtils.loadInterpolator(getContext(), android.R.interpolator.fast_out_slow_in)).start();
+
     }
 
     private void updateProfile() {
