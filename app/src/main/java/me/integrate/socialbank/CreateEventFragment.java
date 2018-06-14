@@ -33,6 +33,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.Vector;
 
 import static android.app.Activity.RESULT_OK;
@@ -339,7 +341,7 @@ public class CreateEventFragment extends Fragment {
                 ((BitmapDrawable) imageView.getDrawable()).getBitmap())
                 : "");
         params.put("capacity", capacity);
-        params.put("tags", new ArrayList<>());
+        params.put("tags", getTags());
 
 
         buttonCreate.setText(R.string.loading);
@@ -549,5 +551,27 @@ public class CreateEventFragment extends Fragment {
 
     private boolean enoughHours() {
         return userHours >= getEventHours();
+    }
+
+    private String getHashtag(String text) { //Returns a list with all Tags
+        String tag = text;
+        int i_space = text.indexOf(" ");
+        int i_next = text.indexOf("#");
+        int i = (i_next != -1 && i_space > i_next) ? i_next : i_space;
+        if( i > 0 ) tag = tag.substring(0, i);
+        return tag;
+    }
+
+    private Set<String> getTags() { //Returns a list with all Tags
+        Set<String> tags = new HashSet<String>();
+        String text = description.getText().toString();
+
+        //Find every occurrence of '#'
+        for (int i = -1; (i = text.indexOf("#", i + 1)) != -1; i++) {
+            String tag = getHashtag( text.substring(i+1) );
+            tags.add(tag);
+        }
+
+        return tags;
     }
 }

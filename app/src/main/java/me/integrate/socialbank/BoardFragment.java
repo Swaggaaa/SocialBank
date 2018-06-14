@@ -23,6 +23,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 public class BoardFragment extends Fragment {
@@ -49,7 +50,6 @@ public class BoardFragment extends Fragment {
     private boolean available;
     private String emailUser;
 
-
     private MenuItem itemLanguage;
     private MenuItem itemCulture;
     private MenuItem itemWorkshops;
@@ -61,7 +61,6 @@ public class BoardFragment extends Fragment {
     private MenuItem itemDemand;
     private MenuItem itemAvailable;
     private String[] tagsText;
-    private MenuItem itemTagged;
 
     private ProgressDialog loadingDialog;
 
@@ -99,7 +98,6 @@ public class BoardFragment extends Fragment {
         itemOffer = menu.findItem(R.id.event_offer);
         itemDemand = menu.findItem(R.id.event_demand);
         itemAvailable = menu.findItem(R.id.event_available);
-        itemTagged = menu.findItem(R.id.event_tagged);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -175,7 +173,6 @@ public class BoardFragment extends Fragment {
                 break;
         }
         return true;
-
     }
 
     private void set_tags() {
@@ -202,29 +199,24 @@ public class BoardFragment extends Fragment {
         return (!available || (available && event.isAvailable()));
     }
 
-    private void checkTags(Event event) {
-        if( (tagsText[0]!="" && event.hasTag(tagsText[0])) || (tagsText[0]==""))
-            items.add(event);
-    }
-
     private void check(Event event) {
-        if (offer || demand || available || (tagsText[0]!="")) {
+        if (offer || demand || available) {
             if (offer && !event.isDemand() && checkAvailability(event)) {
-                checkTags( event );
+                items.add(event);
             }
             else if (demand && event.isDemand() && checkAvailability(event)) {
-                checkTags( event );
+                items.add(event);
             }
             else if (!offer && !demand && checkAvailability(event)) {
-                checkTags( event );
+                items.add(event);
             }
-        } else checkTags( event );
+        } else items.add(event);
     }
 
     private void update() {
         items.clear();
         boolean category = language || culture || workshops || sports || gastronomy || leisure || other;
-        if (category || offer || demand || available || (tagsText[0] != "")) {
+        if (category || offer || demand || available) {
             for (Event event: allItems) {
                 if (language && event.getCategory() == Event.Category.LANGUAGE) check(event);
                 else if (culture && event.getCategory() == Event.Category.CULTURE ) check(event);
@@ -234,7 +226,6 @@ public class BoardFragment extends Fragment {
                 else if (leisure && event.getCategory() == Event.Category.LEISURE) check(event);
                 else if (other && event.getCategory() == Event.Category.OTHER ) check(event);
                 else if (!category && (offer || demand || available)) check(event);
-                else if (tagsText[0] != "") checkTags(event);
             }
         } else {
             items.addAll(allItems);
