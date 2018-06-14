@@ -4,6 +4,7 @@ package me.integrate.socialbank;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -16,7 +17,6 @@ import com.android.volley.Response;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +37,7 @@ public class UserSearchFragment extends Fragment {
         mRecyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(layoutManager);
+        mRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(getContext(), true));
         SearchView mSearchView = (SearchView) rootView.findViewById(R.id.user_search);
         mSearchView.setQueryHint(getString(R.string.input_name));
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {

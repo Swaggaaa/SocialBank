@@ -35,6 +35,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.Vector;
 
 import static android.app.Activity.RESULT_OK;
 import static android.content.ContentValues.TAG;
@@ -78,8 +79,22 @@ public class CreateEventFragment extends Fragment {
     private Integer startMin;
     private Integer endHour;
     private Integer endMin;
+    private Vector<String> categories;
 
     double userHours;
+
+    private void postEvent(HashMap<String, Object> params) {
+    private void iniVector() {
+        categories = new Vector();
+        categories.add("Other");
+        categories.add("Gastronomy");
+        categories.add("Language");
+        categories.add("Workshops");
+        categories.add("Culture");
+        categories.add("Sports");
+        categories.add("Leisue");
+
+    }
 
     private void postEvent(HashMap<String, Object> params) {
         APICommunicator apiCommunicator = new APICommunicator();
@@ -143,6 +158,7 @@ public class CreateEventFragment extends Fragment {
 
         capacity = "1";
 
+        iniVector();
         groupTable.setVisibility(View.GONE);
         getUserInfo();
 
@@ -311,7 +327,7 @@ public class CreateEventFragment extends Fragment {
         }
         EventLocation eventLocation = new EventLocation(address.getText().toString());
 
-        params.put("category", category.getSelectedItem().toString().toUpperCase());
+        params.put("category", categories.get(category.getSelectedItemPosition()).toUpperCase());
         params.put("creatorEmail", getUserEmail());
         params.put("demand", demand ? "true" : "false");
         params.put("description", description.getText().toString());

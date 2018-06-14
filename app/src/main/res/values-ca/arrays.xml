@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="genders">
+        <item>Home</item>
+        <item>Dona</item>
+        <item>Altre</item>
+    </string-array>
+
+    <string-array name="categories">
+        <item>Altre</item>
+        <item>Gastronomia</item>
+        <item>Idioma</item>
+        <item>Taller</item>
+        <item>Cultura</item>
+        <item>Esport</item>
+        <item>Lleure</item>
+    </string-array>
+
+    <string-array name="languages">
+        <item>Castellà</item>
+        <item>Català</item>
+        <item>Anglès</item>
+    </string-array>
+</resources>
