@@ -133,5 +133,7 @@
     <string name="comments">Comments</string>
     <string name="add_comment">Add comment</string>
     <string name="initializing_paypal">Creating a secure connection with PayPal, please wait…</string>
+    <string name="individual">Individual</string>
+    <string name="groupal">Groupal</string>
 
 </resources>

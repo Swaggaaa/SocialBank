@@ -133,5 +133,7 @@
     <string name="comments">Comentaris</string>
     <string name="add_comment">Afegeix un comentari</string>
     <string name="initializing_paypal">Creant una connexió segura amb PayPal, si us plau esperi…</string>
+    <string name="individual">Individual</string>
+    <string name="groupal">Groupal</string>
 
 </resources>

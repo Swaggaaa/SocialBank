@@ -67,8 +67,6 @@ public class EventFragment extends Fragment implements AddCommentFragment.OnComm
 
 
     private List<Comment> comments;
-    private String creator;
-    private Date iniDate;
     protected int id;
     protected String descriptionEvent;
     protected Date iniDate;
@@ -106,7 +104,6 @@ public class EventFragment extends Fragment implements AddCommentFragment.OnComm
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(getContext(), false));
 
-        invite = (Button)rootView.findViewById(R.id.invite_button);
         join_button = (Button) rootView.findViewById(R.id.join_button);
         comments = new ArrayList<>();
 
@@ -145,9 +142,6 @@ public class EventFragment extends Fragment implements AddCommentFragment.OnComm
                 else
                     textIndividualOrGroup.setText(R.string.groupal);
 
-                iniDate = event.getIniDate();
-                Date endDate = event.getEndDate();
-                String hours = getHours(iniDate, endDate) + " " + getResources().getString(R.string.time_hours);
                 textViewNumberPersonsEvent.setText(numberEnrolled+"/"+capacity);
 
                 iniDate = event.getIniDate();
