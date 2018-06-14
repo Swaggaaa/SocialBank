@@ -185,35 +185,6 @@ public class Event {
                 ((iniDate.getTime()-(new Date()).getTime())/(1000.0*60.0*60.0*24.0)) > 1.0);
     }
 
-    private String getHashtag(String text) { //Returns a list with all Tags
-        String tag = text;
-        int i_space = text.indexOf(" ");
-        int i_next = text.indexOf("#");
-        int i = (i_next != -1 && i_space > i_next) ? i_next : i_space;
-        if( i > 0 ) tag = tag.substring(0, i);
-        return tag;
-    }
-
-    private Set<String> getTags(String text) { //Returns a list with all Tags
-        Set<String> tags = new HashSet<String>();
-        //Find every occurrence of '#'
-        for (int i = -1; (i = text.indexOf("#", i + 1)) != -1; i++) {
-            String tag = getHashtag( text.substring(i+1) );
-            tags.add(tag);
-        }
-        return tags;
-    }
-
-    public boolean hasTag(String hashtags) {
-        // TODO: substituir les 3 seguents linies pels "tags" propis de l'esdeveniment
-        Set<String> tags = new HashSet<String>();
-        tags.add("hola");
-        tags.add("adeu");
-        // ---
-
-        return tags.containsAll( getTags(hashtags) );
-    }
-
     public void setDemand(Boolean demand) {
         isDemand = demand;
     }

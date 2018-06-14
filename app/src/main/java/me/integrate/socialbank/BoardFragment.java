@@ -23,7 +23,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class BoardFragment extends Fragment {
 
@@ -49,7 +52,6 @@ public class BoardFragment extends Fragment {
     private boolean available;
     private String emailUser;
 
-
     private MenuItem itemLanguage;
     private MenuItem itemCulture;
     private MenuItem itemWorkshops;
@@ -61,7 +63,6 @@ public class BoardFragment extends Fragment {
     private MenuItem itemDemand;
     private MenuItem itemAvailable;
     private String[] tagsText;
-    private MenuItem itemTagged;
 
     private ProgressDialog loadingDialog;
 
@@ -80,9 +81,9 @@ public class BoardFragment extends Fragment {
         allItems = new ArrayList<>();
         emailUser = SharedPreferencesManager.INSTANCE.read(getActivity(),"user_email");
         available = demand = other = offer = language = culture = workshops = sports = gastronomy = leisure = false;
-        getAllEvents();
         tagsText = new String[1];
         tagsText[0] = "";
+        getAllEvents();
         return rootView;
     }
 
@@ -99,7 +100,6 @@ public class BoardFragment extends Fragment {
         itemOffer = menu.findItem(R.id.event_offer);
         itemDemand = menu.findItem(R.id.event_demand);
         itemAvailable = menu.findItem(R.id.event_available);
-        itemTagged = menu.findItem(R.id.event_tagged);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -175,7 +175,26 @@ public class BoardFragment extends Fragment {
                 break;
         }
         return true;
+    }
 
+
+    private String getHashtag(String text) { //Returns a list with all Tags
+        String tag = text;
+        int i_space = text.indexOf(" ");
+        int i_next = text.indexOf("#");
+        int i = (i_next != -1 && i_space > i_next) ? i_next : i_space;
+        if( i > 0 ) tag = tag.substring(0, i);
+        return tag;
+    }
+
+    private Set<String> getTags(String text) { //Returns a list with all Tags
+        Set<String> tags = new HashSet<String>();
+        //Find every occurrence of '#'
+        for (int i = -1; (i = text.indexOf("#", i + 1)) != -1; i++) {
+            String tag = getHashtag( text.substring(i+1) );
+            tags.add(tag);
+        }
+        return tags;
     }
 
     private void set_tags() {
@@ -191,7 +210,8 @@ public class BoardFragment extends Fragment {
         builder.setPositiveButton(android.R.string.ok, (dialog, which) -> {
             dialog.dismiss();
             tagsText[0] = inputTags.getText().toString();
-            update();
+            loadingDialog = ProgressDialog.show(getActivity(), "", getString(R.string.loadingMessage), true);
+            getAllEvents();
         });
         builder.setNegativeButton(android.R.string.cancel, (dialog, which) -> dialog.cancel());
 
@@ -202,29 +222,24 @@ public class BoardFragment extends Fragment {
         return (!available || (available && event.isAvailable()));
     }
 
-    private void checkTags(Event event) {
-        if( (tagsText[0]!="" && event.hasTag(tagsText[0])) || (tagsText[0]==""))
-            items.add(event);
-    }
-
     private void check(Event event) {
         if (offer || demand || available || (tagsText[0]!="")) {
             if (offer && !event.isDemand() && checkAvailability(event)) {
-                checkTags( event );
+                items.add(event);
             }
             else if (demand && event.isDemand() && checkAvailability(event)) {
-                checkTags( event );
+                items.add(event);
             }
             else if (!offer && !demand && checkAvailability(event)) {
-                checkTags( event );
+                items.add(event);
             }
-        } else checkTags( event );
+        } else items.add(event);
     }
 
     private void update() {
         items.clear();
         boolean category = language || culture || workshops || sports || gastronomy || leisure || other;
-        if (category || offer || demand || available || (tagsText[0] != "")) {
+        if (category || offer || demand || available ) {
             for (Event event: allItems) {
                 if (language && event.getCategory() == Event.Category.LANGUAGE) check(event);
                 else if (culture && event.getCategory() == Event.Category.CULTURE ) check(event);
@@ -234,7 +249,6 @@ public class BoardFragment extends Fragment {
                 else if (leisure && event.getCategory() == Event.Category.LEISURE) check(event);
                 else if (other && event.getCategory() == Event.Category.OTHER ) check(event);
                 else if (!category && (offer || demand || available)) check(event);
-                else if (tagsText[0] != "") checkTags(event);
             }
         } else {
             items.addAll(allItems);
@@ -281,7 +295,15 @@ public class BoardFragment extends Fragment {
             loadingDialog.dismiss();
             errorTreatment(error.networkResponse.statusCode);
         };
-        apiCommunicator.getRequest(getActivity().getApplicationContext(), URL, responseListener, errorListener, null);
+
+        HashMap<String, Object> params = new HashMap<>();
+        if(tagsText[0] != "") {
+            params.put("tags", getTags(tagsText[0]));
+        }
+        else
+            params = null;
+
+        apiCommunicator.getRequest(getActivity().getApplicationContext(), URL, responseListener, errorListener, params);
     }
 
     private void getUserInfo() {
