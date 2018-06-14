@@ -135,5 +135,6 @@
     <string name="new_comment">Add new comment</string>
     <string name="comments">Comments</string>
     <string name="add_comment">Add comment</string>
+    <string name="initializing_paypal">Creating a secure connection with PayPal, please wait…</string>
 
 </resources>
