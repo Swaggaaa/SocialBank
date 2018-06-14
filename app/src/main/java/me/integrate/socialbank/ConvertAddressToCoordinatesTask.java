@@ -2,8 +2,6 @@ package me.integrate.socialbank;
 
 import android.os.AsyncTask;
 
-import com.google.android.gms.maps.model.LatLng;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -17,7 +15,7 @@ import java.net.URL;
 public class ConvertAddressToCoordinatesTask extends AsyncTask<URL,Integer,EventLocation > {
     @Override
     protected EventLocation doInBackground(URL... urls) {
-        EventLocation eventLocation = null;
+        EventLocation eventLocation;
         try {
 
             HttpURLConnection conn = (HttpURLConnection) urls[0].openConnection();
@@ -29,7 +27,7 @@ public class ConvertAddressToCoordinatesTask extends AsyncTask<URL,Integer,Event
             }
             BufferedReader br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
 
-            String output = "", full = "";
+            String output, full = "";
             while ((output = br.readLine()) != null) {
                 full += output;
             }
@@ -54,6 +52,6 @@ public class ConvertAddressToCoordinatesTask extends AsyncTask<URL,Integer,Event
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return eventLocation;
+        return null;
     }
 }
