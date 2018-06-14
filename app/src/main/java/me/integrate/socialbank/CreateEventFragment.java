@@ -82,6 +82,7 @@ public class CreateEventFragment extends Fragment {
 
     double userHours;
 
+
     private void iniVector() {
         categories = new ArrayList<>();
         categories.add("Other");
@@ -90,7 +91,7 @@ public class CreateEventFragment extends Fragment {
         categories.add("Workshops");
         categories.add("Culture");
         categories.add("Sports");
-        categories.add("Leisue");
+        categories.add("Leisure");
 
     }
 
