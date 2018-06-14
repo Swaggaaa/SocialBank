@@ -81,6 +81,7 @@ public class CreateEventFragment extends Fragment {
 
     double userHours;
 
+
     private void iniVector() {
         categories = new Vector();
         categories.add("Other");
