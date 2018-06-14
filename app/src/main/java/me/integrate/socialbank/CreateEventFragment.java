@@ -83,7 +83,6 @@ public class CreateEventFragment extends Fragment {
 
     double userHours;
 
-    private void postEvent(HashMap<String, Object> params) {
     private void iniVector() {
         categories = new Vector();
         categories.add("Other");
