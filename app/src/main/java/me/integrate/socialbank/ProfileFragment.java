@@ -51,6 +51,7 @@ public class ProfileFragment extends Fragment {
     String genderUser;
     String descriptionUser;
     private boolean isFABOpen;
+    private boolean verified;
     protected FloatingActionButton openMenu;
     FloatingActionButton reportUserButton;
     private RecyclerView mRecyclerView;
@@ -86,6 +87,7 @@ public class ProfileFragment extends Fragment {
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.my_recycler_view_user_profile);
         mRecyclerView.setHasFixedSize(true);
         isFABOpen = false;
+        verified = Boolean.parseBoolean(SharedPreferencesManager.INSTANCE.read(getActivity(),"verified"));
         items.clear();
         openMenu = (FloatingActionButton) rootView.findViewById(R.id.openMenu);
         reportUserButton = (FloatingActionButton) rootView.findViewById(R.id.reportProfile);
@@ -301,10 +303,13 @@ public class ProfileFragment extends Fragment {
                     bundle.putInt("id", event.getId());
                     bundle.putBoolean("MyProfile", true);
                     Fragment eventFragment;
-                    if (event.getCreatorEmail().equals(SharedPreferencesManager.INSTANCE.read(getActivity(), "user_email")) && correctDate(event.getIniDate())) {
+                    boolean eventCreator = event.getCreatorEmail().equals(SharedPreferencesManager.INSTANCE.read(getActivity(),"user_email"));
+                    if( eventCreator && event.stillEditable() )
                         eventFragment = MyEventFragment.newInstance(bundle);
-                    }
-                    else eventFragment = EventFragment.newInstance(bundle);
+                    else if( !eventCreator && event.isAvailable() && !verified)
+                        eventFragment = MyJoinEventFragment.newInstance(bundle);
+                    else
+                        eventFragment = EventFragment.newInstance(bundle);
                     FragmentChangeListener fc = (FragmentChangeListener) getActivity();
                     fc.replaceFragment(eventFragment);
                 });

@@ -35,11 +35,14 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.HashMap;
 
 public class EventFragment extends Fragment implements AddCommentFragment.OnCommentSelected {
 
     private static final String URL = "/events";
     private static final String SOCIALBANK_URL = "http://socialbank.com";
+
+    protected Button join_button;
 
     protected ImageView imageView;
     private ImageView addComment;
@@ -55,6 +58,8 @@ public class EventFragment extends Fragment implements AddCommentFragment.OnComm
     private TextView textStartDate;
     private TextView textEndDate;
 
+    private Integer capacity;
+    private Integer numberEnrolled;
 
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
@@ -62,10 +67,13 @@ public class EventFragment extends Fragment implements AddCommentFragment.OnComm
 
 
     private List<Comment> comments;
-    private String creator;
-    private Date iniDate;
+    protected String creator;
+    protected String title;
     protected int id;
     protected String descriptionEvent;
+    protected Date iniDate;
+    protected Date endDate;
+
 
     public static EventFragment newInstance(Bundle params) {
         EventFragment eventFragment = new EventFragment();
@@ -92,6 +100,7 @@ public class EventFragment extends Fragment implements AddCommentFragment.OnComm
         textEndDate = (TextView) rootView.findViewById(R.id.end_date);
         addComment = (ImageView) rootView.findViewById(R.id.addComment);
 
+        join_button = (Button) rootView.findViewById(R.id.join_button);
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view_comment);
         mRecyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
@@ -115,7 +124,8 @@ public class EventFragment extends Fragment implements AddCommentFragment.OnComm
         Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response -> {
             try {
                 Event event = new Event(new JSONObject(response.response));
-                textEventTitle.setText(event.getTitle());
+                title = event.getTitle();
+                textEventTitle.setText(title);
                 creator = event.getCreatorEmail();
                 textEventOrganizer.setText(creator);
                 textEventCategory.setText(event.getCategory().toString());
@@ -125,13 +135,20 @@ public class EventFragment extends Fragment implements AddCommentFragment.OnComm
                 textDemandEvent.setText(event.getDemand() ? R.string.demand : R.string.offer);
                 imageView.setImageBitmap(getImage(event.getImage()));
 
-                //TODO not hardcoded this values
-                textIndividualOrGroup.setText("Individual");
-                textViewNumberPersonsEvent.setText("1/1");
+                capacity = event.getCapacity();
+                numberEnrolled = event.getNumberEnrolled();
+
+                if(event.isIndividual())
+                    textIndividualOrGroup.setText(R.string.individual);
+                else
+                    textIndividualOrGroup.setText(R.string.groupal);
+
+                textViewNumberPersonsEvent.setText(numberEnrolled+"/"+capacity);
 
                 iniDate = event.getIniDate();
-                Date endDate = event.getEndDate();
-                String hours = getHours(iniDate, endDate) + " " + getResources().getString(R.string.time_hours);
+                endDate = event.getEndDate();
+                long hoursL = getHours(iniDate, endDate);
+                String hours =  (hoursL > 0) ? String.valueOf(hoursL) : getResources().getString(R.string.notHour) + " " + getResources().getString(R.string.time_hours);
                 textEventHours.setText(hours);
                 textStartDate.setText(dateToString(iniDate));
                 textEndDate.setText(dateToString(endDate));
@@ -160,14 +177,27 @@ public class EventFragment extends Fragment implements AddCommentFragment.OnComm
         Toast.makeText(getActivity().getApplicationContext(), message, Toast.LENGTH_LONG).show();
     }
 
-    private String getHours(Date hourIni, Date hourEnd) {
+    protected long getHours(Date hourIni, Date hourEnd) {
+        long hours = 0;
         if (hourIni != null && hourEnd != null ) {
             long diff = hourEnd.getTime() - hourIni.getTime();
-            long seconds = diff/1000;
-            long minutes = seconds/60;
-            long hours = minutes/60;
-            return String.valueOf(hours);
-        } else return getResources().getString(R.string.notHour);
+            hours = diff/1000/ 60 / 60;
+        }
+        return hours;
+    }
+
+    protected String getCreator() {
+        return creator;
+    }
+
+    protected void changesEnrollment(boolean join) {
+        if (join) numberEnrolled++;
+        else  numberEnrolled--;
+        textViewNumberPersonsEvent.setText(numberEnrolled+"/"+capacity);
+    }
+
+    protected boolean isEventFull() {
+        return capacity == numberEnrolled;
     }
 
     private String dateToString(Date date) {

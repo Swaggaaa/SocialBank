@@ -139,6 +139,17 @@
     <string name="payment_rejected">Your transaction was rejected by the payment processor</string>
     <string name="verifying_payment">Verifying payment, please wait…</string>
     <string name="payment_not_finished">You didn\'t finish the payment process!</string>
+    <string name="filter">Filter</string>
+    <string name="join_events">Disfruta dels esdeveniments</string>
+    <string name="disjoin">Disjoin</string>
+    <string name="confirm_disjoin_event">Do you want un unenroll this event?</string>
+    <string name="not_hours_msg">You do not have enough hours to enroll this event</string>
+    <string name="joined_msg">You have joined to the event</string>
+    <string name="cancel_btn">CANCEL</string>
+    <string name="canceljoin_msg">You have canceled your enrollment to this event</string>
+    <string name="individual">Individual</string>
+    <string name="groupal">Groupal</string>
+    <string name="event_full_msg">That event is already full</string>
     <string name="deleted_comment">Comment deleted</string>
     <string name="cancel">Cancel</string>
     <string name="new_comment">Add new comment</string>
