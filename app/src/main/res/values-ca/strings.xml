@@ -116,7 +116,7 @@
     <string name="image_update">Imatge canviada!</string>
     <string name="account_created">Compte creat!</string>
     <string name="language">Idioma</string>
-    <string name="personal_events_ES">Esdeveniments de:</string>
+    <string name="personal_events_ES">Esdeveniments de: </string>
     <string name="search_location_here">Busca aquí la localització…</string>
     <string name="user_balance">Balanç de l\'usuari:  </string>
     <string name="edit_profile">Editar perfil</string>

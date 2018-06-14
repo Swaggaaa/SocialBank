@@ -141,13 +141,14 @@ public class ProfileFragment extends Fragment {
                     userPicture.setImageBitmap(getImageRounded(BitmapFactory.decodeByteArray(decodeString, 0, decodeString.length)));
                 }
 
-                JSONArray jsonArray = jsonObject.getJSONArray("awards");
+
+                JSONArray jsonArray = jsonObject.isNull("awards") ? new JSONArray() : jsonObject.getJSONArray("awards");
                 for (int i = 0; i < jsonArray.length(); ++i) {
                     items.add(jsonArray.getString(i));
                 }
 
                 awardAdapter = new AwardAdapter(items, (v1, position) -> {
-                    String award =items.get(position);
+                    String award = items.get(position);
                     String message;
                     String title;
                     int icon;
@@ -155,27 +156,19 @@ public class ProfileFragment extends Fragment {
                         message = getString(R.string.user_developer);
                         title = getString(R.string.developer);
                         icon = R.drawable.developer;
-                    }
-
-                    else if (award.equals(Award.TOP_ORGANIZER.name())) {
+                    } else if (award.equals(Award.TOP_ORGANIZER.name())) {
                         title = getString(R.string.top_organizer);
                         message = getString(R.string.user_organizer);
                         icon = R.drawable.award;
-                    }
-
-                    else if (award.equals(Award.ACTIVE_USER.name())) {
+                    } else if (award.equals(Award.ACTIVE_USER.name())) {
                         title = getString(R.string.active);
                         message = getString(R.string.user_active);
                         icon = R.drawable.volunteer;
-                    }
-
-                    else if (award.equals(Award.VERIFIED_USER.name())){
+                    } else if (award.equals(Award.VERIFIED_USER.name())) {
                         title = getString(R.string.verified_account);
                         message = getString(R.string.user_verified);
                         icon = R.drawable.verified;
-                    }
-
-                    else {
+                    } else {
                         title = "";
                         message = "";
                         icon = 0;
@@ -191,12 +184,11 @@ public class ProfileFragment extends Fragment {
                     dialogAward.show();
                 });
 
-                awardRecyclerView.setAdapter(awardAdapter);
-                loadingDialog.dismiss();
-
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+            awardRecyclerView.setAdapter(awardAdapter);
+            loadingDialog.dismiss();
 
 
 
