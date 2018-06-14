@@ -157,5 +157,9 @@
     <string name="information_event">Informació del esdeveniment</string>
     <string name="edit_event">Editar esdeveniment</string>
     <string name="update_event">Actualitzar la descripció de l\'esdeveniment</string>
+    <string name="available">Available</string>
+    <string name="event_tag">Tag</string>
+    <string name="input_tags">#writeyourtag</string>
+    <string name="tag_search">Search by tag</string>
 
 </resources>
