@@ -35,6 +35,7 @@ public class EditProfileFragment extends Fragment {
     private String emailUser;
     private String image;
     static List<String> genders;
+    private String descriptionUser;
 
     private ProgressDialog loadingDialog;
 
@@ -67,7 +68,8 @@ public class EditProfileFragment extends Fragment {
                 newName.setText(jsonObject.getString("name"));
                 newLastName.setText(jsonObject.getString("surname"));
                 getIndex(jsonObject.getString("gender"));
-                newDescription.setText(jsonObject.getString("description"));
+                descriptionUser = jsonObject.getString("description");
+                if(!descriptionUser.equals("null")) newDescription.setText(descriptionUser);
                 bornDate = jsonObject.getString("birthdate");
                 newBirthdate.setText(bornDate);
                 image = jsonObject.getString("image");
