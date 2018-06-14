@@ -190,16 +190,6 @@
                     android:textColor="@color/colorTextForgot"
                     android:visibility="gone"/>
 
-                <TextView
-                    android:id="@+id/textView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:text="@string/stick"
-                    android:textAlignment="center"
-                    android:textColor="@color/colorTextForgot"
-                    android:textSize="30sp" />
-
                 <Button
                     android:id="@+id/invite_button"
                     android:layout_width="wrap_content"
@@ -393,8 +383,6 @@
                             android:src="@drawable/ic_message"/>
 
                     </LinearLayout>
-
-
 
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/recycler_view_comment"
