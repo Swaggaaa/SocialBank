@@ -177,6 +177,7 @@ public class BoardFragment extends Fragment {
                     if (offer && !event.isDemand()) items.add(event);
                     else if (demand && event.isDemand()) items.add(event);
                 }
+
             }
         } else {
             items.addAll(allItems);

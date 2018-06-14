@@ -46,7 +46,6 @@
                     android:text="@string/delete"
                     android:textColor="@color/colorTextForgot"
                     android:visibility="visible"/>
-
             </LinearLayout>
 
             <TextView

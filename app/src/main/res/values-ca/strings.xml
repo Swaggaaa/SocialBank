@@ -134,4 +134,8 @@
     <string name="add_comment">Afegeix un comentari</string>
     <string name="initializing_paypal">Creant una connexió segura amb PayPal, si us plau esperi…</string>
 
+    <string name="information_event">Informació del esdeveniment</string>
+    <string name="edit_event">Editar esdeveniment</string>
+    <string name="update_event">Actualitzar la descripció de l\'esdeveniment</string>
+
 </resources>
