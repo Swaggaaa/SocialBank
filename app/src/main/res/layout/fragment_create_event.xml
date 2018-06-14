@@ -28,8 +28,7 @@
                 android:layout_gravity="center"
                 android:layout_weight="1"
                 android:clickable="true"
-                app:srcCompat="@android:drawable/ic_menu_camera"
-                android:contentDescription="TODO" />
+                app:srcCompat="@android:drawable/ic_menu_camera" />
 
             <TableRow
                 android:layout_width="match_parent"

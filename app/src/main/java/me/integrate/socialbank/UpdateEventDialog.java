@@ -56,7 +56,7 @@ public class UpdateEventDialog extends DialogFragment {
         try {
             mOnInputSelected = (OnInputSelected) getTargetFragment();
         } catch (ClassCastException e) {
-
+            e.printStackTrace();
         }
     }
 

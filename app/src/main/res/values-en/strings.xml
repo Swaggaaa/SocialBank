@@ -121,7 +121,7 @@
     <string name="user_balance">User balance:  </string>
     <string name="edit_profile">Edit Profile</string>
     <string name="change_picture">Change picture</string>
-    <string name="join_msg">Join to SocialBank and let\s go to \'%1$s\' event! Find out more on %2$s\/%3$s</string>
+    <string name="join_msg">Join to SocialBank and let\s go to \'%1$s\' event! Find out more on %2$s\/%3$d</string>
     <string name="ok">OK</string>
     <string name="user_developer">This user is a member of the SocialBank Development Team!</string>
     <string name="developer">Developer</string>
@@ -156,6 +156,8 @@
     <string name="comments">Comments</string>
     <string name="add_comment">Add comment</string>
     <string name="initializing_paypal">Creating a secure connection with PayPal, please wait…</string>
+    <string name="search_event">Search</string>
+    <string name="item">Item</string>
     <string name="available">Available</string>
     <string name="event_tag">Tag</string>
     <string name="input_tags">#writeyourtag</string>

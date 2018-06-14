@@ -4,7 +4,6 @@ package me.integrate.socialbank;
 import android.app.AlertDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -137,16 +136,13 @@ public class MyJoinEventFragment extends EventFragment {
     //Check if that user is already joined
     private void joinedOrNot() {
         APICommunicator apiCommunicator = new APICommunicator();
-        Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response -> {
-            loadJoinButton(response.response);
-        };
+        Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response -> loadJoinButton(response.response);
         Response.ErrorListener errorListener = error ->  errorTreatment(error.networkResponse.statusCode);
         apiCommunicator.getRequest(getActivity().getApplicationContext(), URL_events +'/' + id + "/enrollments", responseListener, errorListener, null);
     }
 
     private void loadJoinButton(String users) {
-        if(users.contains(emailUser)) joined = false;
-        else joined = true;
+        joined = !users.contains(emailUser);
         checkJoin();
     }
 

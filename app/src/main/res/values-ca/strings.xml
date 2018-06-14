@@ -121,7 +121,7 @@
     <string name="user_balance">Balanç de l\'usuari:  </string>
     <string name="edit_profile">Editar perfil</string>
     <string name="change_picture">Canviar imatge</string>
-    <string name="join_msg">Uneix-te a SocialBank i anem a l\'esdeveniment de \'%1$s\'. Troba més informació a %2$s\/%3$s</string>
+    <string name="join_msg">Uneix-te a SocialBank i anem a l\'esdeveniment de \'%1$s\'. Troba més informació a %2$s\/%3$d</string>
     <string name="ok">D\'acord</string>
     <string name="user_developer">Aquest usuari és un memmbre de l\'equip de desenvolupadors de SocialBank</string>
     <string name="developer">Desevolupador</string>
@@ -157,9 +157,11 @@
     <string name="information_event">Informació del esdeveniment</string>
     <string name="edit_event">Editar esdeveniment</string>
     <string name="update_event">Actualitzar la descripció de l\'esdeveniment</string>
-    <string name="available">Available</string>
+    <string name="search_event">Cercar</string>
+    <string name="item">Ítem</string>
+    <string name="available">Disponible</string>
     <string name="event_tag">Tag</string>
-    <string name="input_tags">#writeyourtag</string>
-    <string name="tag_search">Search by tag</string>
+    <string name="input_tags">#escriuelteutag</string>
+    <string name="tag_search">Busca per tag</string>
 
 </resources>

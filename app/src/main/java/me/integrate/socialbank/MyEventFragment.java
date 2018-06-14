@@ -17,8 +17,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
-import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -111,9 +109,7 @@ public class MyEventFragment extends EventFragment implements UpdateEventDialog.
             dialogDelete.setTitle(getResources().getString(R.string.are_sure));
             dialogDelete.setMessage(getResources().getString(R.string.confirm_delete_event));
             dialogDelete.setCancelable(false);
-            dialogDelete.setPositiveButton(getResources().getString(R.string.confirm), (dialogInterface, i) -> {
-                deleteEvent();
-            });
+            dialogDelete.setPositiveButton(getResources().getString(R.string.confirm), (dialogInterface, i) -> deleteEvent());
             dialogDelete.setNegativeButton(getResources().getString(R.string.discard), (dialogInterface, i) -> {
             });
             dialogDelete.show();
