@@ -76,7 +76,7 @@ public class AddCommentFragment extends DialogFragment {
 
         };
         Response.ErrorListener errorListener = error -> errorTreatment(error.networkResponse.statusCode);
-        Map<String, String> params = new HashMap<>();
+        Map<String, Object> params = new HashMap<>();
         params.put("content", comment);
 
         apiCommunicator.postRequest(getActivity().getApplicationContext(), URL + '/' + id + '/' + "comments", responseListener, errorListener, params);

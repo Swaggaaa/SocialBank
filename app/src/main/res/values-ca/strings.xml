@@ -132,6 +132,7 @@
     <string name="new_comment">Afegeix un nou comentari</string>
     <string name="comments">Comentaris</string>
     <string name="add_comment">Afegeix un comentari</string>
+    <string name="initializing_paypal">Creant una connexió segura amb PayPal, si us plau esperi…</string>
     <string name="filter">Filtre</string>
     <string name="join_events">Join events</string>
     <string name="disjoin">Desapuntar-se</string>

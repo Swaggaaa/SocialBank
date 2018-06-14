@@ -141,7 +141,7 @@ public class MyEventFragment extends EventFragment {
 
 
     private void updateEvent() {
-        HashMap<String, String> params = new HashMap<>();
+        HashMap<String, Object> params = new HashMap<>();
         params.put("description", descriptionEvent);
         Bitmap bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
         params.put("image", bitmap != null ? ImageCompressor.INSTANCE.compressAndEncodeAsBase64(
@@ -149,7 +149,7 @@ public class MyEventFragment extends EventFragment {
         putCredentials(params);
     }
 
-    private void putCredentials(HashMap<String, String> params) {
+    private void putCredentials(HashMap<String, Object> params) {
         APICommunicator apiCommunicator = new APICommunicator();
         Response.Listener responseListener = response -> Toast.makeText(getActivity().getApplicationContext(), R.string.eventUpdated, Toast.LENGTH_LONG).show();
         Response.ErrorListener errorListener = error -> errorTreatment(error.networkResponse.statusCode);

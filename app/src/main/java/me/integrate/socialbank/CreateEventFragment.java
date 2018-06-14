@@ -78,7 +78,7 @@ public class CreateEventFragment extends Fragment {
 
     double userHours;
 
-    private void postEvent(HashMap<String, String> params) {
+    private void postEvent(HashMap<String, Object> params) {
         APICommunicator apiCommunicator = new APICommunicator();
         Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response ->
         {
@@ -299,7 +299,7 @@ public class CreateEventFragment extends Fragment {
     }
 
     private void jsonEvent() {
-        HashMap<String, String> params = new HashMap<>();
+        HashMap<String, Object> params = new HashMap<>();
         String dataIni = null;
         String dataEnd = null;
         if (eventFixed) {

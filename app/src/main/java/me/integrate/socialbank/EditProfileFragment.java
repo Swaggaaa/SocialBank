@@ -88,7 +88,7 @@ public class EditProfileFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         newBirthdate.setOnClickListener(view1 -> chooseDate());
         update.setOnClickListener(v -> {
-            HashMap<String, String> params = new HashMap<>();
+            HashMap<String, Object> params = new HashMap<>();
             params.put("name", newName.getText().toString());
             params.put("surname", newLastName.getText().toString());
             params.put("birthdate", bornDate);
@@ -104,11 +104,11 @@ public class EditProfileFragment extends Fragment {
 
     }
 
-    private void putCredentials(HashMap<String, String> params) {
+    private void putCredentials(HashMap<String, Object> params) {
         APICommunicator apiCommunicator = new APICommunicator();
         Response.Listener responseListener = response -> {
             Toast.makeText(getActivity().getApplicationContext(), R.string.updateAccount, Toast.LENGTH_LONG).show();
-            SharedPreferencesManager.INSTANCE.store(getActivity(), "user_name", params.get("name"));
+            SharedPreferencesManager.INSTANCE.store(getActivity(), "user_name", (String)params.get("name"));
             Fragment boardFragment = new MyProfileFragment();
             FragmentChangeListener fc = (FragmentChangeListener) getActivity();
             fc.replaceFragment(boardFragment);

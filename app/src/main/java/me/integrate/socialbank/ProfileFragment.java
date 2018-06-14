@@ -184,7 +184,7 @@ public class ProfileFragment extends Fragment {
             dialogDelete.setPositiveButton(getResources().getString(R.string.confirm), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
-                    HashMap<String, String> params = new HashMap<>();
+                    HashMap<String, Object> params = new HashMap<>();
                     params.put("email", emailUser);
                     sendReportUser(params);
                 }
@@ -221,7 +221,7 @@ public class ProfileFragment extends Fragment {
         reportUsserText.setVisibility(View.GONE);
     }
 
-    private void sendReportUser(HashMap<String, String> params) {
+    private void sendReportUser(HashMap<String, Object> params) {
         APICommunicator apiCommunicator = new APICommunicator();
         Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response -> {
             Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.user_reported), Toast.LENGTH_LONG).show();
@@ -249,13 +249,13 @@ public class ProfileFragment extends Fragment {
     }
 
     private void getUserEvents() {
-        HashMap<String, String> params = new HashMap<>();
+        HashMap<String, Object> params = new HashMap<>();
         params.put("email", emailUser);
         getAllEvents(params);
     }
 
     //Call to the API
-    private void getAllEvents(HashMap<String, String> params) {
+    private void getAllEvents(HashMap<String, Object> params) {
 
         APICommunicator apiCommunicator = new APICommunicator();
         Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response -> {

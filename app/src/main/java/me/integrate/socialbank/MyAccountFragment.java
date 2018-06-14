@@ -37,6 +37,7 @@ import org.json.JSONObject;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -247,6 +248,8 @@ public class MyAccountFragment extends Fragment implements PaymentMethodNonceCre
     }
 
     private void purchaseHours() {
+        loadingDialog = ProgressDialog.show(getActivity(), "",
+                getString(R.string.initializing_paypal), true);
         APICommunicator apiCommunicator = new APICommunicator();
         Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response ->
         {
@@ -285,13 +288,14 @@ public class MyAccountFragment extends Fragment implements PaymentMethodNonceCre
             Toast.makeText(getActivity().getApplicationContext(), message, Toast.LENGTH_LONG).show();
         };
 
-        Map<String, String> params = new HashMap<>();
+        Map<String, Object> params = new HashMap<>();
         apiCommunicator.getRequest(getActivity().getApplicationContext(), PURCHASE_URL, responseListener, errorListener, params);
 
     }
 
     @Override
     public void onPaymentMethodNonceCreated(PaymentMethodNonce paymentMethodNonce) {
+        loadingDialog.dismiss();
         APICommunicator apiCommunicator = new APICommunicator();
         Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response ->
         {
@@ -333,7 +337,7 @@ public class MyAccountFragment extends Fragment implements PaymentMethodNonceCre
             Toast.makeText(getActivity().getApplicationContext(), message, Toast.LENGTH_LONG).show();
         };
 
-        Map<String, String> params = new HashMap<>();
+        Map<String, Object> params = new HashMap<>();
         params.put("packageName", chosenHoursPackage.getName());
         params.put("amount", String.valueOf(chosenHoursPackage.getPrice()));
         params.put("nonce", paymentMethodNonce.getNonce());
