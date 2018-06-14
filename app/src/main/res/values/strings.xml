@@ -156,5 +156,7 @@
     <string name="individual">Individual</string>
     <string name="groupal">Grupal</string>
     <string name="event_full_msg">Este evento está completo</string>
+    <string name="search_event">Buscar</string>
+    <string name="item">Ítem</string>
 
 </resources>
