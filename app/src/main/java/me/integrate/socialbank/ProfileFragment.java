@@ -155,19 +155,19 @@ public class ProfileFragment extends Fragment {
                     String message = "";
                     String title = "";
                     int icon = 0;
-                    if (award.equals("DEVELOPER")) {
+                    if (award.equals(Award.DEVELOPER.name())) {
                         message = getString(R.string.user_developer);
                         title = getString(R.string.developer);
                         icon = R.drawable.developer;
                     }
 
-                    else if (award.equals("TOP_ORGANIZER")) {
+                    else if (award.equals(Award.TOP_ORGANIZER.name())) {
                         title = getString(R.string.top_organizer);
                         message = getString(R.string.user_organizer);
                         icon = R.drawable.award;
                     }
 
-                    else if (award.equals("ACTIVE_USER")) {
+                    else if (award.equals(Award.ACTIVE_USER.name())) {
                         title = getString(R.string.active);
                         message = getString(R.string.user_active);
                         icon = R.drawable.volunteer;
