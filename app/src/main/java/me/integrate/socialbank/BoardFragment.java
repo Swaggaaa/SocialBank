@@ -1,11 +1,11 @@
 package me.integrate.socialbank;
 
-
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -21,13 +21,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-
 
 public class BoardFragment extends Fragment {
 
     private static final String URL = "/events";
+    private static final String URL_users = "/users";
+
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
 
@@ -43,6 +43,9 @@ public class BoardFragment extends Fragment {
     private boolean other;
     private boolean offer;
     private boolean demand;
+    private boolean verified;
+    private String emailUser;
+
 
     private MenuItem itemLanguage;
     private MenuItem itemCulture;
@@ -69,11 +72,11 @@ public class BoardFragment extends Fragment {
         loadingDialog = ProgressDialog.show(getActivity(), "", getString(R.string.loadingMessage), true);
         items = new ArrayList<>();
         allItems = new ArrayList<>();
+        emailUser = SharedPreferencesManager.INSTANCE.read(getActivity(),"user_email");
         demand = other = offer = language = culture = workshops = sports = gastronomy = leisure = false;
         getAllEvents();
         return rootView;
     }
-
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -87,7 +90,6 @@ public class BoardFragment extends Fragment {
         itemOther = menu.findItem(R.id.category_other);
         itemOffer = menu.findItem(R.id.event_offer);
         itemDemand = menu.findItem(R.id.event_demand);
-
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -96,8 +98,7 @@ public class BoardFragment extends Fragment {
         switch (item.getItemId()) {
             case R.id.category_language:
                 language = !item.isChecked();
-                if (item.isChecked())item.setChecked(false);
-                else item.setChecked(true);
+                item.setChecked(!item.isChecked());
                 break;
             case R.id.category_culture:
                 culture = !item.isChecked();
@@ -183,7 +184,6 @@ public class BoardFragment extends Fragment {
 
     //Call to the API
     public void getAllEvents() {
-
         APICommunicator apiCommunicator = new APICommunicator();
         Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response -> {
             JSONArray jsonArray;
@@ -193,56 +193,66 @@ public class BoardFragment extends Fragment {
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
                     items.add(new Event(jsonObject));
-
                 }
-
                 mAdapter = new EventAdapter(items, getActivity(), (v1, position) -> {
                     Bundle bundle = new Bundle();
                     Event event = items.get(position);
                     bundle.putInt("id", event.getId());
                     Fragment eventFragment;
-                    if (event.getCreatorEmail().equals(SharedPreferencesManager.INSTANCE.read(getActivity(),"user_email"))
-                            && correctDate(event.getIniDate())) {
-                        eventFragment = MyEventFragment.newInstance(bundle);
-                    }
-                    else eventFragment = EventFragment.newInstance(bundle);
+                    boolean eventCreator = event.getCreatorEmail().equals(emailUser);
+                    if( eventCreator && event.stillEditable() )
+                            eventFragment = MyEventFragment.newInstance(bundle);
+                    else if( !eventCreator && event.isAvailable() && !verified)
+                        eventFragment = MyJoinEventFragment.newInstance(bundle);
+                    else
+                        eventFragment = EventFragment.newInstance(bundle);
                     FragmentChangeListener fc = (FragmentChangeListener) getActivity();
                     fc.replaceFragment(eventFragment);
                 });
                 allItems.addAll(items);
                 mRecyclerView.setAdapter(mAdapter);
-                loadingDialog.dismiss();
+                getUserInfo();
 
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         };
         Response.ErrorListener errorListener = error -> {
-            String message;
-            int errorCode = error.networkResponse.statusCode;
-            if (errorCode == 401)
-                message = "Unauthorized";
-            else if (errorCode == 403)
-                message = "Forbidden";
-            else if (errorCode == 404)
-                message = "Not Found";
-            else
-                message = "Unexpected error";
-
             loadingDialog.dismiss();
-            Toast.makeText(getActivity().getApplicationContext(), message, Toast.LENGTH_LONG).show();
+            errorTreatment(error.networkResponse.statusCode);
         };
         apiCommunicator.getRequest(getActivity().getApplicationContext(), URL, responseListener, errorListener, null);
     }
 
-    private boolean correctDate(Date iniDate) {
-        if (iniDate == null) return true;
-        else {
-            Date currentDate = new Date();
-            long hours = iniDate.getTime() - currentDate.getTime();
-            hours = hours/ 1000 / 60 / 60;
-            return hours >= 24;
-        }
+    private void getUserInfo() {
+        APICommunicator apiCommunicator = new APICommunicator();
+        Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response -> {
+            JSONObject jsonObject;
+            try{
+                jsonObject = new JSONObject(response.response);
+                verified = jsonObject.getBoolean("verified");
+                SharedPreferencesManager.INSTANCE.store(getActivity(), "verified", (verified) ? "true" : "false");
+                loadingDialog.dismiss();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        };
+        Response.ErrorListener errorListener = error ->  errorTreatment(error.networkResponse.statusCode);
+
+        apiCommunicator.getRequest(getActivity().getApplicationContext(), URL_users +'/'+ emailUser, responseListener, errorListener, null);
     }
 
+    private void errorTreatment(int errorCode) {
+        String message;
+        if (errorCode == 401)
+            message = getString(R.string.unauthorized);
+        else if(errorCode == 403)
+            message = getString(R.string.forbidden);
+        else if(errorCode == 404)
+            message = getString(R.string.not_found);
+        else
+            message = getString(R.string.unexpectedError);
+
+        Toast.makeText(getActivity().getApplicationContext(), message, Toast.LENGTH_LONG).show();
+    }
 }

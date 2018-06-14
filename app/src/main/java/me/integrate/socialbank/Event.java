@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.annotation.StringRes;
 import android.util.Base64;
+import android.util.Log;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -16,6 +17,8 @@ import java.util.Date;
 public class Event {
 
     private int id;
+    private int capacity;
+    private int numberEnrolled;
     private String creatorEmail;
     private Date iniDate, endDate;
     private String location;
@@ -29,6 +32,8 @@ public class Event {
 
     public Event(JSONObject object) throws JSONException {
         this.id = object.getInt("id");
+        this.capacity = object.getInt("capacity");
+        this.numberEnrolled = object.getInt("numberEnrolled");
         this.creatorEmail = object.getString("creatorEmail");
         this.location = object.getString("location");
         this.title = object.getString("title");
@@ -41,9 +46,10 @@ public class Event {
         getDates(object);
     }
 
-
-    public Event(String creatorEmail, boolean demand, String description, Date finishDate, int id, Bitmap decodedByte, Date initDate, double latitude, String location, double longitude, String title) {
+    public Event(String creatorEmail, boolean demand, String description, Date finishDate, int id, int capacity, int numberEnrolled, Bitmap decodedByte, Date initDate, double latitude, String location, double longitude, String title) {
         this.id = id;
+        this.capacity = capacity;
+        this.numberEnrolled = numberEnrolled;
         this.title = title;
         this.iniDate = initDate;
         this.image = decodedByte;
@@ -110,6 +116,14 @@ public class Event {
         return id;
     }
 
+    public int getCapacity() {
+        return capacity;
+    }
+
+    public int getNumberEnrolled() {
+        return numberEnrolled;
+    }
+
     public void setId(int id) {
         this.id = id;
     }
@@ -159,6 +173,16 @@ public class Event {
         return isDemand;
     }
 
+    public boolean isAvailable() {
+        return (iniDate == null || (iniDate.compareTo(new Date()) > 0));
+    }
+
+    // 'true' if it's a no dated event or is going to start in more than 24 hours
+    public boolean stillEditable() {
+        return (iniDate == null ||
+                ((iniDate.getTime()-(new Date()).getTime())/(1000.0*60.0*60.0*24.0)) > 1.0);
+    }
+
     public void setDemand(Boolean demand) {
         isDemand = demand;
     }
@@ -173,6 +197,10 @@ public class Event {
 
     public void setCategory(Category category) {
         this.category = category;
+    }
+
+    public boolean isIndividual() {
+        return capacity == 1;
     }
 
     enum Category {

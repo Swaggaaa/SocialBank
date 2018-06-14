@@ -343,6 +343,7 @@ public class CreateEventFragment extends Fragment {
 
         buttonCreate.setText(R.string.loading);
         buttonCreate.setEnabled(false);
+
         postEvent(params);
     }
 
