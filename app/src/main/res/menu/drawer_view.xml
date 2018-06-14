@@ -30,17 +30,14 @@
             android:id="@+id/searchUsers"
             android:title="@string/search_users" />
 
+        <item
+            android:icon="@drawable/ic_settings"
+            android:id="@+id/myAccount"
+            android:title="@string/EditAccount" />
+        <item
+            android:icon="@drawable/ic_exit_to_app"
+            android:id="@+id/logout"
+            android:title="@string/logout" />
+
     </group>
-    <item android:title="@string/settings">
-        <menu>
-            <item
-                android:icon="@drawable/ic_settings"
-                android:id="@+id/myAccount"
-                android:title="@string/EditAccount" />
-            <item
-                android:icon="@drawable/ic_exit_to_app"
-                android:id="@+id/logout"
-                android:title="@string/logout" />
-        </menu>
-    </item>
 </menu>

@@ -1,5 +1,6 @@
 package me.integrate.socialbank;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -8,6 +9,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -26,7 +28,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.ByteArrayOutputStream;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
@@ -41,15 +42,19 @@ public class ProfileFragment extends Fragment {
     private TextView userBalance;
     private TextView userDescription;
     private TextView myEvents;
+    private TextView userBalanceText;
+    private TextView reportUsserText;
+    private TextView editProfileText;
+    private TextView changePictureText;
     String emailUser;
     String nameUser;
     String lastNameUser;
     String dateUser;
     String genderUser;
     String descriptionUser;
-    Button reportUser;
-    Button confirmReport;
-    Button discardReport;
+    private boolean isFABOpen;
+    FloatingActionButton openMenu;
+    FloatingActionButton reportUserButton;
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
 
@@ -60,6 +65,7 @@ public class ProfileFragment extends Fragment {
 
     protected Float balance;
     private ProgressDialog loadingDialog;
+    protected ProgressDialog loadingDialog;
 
 
     @Override
@@ -71,17 +77,22 @@ public class ProfileFragment extends Fragment {
         userName = (TextView) rootView.findViewById(R.id.myProfileName);
         userEmailToShow = (TextView) rootView.findViewById(R.id.userEmailToShow);
         userBalance = (TextView) rootView.findViewById(R.id.hoursBalance);
+        userBalance.setVisibility(View.GONE);
         userDescription = (TextView) rootView.findViewById(R.id.aboutMe);
+        userBalanceText = (TextView) rootView.findViewById(R.id.userBalanceText);
+        userBalanceText.setVisibility(View.GONE);
         myEvents = (TextView)rootView.findViewById(R.id.events);
+        reportUsserText = (TextView) rootView.findViewById(R.id.reportUserText);
+        editProfileText = (TextView) rootView.findViewById(R.id.editProfileText);
+        changePictureText = (TextView) rootView.findViewById(R.id.changePasswordText);
         awardRecyclerView = (RecyclerView) rootView.findViewById(R.id.award_recycler_view);
         awardRecyclerView.setHasFixedSize(true);
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.my_recycler_view_user_profile);
-        reportUser = (Button)rootView.findViewById(R.id.buttonReportUser);
-        confirmReport = (Button)rootView.findViewById(R.id.confirmReport);
-        confirmReport.setVisibility(View.GONE);
-        discardReport = (Button)rootView.findViewById(R.id.discardReport);
-        discardReport.setVisibility(View.GONE);
         mRecyclerView.setHasFixedSize(true);
+        isFABOpen = false;
+        items.clear();
+        openMenu = (FloatingActionButton) rootView.findViewById(R.id.openMenu);
+        reportUserButton = (FloatingActionButton) rootView.findViewById(R.id.reportProfile);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
         RecyclerView.LayoutManager awardLayoutManager = new LinearLayoutManager(getContext(),LinearLayoutManager.HORIZONTAL, false);
         awardRecyclerView.setLayoutManager(awardLayoutManager);
@@ -91,6 +102,7 @@ public class ProfileFragment extends Fragment {
         balance = null;
         fillFields();
         getUserEvents();
+
         return rootView;
     }
 
@@ -108,14 +120,15 @@ public class ProfileFragment extends Fragment {
 
     private void getUserInfo(String emailUser) {
         APICommunicator apiCommunicator = new APICommunicator();
-        Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response -> {
+        @SuppressLint("ResourceAsColor") Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response -> {
             JSONObject jsonObject;
             Float balance = null;
             try{
                 jsonObject = new JSONObject(response.response);
                 nameUser = jsonObject.getString("name");
-                String events = getString(R.string.personal_events);
-                myEvents.setText(nameUser+events);
+                String events_en = getString(R.string.personal_events);
+                String events = getString(R.string.personal_events_ES);
+                myEvents.setText(events+nameUser+events_en);
                 lastNameUser = jsonObject.getString("surname");
                 dateUser = jsonObject.getString("birthdate");
                 genderUser = jsonObject.getString("gender");
@@ -124,13 +137,14 @@ public class ProfileFragment extends Fragment {
                 userName.setText(completeName);
                 balance = BigDecimal.valueOf(jsonObject.getDouble("balance")).floatValue();
                 userBalance.setText(balance.toString());
+                if (balance < 0) userBalance.setTextColor(this.getResources().getColor(R.color.negative_balance));
+                else if (balance > 0) userBalance.setTextColor(this.getResources().getColor(R.color.positive_balance));
                 userEmailToShow.setText(jsonObject.getString("email"));
                 if(!descriptionUser.equals("null")) userDescription.setText(descriptionUser);
                 String image = jsonObject.getString("image");
-                if (!image.equals("")) {
+                if (!image.equals("")&& !image.equals("null")) {
                     byte[] decodeString = Base64.decode(image, Base64.DEFAULT);
-                    userPicture.setImageBitmap(BitmapFactory.decodeByteArray(
-                            decodeString, 0, decodeString.length));
+                    userPicture.setImageBitmap(getImageRounded(BitmapFactory.decodeByteArray(decodeString, 0, decodeString.length)));
                 }
 
                 JSONArray jsonArray = jsonObject.getJSONArray("awards");
@@ -142,7 +156,7 @@ public class ProfileFragment extends Fragment {
                 });
 
                 awardRecyclerView.setAdapter(awardAdapter);
-
+                loadingDialog.dismiss();
 
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -153,7 +167,7 @@ public class ProfileFragment extends Fragment {
 
         };
         Response.ErrorListener errorListener = error -> {
-            Toast.makeText(getActivity().getApplicationContext(), "Something went wrong", Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity().getApplicationContext(), getString(R.string.something_wrong), Toast.LENGTH_LONG).show();
             Fragment boardFragment = new BoardFragment();
             FragmentChangeListener fc = (FragmentChangeListener) getActivity();
             fc.replaceFragment(boardFragment);
@@ -164,7 +178,7 @@ public class ProfileFragment extends Fragment {
 
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        reportUser.setOnClickListener(v -> {
+        reportUserButton.setOnClickListener(v -> {
             AlertDialog.Builder dialogDelete = new AlertDialog.Builder(getContext());
             dialogDelete.setTitle(getResources().getString(R.string.are_sure));
             dialogDelete.setMessage(getResources().getString(R.string.confirm_report_user));
@@ -172,7 +186,7 @@ public class ProfileFragment extends Fragment {
             dialogDelete.setPositiveButton(getResources().getString(R.string.confirm), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
-                    HashMap<String, String> params = new HashMap<>();
+                    HashMap<String, Object> params = new HashMap<>();
                     params.put("email", emailUser);
                     sendReportUser(params);
                 }
@@ -184,9 +198,32 @@ public class ProfileFragment extends Fragment {
             });
             dialogDelete.show();
         });
+        view.findViewById(R.id.openMenu).setOnClickListener(view1 -> {
+            if (!isFABOpen) {
+                showFABMenu();
+            } else {
+                closeFABMenu();
+            }
+        });
     }
 
-    private void sendReportUser(HashMap<String, String> params) {
+    private void showFABMenu() {
+        isFABOpen = true;
+        reportUserButton.animate().translationY(-getResources().getDimension(R.dimen.standard_55));
+        reportUsserText.setVisibility(View.VISIBLE);
+        reportUsserText.bringToFront();
+        reportUsserText.animate().translationY(-getResources().getDimension(R.dimen.standard_55));
+
+    }
+
+    private void closeFABMenu() {
+        isFABOpen = false;
+        reportUserButton.animate().translationY(0);
+        reportUsserText.animate().translationY(0);
+        reportUsserText.setVisibility(View.GONE);
+    }
+
+    private void sendReportUser(HashMap<String, Object> params) {
         APICommunicator apiCommunicator = new APICommunicator();
         Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response -> {
             Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.user_reported), Toast.LENGTH_LONG).show();
@@ -199,26 +236,28 @@ public class ProfileFragment extends Fragment {
     private void errorTreatment(int errorCode) {
         String message;
         if (errorCode == 401)
-            message = getString(R.string.Unauthorized);
+            message = getString(R.string.unauthorized);
         else if (errorCode == 403)
-            message = getString(R.string.Forbidden);
+            message = getString(R.string.forbidden);
         else if (errorCode == 404)
-            message = getString(R.string.NotFound);
+            message = getString(R.string.not_found);
+        else if (errorCode == 409)
+            message = getString(R.string.user_already_reported);
         else
-            message = getString(R.string.UnexpectedError);
+            message = getString(R.string.unexpectedError);
 
         loadingDialog.dismiss();
         Toast.makeText(getActivity().getApplicationContext(), message, Toast.LENGTH_LONG).show();
     }
 
     private void getUserEvents() {
-        HashMap<String, String> params = new HashMap<>();
+        HashMap<String, Object> params = new HashMap<>();
         params.put("email", emailUser);
         getAllEvents(params);
     }
 
     //Call to the API
-    private void getAllEvents(HashMap<String, String> params) {
+    private void getAllEvents(HashMap<String, Object> params) {
 
         APICommunicator apiCommunicator = new APICommunicator();
         Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response -> {
@@ -240,8 +279,7 @@ public class ProfileFragment extends Fragment {
                     bundle.putInt("id", event.getId());
                     bundle.putBoolean("MyProfile", true);
                     Fragment eventFragment;
-                    if (event.getCreatorEmail().equals(SharedPreferencesManager.INSTANCE.read(getActivity(),"user_email"))
-                            && correctDate(event.getIniDate())) {
+                    if (event.getCreatorEmail().equals(SharedPreferencesManager.INSTANCE.read(getActivity(), "user_email")) && correctDate(event.getIniDate())) {
                         eventFragment = MyEventFragment.newInstance(bundle);
                     } else if (event.getCreatorEmail().equals(SharedPreferencesManager.INSTANCE.read(getActivity(), "user_email"))) eventFragment = EventFragment.newInstance(bundle);
                     else eventFragment = MyJoinEventFragment.newInstance(bundle);
@@ -250,16 +288,13 @@ public class ProfileFragment extends Fragment {
                 });
 
                 mRecyclerView.setAdapter(mAdapter);
-                loadingDialog.dismiss();
+
 
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         };
-        Response.ErrorListener errorListener = error -> {
-            loadingDialog.dismiss();
-            errorTreatment(error.networkResponse.statusCode);
-        };
+        Response.ErrorListener errorListener = error -> errorTreatment(error.networkResponse.statusCode);
         apiCommunicator.getRequest(getActivity().getApplicationContext(), URL +'/'+ emailUser + "/events", responseListener, errorListener, params);
     }
 
@@ -271,6 +306,13 @@ public class ProfileFragment extends Fragment {
             hours = hours/ 1000 / 60 / 60;
             return hours >= 24;
         }
+    }
+
+    protected Bitmap getImageRounded(Bitmap image) {
+        image = ImageHelper.cropBitmapToSquare(image);
+        image = ImageHelper.getRoundedCornerBitmap(image, 420);
+        return image;
+
     }
 
 }

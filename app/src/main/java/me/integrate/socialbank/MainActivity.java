@@ -3,6 +3,7 @@ package me.integrate.socialbank;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -32,7 +33,17 @@ public class MainActivity extends AppCompatActivity implements FragmentChangeLis
 
         } else {
             if (SharedPreferencesManager.INSTANCE.read(this, "token") != null) {
-                startActivity(new Intent(this, InsideActivity.class));
+                Intent intent = new Intent(this, InsideActivity.class);
+
+                Intent appLinkIntent = getIntent();
+                Uri appLinkData = appLinkIntent.getData();
+                if (appLinkData != null) {
+                    // TODO: magic number
+                    String eventId = appLinkData.toString().substring(22);
+                    intent.putExtra("event", eventId);
+                }
+
+                startActivity(intent);
                 finish();
             }
 

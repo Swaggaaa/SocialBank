@@ -76,7 +76,7 @@
             android:layout_marginBottom="15dp"
             android:layout_marginTop="15dp"
             android:ems="10"
-            android:hint="@string/email_address"
+            android:hint="@string/email"
             android:inputType="textEmailAddress" />
 
         <EditText
@@ -94,7 +94,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_marginTop="20dp"
-            android:background="@android:color/holo_blue_dark"
+            android:background="#c50e29"
             android:drawableStart="@drawable/common_google_signin_btn_icon_dark_normal"
             android:text="@string/google_sign_up"
             android:textColor="@android:color/white"
@@ -106,7 +106,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
-            android:background="@android:color/holo_blue_dark"
+            android:background="#c50e29"
             android:text="@string/register"
             tools:enabled="false" />
     </LinearLayout>

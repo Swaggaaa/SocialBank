@@ -116,13 +116,13 @@ public class MyEventFragment extends EventFragment {
     private void errorTreatment(int errorCode) {
         String message;
         if (errorCode == 401)
-            message = getString(R.string.Unauthorized);
+            message = getString(R.string.unauthorized);
         else if (errorCode == 403)
-            message = getString(R.string.Forbidden);
+            message = getString(R.string.forbidden);
         else if (errorCode == 404)
-            message = getString(R.string.NotFound);
+            message = getString(R.string.not_found);
         else
-            message = getString(R.string.UnexpectedError);
+            message = getString(R.string.unexpectedError);
 
         Toast.makeText(getActivity().getApplicationContext(), message, Toast.LENGTH_LONG).show();
     }
@@ -141,7 +141,7 @@ public class MyEventFragment extends EventFragment {
 
 
     private void updateEvent() {
-        HashMap<String, String> params = new HashMap<>();
+        HashMap<String, Object> params = new HashMap<>();
         params.put("description", descriptionEvent);
         Bitmap bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
         params.put("image", bitmap != null ? ImageCompressor.INSTANCE.compressAndEncodeAsBase64(
@@ -149,9 +149,9 @@ public class MyEventFragment extends EventFragment {
         putCredentials(params);
     }
 
-    private void putCredentials(HashMap<String, String> params) {
+    private void putCredentials(HashMap<String, Object> params) {
         APICommunicator apiCommunicator = new APICommunicator();
-        Response.Listener responseListener = response -> Toast.makeText(getActivity().getApplicationContext(), R.string.EventUpdated, Toast.LENGTH_LONG).show();
+        Response.Listener responseListener = response -> Toast.makeText(getActivity().getApplicationContext(), R.string.eventUpdated, Toast.LENGTH_LONG).show();
         Response.ErrorListener errorListener = error -> errorTreatment(error.networkResponse.statusCode);
 
 

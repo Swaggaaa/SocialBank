@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="genders">
+        <item>Male</item>
+        <item>Female</item>
+        <item>Other</item>
+    </string-array>
+
+    <string-array name="categories">
+        <item>Other</item>
+        <item>Gastronomy</item>
+        <item>Language</item>
+        <item>Workshops</item>
+        <item>Culture</item>
+        <item>Sports</item>
+        <item>Leisure</item>
+    </string-array>
+
+    <string-array name="languages">
+        <item>Spanish</item>
+        <item>Catalan</item>
+        <item>English</item>
+    </string-array>
+</resources>
