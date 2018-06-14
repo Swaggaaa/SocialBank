@@ -122,6 +122,15 @@
     <string name="edit_profile">Edit Profile</string>
     <string name="change_picture">Change picture</string>
     <string name="join_msg">Join to SocialBank and let\s go to \'%1$s\' event! Find out more on %2$s\/%3$s</string>
+    <string name="ok">OK</string>
+    <string name="user_developer">This user is a member of the SocialBank Development Team!</string>
+    <string name="developer">Developer</string>
+    <string name="top_organizer">Top organizer</string>
+    <string name="user_organizer">This user is one of the best in SocialBank!</string>
+    <string name="active">Active user</string>
+    <string name="user_active">This user is active in SocialBank.</string>
+    <string name="verified_account">Verified entity</string>
+    <string name="user_verified">This usuary has a verified account in SocialBank.</string>
     <string name="information_event">Event information</string>
     <string name="edit_event">Edit Event</string>
     <string name="update_event">Update description\'s event</string>

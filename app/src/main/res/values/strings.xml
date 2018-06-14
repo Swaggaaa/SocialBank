@@ -122,6 +122,15 @@
     <string name="edit_profile">Editar perfil</string>
     <string name="change_picture">Cambiar imagen</string>
     <string name="join_msg">Únete a SocialBank y vayamos al evento de \'%1$s\'. Encuentra más información en %2$s\/%3$s</string>
+    <string name="ok">Vale</string>
+    <string name="user_developer">¡Este usuario es miembro del equipo de desenvolupadores de SocialBank!</string>
+    <string name="developer">Desenvolupador</string>
+    <string name="top_organizer">Mejor organizador</string>
+    <string name="user_organizer">¡Este usuario es uno de los mejores organizadores en SocialBank!</string>
+    <string name="active">Usuario activo</string>
+    <string name="user_active">Este usuario se ha mostrado activo en SocialBank.</string>
+    <string name="verified_account">Entidad verificada</string>
+    <string name="user_verified">Este usuario dispone de una cuenta verificada en SocialBank.</string>
     <string name="get_hours">horas</string>
     <string name="thank_you_purchase">Gracias por su compra!</string>
     <string name="payment_rejected">Su transacción fue rechazada por el procesador de pagos!</string>
