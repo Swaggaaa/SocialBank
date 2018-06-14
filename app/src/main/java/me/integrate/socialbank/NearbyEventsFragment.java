@@ -65,7 +65,7 @@ public class NearbyEventsFragment extends Fragment {
         try {
             MapsInitializer.initialize(getActivity().getApplicationContext());
         } catch (Exception e) {
-            Toast.makeText(getActivity().getApplicationContext(), R.string.UnexpectedError, Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity().getApplicationContext(), R.string.unexpectedError, Toast.LENGTH_LONG).show();
         }
 
         mMapView.getMapAsync(mMap -> {
@@ -174,13 +174,13 @@ public class NearbyEventsFragment extends Fragment {
     private void errorTreatment(int errorCode) {
         String message;
         if (errorCode == 401)
-            message = getString(R.string.Unauthorized);
+            message = getString(R.string.unauthorized);
         else if (errorCode == 403)
-            message = getString(R.string.Forbidden);
+            message = getString(R.string.forbidden);
         else if (errorCode == 404)
-            message = getString(R.string.NotFound);
+            message = getString(R.string.not_found);
         else
-            message = getString(R.string.UnexpectedError);
+            message = getString(R.string.unexpectedError);
         Toast.makeText(getActivity().getApplicationContext(), message, Toast.LENGTH_LONG).show();
     }
 

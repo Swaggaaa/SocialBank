@@ -32,6 +32,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Vector;
 
 import static android.app.Activity.RESULT_OK;
 import static android.content.ContentValues.TAG;
@@ -75,10 +76,23 @@ public class CreateEventFragment extends Fragment {
     private Integer startMin;
     private Integer endHour;
     private Integer endMin;
+    private Vector<String> categories;
 
     double userHours;
 
-    private void postEvent(HashMap<String, String> params) {
+    private void iniVector() {
+        categories = new Vector();
+        categories.add("Other");
+        categories.add("Gastronomy");
+        categories.add("Language");
+        categories.add("Workshops");
+        categories.add("Culture");
+        categories.add("Sports");
+        categories.add("Leisue");
+
+    }
+
+    private void postEvent(HashMap<String, Object> params) {
         APICommunicator apiCommunicator = new APICommunicator();
         Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response ->
         {
@@ -140,6 +154,7 @@ public class CreateEventFragment extends Fragment {
 
         capacity = "1";
 
+        iniVector();
         groupTable.setVisibility(View.GONE);
         getUserInfo();
 
@@ -299,7 +314,7 @@ public class CreateEventFragment extends Fragment {
     }
 
     private void jsonEvent() {
-        HashMap<String, String> params = new HashMap<>();
+        HashMap<String, Object> params = new HashMap<>();
         String dataIni = null;
         String dataEnd = null;
         if (eventFixed) {
@@ -308,7 +323,7 @@ public class CreateEventFragment extends Fragment {
         }
         EventLocation eventLocation = new EventLocation(address.getText().toString());
 
-        params.put("category", category.getSelectedItem().toString().toUpperCase());
+        params.put("category", categories.get(category.getSelectedItemPosition()).toUpperCase());
         params.put("creatorEmail", getUserEmail());
         params.put("demand", demand ? "true" : "false");
         params.put("description", description.getText().toString());
