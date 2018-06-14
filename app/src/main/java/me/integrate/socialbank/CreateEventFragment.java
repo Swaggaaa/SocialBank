@@ -340,6 +340,7 @@ public class CreateEventFragment extends Fragment {
         params.put("capacity", capacity);
         params.put("tags", new ArrayList<>());
 
+
         buttonCreate.setText(R.string.loading);
         buttonCreate.setEnabled(false);
         postEvent(params);
