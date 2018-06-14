@@ -3,10 +3,8 @@ package me.integrate.socialbank;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -18,7 +16,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -120,7 +117,7 @@ public class ProfileFragment extends Fragment {
         APICommunicator apiCommunicator = new APICommunicator();
         @SuppressLint("ResourceAsColor") Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response -> {
             JSONObject jsonObject;
-            Float balance = null;
+            Float balance;
             try{
                 jsonObject = new JSONObject(response.response);
                 nameUser = jsonObject.getString("name");
@@ -152,9 +149,9 @@ public class ProfileFragment extends Fragment {
 
                 awardAdapter = new AwardAdapter(items, (v1, position) -> {
                     String award =items.get(position);
-                    String message = "";
-                    String title = "";
-                    int icon = 0;
+                    String message;
+                    String title;
+                    int icon;
                     if (award.equals(Award.DEVELOPER.name())) {
                         message = getString(R.string.user_developer);
                         title = getString(R.string.developer);
@@ -173,10 +170,16 @@ public class ProfileFragment extends Fragment {
                         icon = R.drawable.volunteer;
                     }
 
-                    else {
+                    else if (award.equals(Award.VERIFIED_USER.name())){
                         title = getString(R.string.verified_account);
                         message = getString(R.string.user_verified);
                         icon = R.drawable.verified;
+                    }
+
+                    else {
+                        title = "";
+                        message = "";
+                        icon = 0;
                     }
 
                     AlertDialog.Builder dialogAward = new AlertDialog.Builder(getContext());
@@ -184,10 +187,7 @@ public class ProfileFragment extends Fragment {
                     dialogAward.setIcon(icon);
                     dialogAward.setMessage(message);
                     dialogAward.setCancelable(false);
-                    dialogAward.setPositiveButton(getResources().getString(R.string.ok), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                        }
+                    dialogAward.setPositiveButton(getResources().getString(R.string.ok), (dialogInterface, i) -> {
                     });
                     dialogAward.show();
                 });
@@ -219,18 +219,12 @@ public class ProfileFragment extends Fragment {
             dialogDelete.setTitle(getResources().getString(R.string.are_sure));
             dialogDelete.setMessage(getResources().getString(R.string.confirm_report_user));
             dialogDelete.setCancelable(false);
-            dialogDelete.setPositiveButton(getResources().getString(R.string.confirm), new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    HashMap<String, Object> params = new HashMap<>();
-                    params.put("email", emailUser);
-                    sendReportUser(params);
-                }
+            dialogDelete.setPositiveButton(getResources().getString(R.string.confirm), (dialogInterface, i) -> {
+                HashMap<String, Object> params = new HashMap<>();
+                params.put("email", emailUser);
+                sendReportUser(params);
             });
-            dialogDelete.setNegativeButton(getResources().getString(R.string.discard), new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                }
+            dialogDelete.setNegativeButton(getResources().getString(R.string.discard), (dialogInterface, i) -> {
             });
             dialogDelete.show();
         });
@@ -264,9 +258,7 @@ public class ProfileFragment extends Fragment {
 
     private void sendReportUser(HashMap<String, Object> params) {
         APICommunicator apiCommunicator = new APICommunicator();
-        Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response -> {
-            Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.user_reported), Toast.LENGTH_LONG).show();
-        };
+        Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) (CustomRequest.CustomResponse response) -> Toast.makeText(getActivity().getApplicationContext(), getResources().getString(R.string.user_reported), Toast.LENGTH_LONG).show();
         Response.ErrorListener errorListener = error -> errorTreatment(error.networkResponse.statusCode);
 
         apiCommunicator.postRequest(getActivity().getApplicationContext(), URL+'/'+emailUser+"/report", responseListener, errorListener, params);
