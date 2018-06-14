@@ -56,7 +56,6 @@ public class ProfileFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
 
-
     private RecyclerView awardRecyclerView;
     private RecyclerView.Adapter awardAdapter;
 
