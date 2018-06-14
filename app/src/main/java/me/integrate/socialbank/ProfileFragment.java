@@ -124,7 +124,7 @@ public class ProfileFragment extends Fragment {
                 nameUser = jsonObject.getString("name");
                 String events_en = getString(R.string.personal_events);
                 String events = getString(R.string.personal_events_ES);
-                myEvents.setText(events+nameUser+events_en);
+                myEvents.setText(events + " " + nameUser+events_en);
                 lastNameUser = jsonObject.getString("surname");
                 dateUser = jsonObject.getString("birthdate");
                 genderUser = jsonObject.getString("gender");
