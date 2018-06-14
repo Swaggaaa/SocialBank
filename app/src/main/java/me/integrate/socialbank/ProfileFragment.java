@@ -11,6 +11,8 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.SpannableString;
+import android.text.style.UnderlineSpan;
 import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -135,7 +137,9 @@ public class ProfileFragment extends Fragment {
                 userBalance.setText(balance.toString());
                 if (balance < 0) userBalance.setTextColor(this.getResources().getColor(R.color.negative_balance));
                 else if (balance > 0) userBalance.setTextColor(this.getResources().getColor(R.color.positive_balance));
-                userEmailToShow.setText(jsonObject.getString("email"));
+                SpannableString userEmail = new SpannableString(jsonObject.getString("email"));
+                userEmail.setSpan(new UnderlineSpan(), 0, userEmail.length(), 0);
+                userEmailToShow.setText(userEmail);
                 if(!descriptionUser.equals("null")) userDescription.setText(descriptionUser);
                 String image = jsonObject.getString("image");
                 if (!image.equals("")&& !image.equals("null")) {
