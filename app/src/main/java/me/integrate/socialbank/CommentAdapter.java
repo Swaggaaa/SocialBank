@@ -60,15 +60,15 @@ class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentViewHold
     public void onBindViewHolder(CommentViewHolder viewHolder, int i) {
         viewHolder.user.setText(items.get(i).getUser());
         viewHolder.text.setText(items.get(i).getComment());
-        if (items.get(i).getEmailCreator().equals(SharedPreferencesManager.INSTANCE.read(this.context, "user_email"))){
+        if (!items.get(i).getEmailCreator().equals(SharedPreferencesManager.INSTANCE.read(this.context, "user_email"))) {
+            viewHolder.delete.setVisibility(View.GONE);
+        } else {
             viewHolder.delete.setVisibility(View.VISIBLE);
             viewHolder.delete.setOnClickListener(v->{
-
                 if (items.get(i).getEmailCreator().equals(SharedPreferencesManager.INSTANCE.read(this.context, "user_email"))) {
                     deletedComment(items.get(i).getId());
                     items.remove(items.get(i));
                     notifyDataSetChanged();
-                    viewHolder.delete.setVisibility(View.INVISIBLE);
                 }
 
             });
@@ -83,11 +83,7 @@ class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentViewHold
     private void deletedComment(int id) {
 
         APICommunicator apiCommunicator = new APICommunicator();
-        Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response -> {
-
-            Toast.makeText(getContext().getApplicationContext(), getContext().getResources().getString(R.string.deleted_comment), Toast.LENGTH_LONG).show();
-
-        };
+        Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response -> Toast.makeText(getContext().getApplicationContext(), getContext().getResources().getString(R.string.deleted_comment), Toast.LENGTH_LONG).show();
         Response.ErrorListener errorListener = error -> errorTreatment(error.networkResponse.statusCode);
 
         apiCommunicator.deleteRequest(getContext().getApplicationContext(), URL + '/' + id , responseListener, errorListener, null);

@@ -3,6 +3,7 @@ package me.integrate.socialbank;
 
 import android.content.Intent;
 import android.app.ProgressDialog;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -10,6 +11,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,7 +54,6 @@ public class EventFragment extends Fragment implements AddCommentFragment.OnComm
     private TextView textEventHours;
     private TextView textStartDate;
     private TextView textEndDate;
-    protected EditText editDescription;
 
 
     private RecyclerView mRecyclerView;
@@ -88,7 +90,6 @@ public class EventFragment extends Fragment implements AddCommentFragment.OnComm
         textEventHours = (TextView) rootView.findViewById(R.id.hours);
         textStartDate = (TextView) rootView.findViewById(R.id.start_date);
         textEndDate = (TextView) rootView.findViewById(R.id.end_date);
-        editDescription = (EditText) rootView.findViewById(R.id.editDescription);
         addComment = (ImageView) rootView.findViewById(R.id.addComment);
 
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view_comment);
@@ -122,9 +123,7 @@ public class EventFragment extends Fragment implements AddCommentFragment.OnComm
                 textEventDescription.setText(descriptionEvent);
                 textLocation.setText(event.getLocation());
                 textDemandEvent.setText(event.getDemand() ? R.string.demand : R.string.offer);
-                imageView.setImageBitmap(event.getImage());
-
-                editDescription.setText(descriptionEvent);
+                imageView.setImageBitmap(getImage(event.getImage()));
 
                 //TODO not hardcoded this values
                 textIndividualOrGroup.setText("Individual");
@@ -177,6 +176,25 @@ public class EventFragment extends Fragment implements AddCommentFragment.OnComm
             DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm");
             return df.format(date);
         }
+    }
+
+    protected Bitmap getImage(Bitmap bitmap)
+    {
+        if (bitmap != null) {
+            double originWidth = bitmap.getWidth();
+            double originHeight = bitmap.getHeight();
+
+            DisplayMetrics displayMetrics = new DisplayMetrics();
+            getActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+            double displayWidht = displayMetrics.widthPixels;
+
+            if (displayWidht > originWidth) {
+                double destHeight = originHeight * (displayWidht / originWidth);
+                bitmap = Bitmap.createScaledBitmap(bitmap, (int) displayWidht, (int) destHeight, false);
+                imageView.setImageBitmap(bitmap);
+            }
+        }
+        return bitmap;
     }
 
 
