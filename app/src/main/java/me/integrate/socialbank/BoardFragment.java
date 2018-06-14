@@ -154,9 +154,6 @@ public class BoardFragment extends Fragment {
                 item.setChecked(!item.isChecked());
                 update();
                 break;
-            case R.id.event_tagged:
-                set_tags();
-                break;
             case R.id.delete_filters:
                 demand = other = offer = language = culture = workshops = sports = gastronomy = leisure = false;
                 itemLanguage.setChecked(false);
