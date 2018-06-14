@@ -47,7 +47,7 @@ public class MyJoinEventFragment extends EventFragment {
         super.onViewCreated(view, savedInstanceState);
         join_button.setOnClickListener(v->
         {
-            HashMap<String, String> params = new HashMap<>();
+            HashMap<String, Object> params = new HashMap<>();
             params.put("id", String.valueOf(id));
             if (joined) {
                 AlertDialog.Builder dialogDelete = new AlertDialog.Builder(getContext());
@@ -109,7 +109,7 @@ public class MyJoinEventFragment extends EventFragment {
     }
 
     //To JOIN an event
-    private void joinEvent(HashMap<String, String> params) {
+    private void joinEvent(HashMap<String, Object> params) {
         APICommunicator apiCommunicator = new APICommunicator();
         Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response -> {
             Toast.makeText(getActivity().getApplicationContext(), R.string.joined_msg, Toast.LENGTH_LONG).show();
@@ -122,7 +122,7 @@ public class MyJoinEventFragment extends EventFragment {
 
 
     //To CANCEL your enrollment to an event
-    private void cancelJoinEvent(HashMap<String, String> params) {
+    private void cancelJoinEvent(HashMap<String, Object> params) {
         APICommunicator apiCommunicator = new APICommunicator();
         Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response -> {
             Toast.makeText(getActivity().getApplicationContext(), R.string.canceljoin_msg, Toast.LENGTH_LONG).show();
