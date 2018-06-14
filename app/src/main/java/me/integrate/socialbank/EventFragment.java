@@ -68,6 +68,7 @@ public class EventFragment extends Fragment implements AddCommentFragment.OnComm
 
     private List<Comment> comments;
     protected String creator;
+    protected String title;
     protected int id;
     protected String descriptionEvent;
     protected Date iniDate;
@@ -123,7 +124,8 @@ public class EventFragment extends Fragment implements AddCommentFragment.OnComm
         Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response -> {
             try {
                 Event event = new Event(new JSONObject(response.response));
-                textEventTitle.setText(event.getTitle());
+                title = event.getTitle();
+                textEventTitle.setText(title);
                 creator = event.getCreatorEmail();
                 textEventOrganizer.setText(creator);
                 textEventCategory.setText(event.getCategory().toString());

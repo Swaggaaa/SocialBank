@@ -12,12 +12,14 @@
             <item android:id="@+id/my_events"
                 android:title="@string/my_events"
                 app:showAsAction="never"
-                android:checkable="true"/>
+                android:checkable="true"
+                android:checked="true"/>
 
             <item android:id="@+id/my_events_join"
                 android:title="@string/join_events"
                 app:showAsAction="never"
-                android:checkable="true"/>
+                android:checkable="true"
+                android:checked="true"/>
 
             <item
                 android:id="@+id/delete_filters"

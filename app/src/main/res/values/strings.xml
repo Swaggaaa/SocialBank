@@ -146,11 +146,11 @@
     <string name="edit_event">Editar evento</string>
     <string name="update_event">Actualizar descripción del evento</string>
     <string name="filter">Filtro</string>
-    <string name="join_events">Disfruta del evento</string>
+    <string name="join_events">Eventos apuntados</string>
     <string name="disjoin">Desapuntarse</string>
     <string name="confirm_disjoin_event">¿Quieres desapuntarte de este evento?</string>
     <string name="not_hours_msg">No tienes horas suficientes para apuntarte a este evento</string>
-    <string name="joined_msg">Ya estas apuntado a este evento</string>
+    <string name="joined_msg">Te has apuntado al evento</string>
     <string name="cancel_btn">CANCELAR</string>
     <string name="canceljoin_msg">Ya no estas apuntado a este evento</string>
     <string name="individual">Individual</string>

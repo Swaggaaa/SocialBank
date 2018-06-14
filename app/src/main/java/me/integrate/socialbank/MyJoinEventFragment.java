@@ -112,7 +112,8 @@ public class MyJoinEventFragment extends EventFragment {
     private void joinEvent(HashMap<String, Object> params) {
         APICommunicator apiCommunicator = new APICommunicator();
         Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response -> {
-            Toast.makeText(getActivity().getApplicationContext(), R.string.joined_msg, Toast.LENGTH_LONG).show();
+            String msg = getContext().getResources().getString(R.string.joined_msg) + " " + title + "!";
+            Toast.makeText(getActivity().getApplicationContext(), msg, Toast.LENGTH_LONG).show();
             checkJoin();
             changesEnrollment(true);
         };

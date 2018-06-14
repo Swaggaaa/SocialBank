@@ -87,6 +87,7 @@ public class ProfileFragment extends Fragment {
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.my_recycler_view_user_profile);
         mRecyclerView.setHasFixedSize(true);
         isFABOpen = false;
+        verified = Boolean.parseBoolean(SharedPreferencesManager.INSTANCE.read(getActivity(),"verified"));
         items.clear();
         openMenu = (FloatingActionButton) rootView.findViewById(R.id.openMenu);
         reportUserButton = (FloatingActionButton) rootView.findViewById(R.id.reportProfile);
@@ -132,7 +133,6 @@ public class ProfileFragment extends Fragment {
                 userName.setText(completeName);
                 balance = BigDecimal.valueOf(jsonObject.getDouble("balance")).floatValue();
                 userBalance.setText(balance.toString());
-                verified = jsonObject.getBoolean("verified");
                 if (balance < 0) userBalance.setTextColor(this.getResources().getColor(R.color.negative_balance));
                 else if (balance > 0) userBalance.setTextColor(this.getResources().getColor(R.color.positive_balance));
                 userEmailToShow.setText(jsonObject.getString("email"));

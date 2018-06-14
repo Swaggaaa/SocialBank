@@ -50,17 +50,16 @@ public class AllMyEventsFragment extends Fragment {
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
         loadingDialog = ProgressDialog.show(getActivity(), "",
-                getString(R.string.loadingMessage), true);
+               getString(R.string.loadingMessage), true);
         events = new ArrayList<>();
         joinEvents = new ArrayList<>();
         items = new ArrayList<>();
         emailUser = SharedPreferencesManager.INSTANCE.read(getActivity(),"user_email");
-
         getJoinEvents();
-        getAllEventsByUser();
 
         return rootView;
     }
+
 
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -111,8 +110,6 @@ public class AllMyEventsFragment extends Fragment {
                 break;
             case R.id.delete_filters:
                 items.clear();
-                items.addAll(events);
-                items.addAll(joinEvents);
                 itemMyJoinEvents.setChecked(false);
                 itemMyEvents.setChecked(false);
                 break;
@@ -136,6 +133,7 @@ public class AllMyEventsFragment extends Fragment {
 
                 }
                 items.addAll(events);
+
                 mAdapter = new EventAdapter(items, getActivity(), (v1, position) -> {
                     Bundle bundle = new Bundle();
                     Event event = items.get(position);
@@ -157,12 +155,13 @@ public class AllMyEventsFragment extends Fragment {
                 mRecyclerView.setAdapter(mAdapter);
                 loadingDialog.dismiss();
 
-
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         };
-        Response.ErrorListener errorListener = error -> errorTreatment(error.networkResponse.statusCode);
+        Response.ErrorListener errorListener = error -> {
+            errorTreatment(error.networkResponse.statusCode);
+        };
 
         apiCommunicator.getRequest(getActivity().getApplicationContext(), URL +'/'+ emailUser + "/events", responseListener, errorListener, null);
     }
@@ -181,25 +180,7 @@ public class AllMyEventsFragment extends Fragment {
 
                 }
                 items.addAll(joinEvents);
-                mAdapter = new EventAdapter(items, getActivity(), (v1, position) -> {
-                    Bundle bundle = new Bundle();
-                    Event event = items.get(position);
-
-                    bundle.putInt("id", event.getId());
-                    bundle.putBoolean("MyProfile", true);
-                    Fragment eventFragment;
-                    boolean eventCreator = event.getCreatorEmail().equals(SharedPreferencesManager.INSTANCE.read(getActivity(),"user_email"));
-                    if( eventCreator && event.stillEditable() )
-                        eventFragment = MyEventFragment.newInstance(bundle);
-                    else if( !eventCreator && event.isAvailable() )
-                        eventFragment = MyJoinEventFragment.newInstance(bundle);
-                    else
-                        eventFragment = EventFragment.newInstance(bundle);
-                    FragmentChangeListener fc = (FragmentChangeListener) getActivity();
-                    fc.replaceFragment(eventFragment);
-                });
-
-                mRecyclerView.setAdapter(mAdapter);
+                getAllEventsByUser();
 
             } catch (JSONException e) {
                 e.printStackTrace();
