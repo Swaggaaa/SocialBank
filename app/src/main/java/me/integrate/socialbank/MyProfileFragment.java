@@ -103,7 +103,7 @@ public class MyProfileFragment extends ProfileFragment {
     }
 
     private void updateProfile() {
-        HashMap<String, String> params = new HashMap<>();
+        HashMap<String, Object> params = new HashMap<>();
         params.put("name", nameUser);
         params.put("surname", lastNameUser);
         params.put("birthdate", dateUser);
@@ -117,7 +117,7 @@ public class MyProfileFragment extends ProfileFragment {
         putCredentials(params);
     }
 
-    private void putCredentials(HashMap<String, String> params) {
+    private void putCredentials(HashMap<String, Object> params) {
         APICommunicator apiCommunicator = new APICommunicator();
         Response.Listener responseListener = response -> {
             Toast.makeText(getActivity().getApplicationContext(), getString(R.string.image_update), Toast.LENGTH_LONG).show();

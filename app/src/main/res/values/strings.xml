@@ -132,6 +132,7 @@
     <string name="new_comment">Añade un nuevo comentario</string>
     <string name="comments">Comentarios</string>
     <string name="add_comment">Añade un comentario</string>
+    <string name="initializing_paypal">Creando una conexión segura con PayPal, por favor espere…</string>
 
 
 </resources>

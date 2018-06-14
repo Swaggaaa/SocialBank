@@ -20,11 +20,11 @@ class APICommunicator {
     private static final String CHARSET = "utf-8";
 
 
-    void getRequest(Context context, String url, Response.Listener responseListener, Response.ErrorListener errorListener, final Map<String, String> params) {
+    void getRequest(Context context, String url, Response.Listener responseListener, Response.ErrorListener errorListener, final Map<String, Object> params) {
         doRequest(context, Request.Method.GET, url, responseListener, errorListener, params);
     }
 
-    void postRequest(Context context, String url, Response.Listener responseListener, Response.ErrorListener errorListener, final Map<String, String> params) {
+    void postRequest(Context context, String url, Response.Listener responseListener, Response.ErrorListener errorListener, final Map<String, Object> params) {
         doRequest(context, Request.Method.POST, url, responseListener, errorListener, params);
     }
 
@@ -32,7 +32,7 @@ class APICommunicator {
         doRequest(context, Request.Method.POST, url, responseListener, errorListener, params);
     }
 
-    void putRequest(Context context, String url, Response.Listener responseListener, Response.ErrorListener errorListener, final Map<String, String> params) {
+    void putRequest(Context context, String url, Response.Listener responseListener, Response.ErrorListener errorListener, final Map<String, Object> params) {
         doRequest(context, Request.Method.PUT, url, responseListener, errorListener, params);
     }
 
@@ -40,11 +40,11 @@ class APICommunicator {
         doRequest(context, Request.Method.PUT, url, responseListener, errorListener, params);
     }
 
-    void deleteRequest(Context context, String url, Response.Listener responseListener, Response.ErrorListener errorListener, final Map<String, String> params) {
+    void deleteRequest(Context context, String url, Response.Listener responseListener, Response.ErrorListener errorListener, final Map<String, Object> params) {
         doRequest(context, Request.Method.DELETE, url, responseListener, errorListener, params);
     }
 
-    private void doRequest(Context context, final int post, final String url, final Response.Listener responseListener, final Response.ErrorListener errorListener, final Map<String, String> params) {
+    private void doRequest(Context context, final int post, final String url, final Response.Listener responseListener, final Response.ErrorListener errorListener, final Map<String, Object> params) {
         CustomRequest postRequest = new CustomRequest(post, API_URL + url, responseListener, errorListener) {
             @Override
             public byte[] getBody() {
@@ -100,6 +100,10 @@ class APICommunicator {
                 return CONTENT_TYPE;
             }
         };
+        postRequest.setRetryPolicy(new DefaultRetryPolicy(
+                10000,
+                2,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         Volley.newRequestQueue(context).add(postRequest);
     }
 

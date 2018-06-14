@@ -68,7 +68,7 @@ public class RegisterFragment extends Fragment {
             startActivityForResult(signInIntent, RC_SIGN_IN);
         });
         SignUpButton.setOnClickListener(v -> {
-            HashMap<String, String> params = new HashMap<>();
+            HashMap<String, Object> params = new HashMap<>();
             params.put("name", name.getText().toString());
             params.put("surname", lastName.getText().toString());
             params.put("birthdate", strDate);
@@ -187,7 +187,7 @@ public class RegisterFragment extends Fragment {
         }
     }
 
-    private void postCredentials(HashMap<String, String> params) {
+    private void postCredentials(HashMap<String, Object> params) {
         APICommunicator apiCommunicator = new APICommunicator();
         Response.Listener responseListener = response -> {
             Toast.makeText(getActivity().getApplicationContext(), "Account created!", Toast.LENGTH_LONG).show();

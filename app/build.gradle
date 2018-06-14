@@ -17,7 +17,7 @@ android {
     }
     buildTypes {
         debug {
-            buildConfigField "String", "API_ENDPOINT", '"http://sandshrew.fib.upc.edu:9000"'
+            buildConfigField "String", "API_ENDPOINT", '"http://10.0.2.2:8080"'
         }
         production {
             initWith debug

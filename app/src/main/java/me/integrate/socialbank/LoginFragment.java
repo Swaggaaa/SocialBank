@@ -112,7 +112,7 @@ public class LoginFragment extends Fragment {
             loginButton.setText(R.string.login);
             Toast.makeText(getActivity().getApplicationContext(), "Email or password incorrect", Toast.LENGTH_LONG).show();
         };
-        Map<String, String> params = new HashMap<>();
+        Map<String, Object> params = new HashMap<>();
         params.put("email", user);
         params.put("password", password);
 
