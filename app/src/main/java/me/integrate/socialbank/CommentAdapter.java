@@ -60,15 +60,13 @@ class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentViewHold
     public void onBindViewHolder(CommentViewHolder viewHolder, int i) {
         viewHolder.user.setText(items.get(i).getUser());
         viewHolder.text.setText(items.get(i).getComment());
-        if (items.get(i).getEmailCreator().equals(SharedPreferencesManager.INSTANCE.read(this.context, "user_email"))){
-            viewHolder.delete.setVisibility(View.VISIBLE);
+        if (!items.get(i).getEmailCreator().equals(SharedPreferencesManager.INSTANCE.read(this.context, "user_email"))) viewHolder.delete.setVisibility(View.GONE);
+        else {
             viewHolder.delete.setOnClickListener(v->{
-
                 if (items.get(i).getEmailCreator().equals(SharedPreferencesManager.INSTANCE.read(this.context, "user_email"))) {
                     deletedComment(items.get(i).getId());
                     items.remove(items.get(i));
                     notifyDataSetChanged();
-                    viewHolder.delete.setVisibility(View.INVISIBLE);
                 }
 
             });
