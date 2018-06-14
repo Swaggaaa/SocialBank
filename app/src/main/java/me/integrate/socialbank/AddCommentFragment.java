@@ -63,18 +63,14 @@ public class AddCommentFragment extends DialogFragment {
         try {
             mOnCommentSelected = (OnCommentSelected) getTargetFragment();
         } catch (ClassCastException e) {
-
+            e.printStackTrace();
         }
     }
 
     private void postComment(String comment) {
 
         APICommunicator apiCommunicator = new APICommunicator();
-        Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response -> {
-
-            mOnCommentSelected.sendComment();
-
-        };
+        Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response -> mOnCommentSelected.sendComment();
         Response.ErrorListener errorListener = error -> errorTreatment(error.networkResponse.statusCode);
         Map<String, Object> params = new HashMap<>();
         params.put("content", comment);

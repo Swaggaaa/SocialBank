@@ -1,6 +1,7 @@
 package me.integrate.socialbank;
 
 import android.app.Dialog;
+import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ public class TimePickerFragment extends DialogFragment {
 
     private TimePickerDialog.OnTimeSetListener listener;
 
+    @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState){
         //Use the current time as the default values for the time picker

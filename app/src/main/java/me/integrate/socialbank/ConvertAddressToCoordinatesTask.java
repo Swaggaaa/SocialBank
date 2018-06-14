@@ -27,13 +27,13 @@ public class ConvertAddressToCoordinatesTask extends AsyncTask<URL,Integer,Event
             }
             BufferedReader br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
 
-            String output, full = "";
+            String output;StringBuilder full = new StringBuilder();
             while ((output = br.readLine()) != null) {
-                full += output;
+                full.append(output);
             }
 
 
-            JSONObject json = new JSONObject(full);
+            JSONObject json = new JSONObject(full.toString());
 
 
             JSONObject results = json.getJSONArray("results").getJSONObject(0);
@@ -47,9 +47,7 @@ public class ConvertAddressToCoordinatesTask extends AsyncTask<URL,Integer,Event
             return eventLocation;
 
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
+        } catch (IOException | JSONException e) {
             e.printStackTrace();
         }
         return null;

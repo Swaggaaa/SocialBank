@@ -2,7 +2,6 @@ package me.integrate.socialbank;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -58,11 +57,6 @@ public class AllMyEventsFragment extends Fragment {
         getJoinEvents();
 
         return rootView;
-    }
-
-
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
     }
 
     @Override
@@ -159,9 +153,7 @@ public class AllMyEventsFragment extends Fragment {
                 e.printStackTrace();
             }
         };
-        Response.ErrorListener errorListener = error -> {
-            errorTreatment(error.networkResponse.statusCode);
-        };
+        Response.ErrorListener errorListener = error -> errorTreatment(error.networkResponse.statusCode);
 
         apiCommunicator.getRequest(getActivity().getApplicationContext(), URL +'/'+ emailUser + "/events", responseListener, errorListener, null);
     }
