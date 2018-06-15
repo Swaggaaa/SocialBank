@@ -290,7 +290,7 @@ public class BoardFragment extends Fragment {
                     boolean eventCreator = event.getCreatorEmail().equals(emailUser);
                     if (eventCreator && event.stillEditable())
                         eventFragment = MyEventFragment.newInstance(bundle);
-                    else if (!eventCreator && event.isAvailable() && !verified)
+                    else if (!eventCreator && event.isAvailable() && !verified && (event.getCapacity() < event.getNumberEnrolled()))
                         eventFragment = MyJoinEventFragment.newInstance(bundle);
                     else
                         eventFragment = EventFragment.newInstance(bundle);

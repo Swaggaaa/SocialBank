@@ -121,7 +121,7 @@
     <string name="user_balance">Balanç de l\'usuari:  </string>
     <string name="edit_profile">Editar perfil</string>
     <string name="change_picture">Canviar imatge</string>
-    <string name="join_msg">Uneix-te a SocialBank i anem a l\'esdeveniment de \'%1$s\'. Troba més informació a %2$s\/%3$d</string>
+    <string name="join_msg">Uneix-te a SocialBank per veure l\'esdeveniment de \'%1$s\'. Troba més informació a %2$s\/%3$d</string>
     <string name="ok">D\'acord</string>
     <string name="user_developer">Aquest usuari és un memmbre de l\'equip de desenvolupadors de SocialBank</string>
     <string name="developer">Desevolupador</string>
