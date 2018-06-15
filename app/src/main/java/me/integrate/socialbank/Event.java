@@ -28,6 +28,7 @@ public class Event {
     private double latitude;
     private double longitude;
     private Category category;
+    private String exchangeToken;
 
     public Event(JSONObject object) throws JSONException {
         this.id = object.getInt("id");
@@ -42,24 +43,10 @@ public class Event {
         this.latitude = object.getDouble("latitude");
         this.longitude = object.getDouble("longitude");
         this.category = Category.valueOf(object.getString("category"));
+        this.exchangeToken = object.getString("exchangeToken");
+        this.exchangeToken = !object.isNull("exchangeToken") ? object.getString("exchangeToken") : null;
 
         getDates(object);
-    }
-
-    public Event(String creatorEmail, boolean demand, String description, Date finishDate, int id, int capacity, int numberEnrolled, Bitmap decodedByte, Date initDate, double latitude, String location, double longitude, String title) {
-        this.id = id;
-        this.capacity = capacity;
-        this.numberEnrolled = numberEnrolled;
-        this.title = title;
-        this.iniDate = initDate;
-        this.image = decodedByte;
-        this.location = location;
-        this.description = description;
-        this.endDate = finishDate;
-        this.isDemand = demand;
-        this.longitude = longitude;
-        this.latitude = latitude;
-        this.creatorEmail = creatorEmail;
     }
 
     public Category getCategory() {
@@ -197,6 +184,14 @@ public class Event {
 
     public void setCategory(Category category) {
         this.category = category;
+    }
+
+    public String getExchangeToken() {
+        return exchangeToken;
+    }
+
+    public void setExchangeToken(String exchangeToken) {
+        this.exchangeToken = exchangeToken;
     }
 
     public boolean isIndividual() {

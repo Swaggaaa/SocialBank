@@ -168,5 +168,6 @@
     <string name="example_exchange_token">123-user@email.com-XXXX</string>
     <string name="insert_token_first">You must insert a token first!</string>
     <string name="exchanged_success">Your token was exchanged successfully</string>
+    <string name="about_exchangeToken">Exchange hours token</string>
 
 </resources>

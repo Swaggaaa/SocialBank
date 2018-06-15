@@ -164,6 +164,7 @@
     <string name="input_tags">#escribetutag</string>
     <string name="tag_search">Buscar por tag</string>
     <string name="noTags">No hay ningún tag a buscar</string>
+    <string name="about_exchangeToken">Token de canjeo de horas</string>
     <string name="exchange_hours">Canjear horas</string>
     <string name="example_exchange_token">123-user@email.com-XXXX</string>
     <string name="insert_token_first">¡Debes insertar un código primero!</string>
