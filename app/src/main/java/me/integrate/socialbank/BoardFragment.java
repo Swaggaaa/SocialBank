@@ -296,14 +296,26 @@ public class BoardFragment extends Fragment {
             errorTreatment(error.networkResponse.statusCode);
         };
 
-        HashMap<String, Object> params = new HashMap<>();
-        if(tagsText[0] != "") {
-            params.put("tags", getTags(tagsText[0]));
-        }
+        if(!tagsText[0].equals(""))
+            apiCommunicator.getRequest(getActivity().getApplicationContext(), "/events?tags" + queryListParams( getTags(tagsText[0]) ), responseListener, errorListener, null);
         else
-            params = null;
+            apiCommunicator.getRequest(getActivity().getApplicationContext(), URL , responseListener, errorListener, null);
 
-        apiCommunicator.getRequest(getActivity().getApplicationContext(), URL, responseListener, errorListener, params);
+    }
+
+    private String queryListParams(Set<String> params) {
+        if (params.size() == 0) return "";
+        String res = "";
+        boolean first = true;
+        for (String s : params) {
+            if (first) {
+                res = s;
+                first = false;
+            }
+            else
+                res += "," + s;
+        }
+        return res;
     }
 
     private void getUserInfo() {
