@@ -174,7 +174,6 @@ public class BoardFragment extends Fragment {
         return true;
     }
 
-
     private String getHashtag(String text) { //Returns a list with all Tags
         String tag = text;
         int i_space = text.indexOf(" ");
@@ -215,6 +214,7 @@ public class BoardFragment extends Fragment {
         builder.show();
     }
 
+
     private boolean checkAvailability(Event event) {
         return (!available || (available && event.isAvailable()));
     }
@@ -236,7 +236,7 @@ public class BoardFragment extends Fragment {
     private void update() {
         items.clear();
         boolean category = language || culture || workshops || sports || gastronomy || leisure || other;
-        if (category || offer || demand || available ) {
+        if (category || offer || demand || available) {
             for (Event event: allItems) {
                 if (language && event.getCategory() == Event.Category.LANGUAGE) check(event);
                 else if (culture && event.getCategory() == Event.Category.CULTURE ) check(event);
@@ -253,7 +253,7 @@ public class BoardFragment extends Fragment {
         mAdapter.notifyDataSetChanged();
     }
 
-    //Call to the API
+    //Call to API
     public void getAllEvents() {
         APICommunicator apiCommunicator = new APICommunicator();
         Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response -> {
