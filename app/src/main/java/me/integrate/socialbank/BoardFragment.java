@@ -157,21 +157,27 @@ public class BoardFragment extends Fragment {
                 setTags();
                 break;
             case R.id.delete_filters:
-                demand = other = offer = language = culture = workshops = sports = gastronomy = leisure = false;
-                itemLanguage.setChecked(false);
-                itemCulture.setChecked(false);
-                itemWorkshops.setChecked(false);
-                itemSports.setChecked(false);
-                itemGastronomy.setChecked(false);
-                itemLeisure.setChecked(false);
-                itemOther.setChecked(false);
-                itemOffer.setChecked(false);
-                itemDemand.setChecked(false);
-                itemAvailable.setChecked(false);
-                update();
+                clean_filters();
                 break;
         }
         return true;
+    }
+
+    private void clean_filters() {
+        loadingDialog = ProgressDialog.show(getActivity(), "", getString(R.string.loadingMessage), true);
+        tagsText = "";
+        getAllEvents();
+        demand = other = offer = language = culture = workshops = sports = gastronomy = leisure = false;
+        itemLanguage.setChecked(false);
+        itemCulture.setChecked(false);
+        itemWorkshops.setChecked(false);
+        itemSports.setChecked(false);
+        itemGastronomy.setChecked(false);
+        itemLeisure.setChecked(false);
+        itemOther.setChecked(false);
+        itemOffer.setChecked(false);
+        itemDemand.setChecked(false);
+        itemAvailable.setChecked(false);
     }
 
     private String getHashtag(String text) { //Returns a list with all Tags
@@ -258,8 +264,10 @@ public class BoardFragment extends Fragment {
         Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response -> {
             JSONArray jsonArray;
             try {
-                if(!items.isEmpty())
+                if(!items.isEmpty()) {
                     items.clear();
+                    allItems.clear();
+                }
                 jsonArray = new JSONArray(response.response);
                 System.out.println(String.valueOf(jsonArray.length()));
                 for (int i = 0; i < jsonArray.length(); i++) {
@@ -284,6 +292,7 @@ public class BoardFragment extends Fragment {
                 allItems.addAll(items);
                 mRecyclerView.setAdapter(mAdapter);
                 getUserInfo();
+                update();
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -293,8 +302,10 @@ public class BoardFragment extends Fragment {
             errorTreatment(error.networkResponse.statusCode);
         };
 
-        if(!tagsText.equals("")) {
-            apiCommunicator.getRequest(getActivity().getApplicationContext(), "/events?tags=" + queryListParams(getTags(tagsText)), responseListener, errorListener, null);
+        Set<String> tags = getTags(tagsText);
+        if(tags.size() > 0) {
+            apiCommunicator.getRequest(getActivity().getApplicationContext(), "/events?tags=" + queryListParams( tags ), responseListener, errorListener, null);
+
         } else
             apiCommunicator.getRequest(getActivity().getApplicationContext(), URL , responseListener, errorListener, null);
 
