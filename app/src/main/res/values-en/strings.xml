@@ -156,6 +156,8 @@
     <string name="comments">Comments</string>
     <string name="add_comment">Add comment</string>
     <string name="initializing_paypal">Creating a secure connection with PayPal, please wait…</string>
+    <string name="search_event">Search</string>
+    <string name="item">Item</string>
     <string name="available">Available</string>
     <string name="event_tag">Tag</string>
     <string name="input_tags">#writeyourtag</string>

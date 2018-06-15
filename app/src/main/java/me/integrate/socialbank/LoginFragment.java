@@ -88,7 +88,7 @@ public class LoginFragment extends Fragment {
         APICommunicator apiCommunicator = new APICommunicator();
         Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response -> {
             String token = response.headers.get("Authorization");
-            JSONObject jsonObject = null;
+            JSONObject jsonObject;
             String email = null;
             String name = null;
             try {

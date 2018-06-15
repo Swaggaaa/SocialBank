@@ -33,7 +33,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Vector;
+import java.util.List;
+import java.util.Objects;
 
 import static android.app.Activity.RESULT_OK;
 import static android.content.ContentValues.TAG;
@@ -77,13 +78,13 @@ public class CreateEventFragment extends Fragment {
     private Integer startMin;
     private Integer endHour;
     private Integer endMin;
-    private Vector<String> categories;
+    private List<String> categories;
 
     double userHours;
 
 
     private void iniVector() {
-        categories = new Vector();
+        categories = new ArrayList<>();
         categories.add("Other");
         categories.add("Gastronomy");
         categories.add("Language");
@@ -353,12 +354,12 @@ public class CreateEventFragment extends Fragment {
     }
 
     private boolean areFilled() {
-        return (/*(thereIsPic) && */!(name.getText().toString().isEmpty()) && !(address.getText().toString().isEmpty()) &&
-                !(description.getText().toString().isEmpty()) && (eventFixed != null) && (demand != null)
-                && (!eventFixed || (eventFixed && !editTextEndDate.getText().toString().isEmpty()
-                && !editTextStartDate.getText().toString().isEmpty()
-                && !editTextEndHour.getText().toString().isEmpty()
-                && !editTextStartHour.getText().toString().isEmpty())));
+        return !name.getText().toString().isEmpty() && !address.getText().toString().isEmpty() &&
+                !description.getText().toString().isEmpty() && eventFixed != null &&
+                demand != null && (!eventFixed || !editTextEndDate.getText().toString().isEmpty() &&
+                !editTextStartDate.getText().toString().isEmpty() &&
+                !editTextEndHour.getText().toString().isEmpty() &&
+                !editTextStartHour.getText().toString().isEmpty());
     }
 
     private void enableButton() {
@@ -491,7 +492,8 @@ public class CreateEventFragment extends Fragment {
     }
 
     private boolean rightHour() {
-        return (((startHour == null && startMin == null) || (endHour == null && endMin == null)) || ((startHour < endHour) || (startHour == endHour && startMin < endMin)));
+        return (((startHour == null && startMin == null) || (endHour == null && endMin == null)) ||
+                ((startHour < endHour) || (Objects.equals(startHour, endHour) && startMin < endMin)));
     }
 
     private String getFullHour(int h, int m) {

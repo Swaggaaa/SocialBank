@@ -1,8 +1,6 @@
 package me.integrate.socialbank;
 
 
-import com.google.android.gms.maps.model.LatLng;
-
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.concurrent.ExecutionException;
@@ -46,10 +44,8 @@ public class EventLocation {
         EventLocation coordinates = null;
         try {
             coordinates = new ConvertAddressToCoordinatesTask().execute(url).get();
-        }catch (ExecutionException e1){
+        }catch (ExecutionException | InterruptedException e1){
             e1.printStackTrace();
-        }catch (InterruptedException e2) {
-            e2.printStackTrace();
         }
         return coordinates;
     }

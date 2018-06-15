@@ -4,7 +4,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.annotation.StringRes;
 import android.util.Base64;
-import android.util.Log;
 
 import org.json.JSONException;
 import org.json.JSONObject;

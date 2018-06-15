@@ -37,7 +37,6 @@ import org.json.JSONObject;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -197,9 +196,7 @@ public class MyAccountFragment extends Fragment implements PaymentMethodNonceCre
             sendRequest(sendRequestText.getText().toString());
         });
         purchaseHoursButton.setOnClickListener(v ->
-        {
-            purchaseHours();
-        });
+                purchaseHours());
 
         languageSpinner.setSelected(false);
         languageSpinner.setSelection(languageSpinner.getSelectedItemPosition(), false);

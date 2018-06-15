@@ -33,7 +33,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="2dp"
                     android:textStyle="italic"
-                    android:text="BUUUUUUUUUU"
+                    android:text=""
                     android:textColor="@color/cardview_dark_background"
                     android:textSize="20sp" />
 

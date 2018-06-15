@@ -11,13 +11,13 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.SpannableString;
+import android.text.style.UnderlineSpan;
 import android.util.DisplayMetrics;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,7 +35,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
-import java.util.HashMap;
+import java.util.Objects;
 
 public class EventFragment extends Fragment implements AddCommentFragment.OnCommentSelected {
 
@@ -127,7 +127,9 @@ public class EventFragment extends Fragment implements AddCommentFragment.OnComm
                 title = event.getTitle();
                 textEventTitle.setText(title);
                 creator = event.getCreatorEmail();
-                textEventOrganizer.setText(creator);
+                SpannableString creatorEmail = new SpannableString(event.getCreatorEmail());
+                creatorEmail.setSpan(new UnderlineSpan(), 0, creatorEmail.length(), 0);
+                textEventOrganizer.setText(creatorEmail);
                 textEventCategory.setText(event.getCategory().toString());
                 descriptionEvent = event.getDescription();
                 textEventDescription.setText(descriptionEvent);
@@ -197,7 +199,7 @@ public class EventFragment extends Fragment implements AddCommentFragment.OnComm
     }
 
     protected boolean isEventFull() {
-        return capacity == numberEnrolled;
+        return Objects.equals(capacity, numberEnrolled);
     }
 
     private String dateToString(Date date) {
@@ -242,9 +244,7 @@ public class EventFragment extends Fragment implements AddCommentFragment.OnComm
             fc.replaceFragment(profileFragment);
         });
         view.findViewById(R.id.invite_button).setOnClickListener(v ->
-        {
-            shareEvent();
-        });
+                shareEvent());
         addComment.setOnClickListener(v ->
         {
             Bundle b = new Bundle();
@@ -278,12 +278,7 @@ public class EventFragment extends Fragment implements AddCommentFragment.OnComm
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
                     comments.add(new Comment(jsonObject));
                 }
-                Collections.sort(comments, new Comparator<Comment>() {
-                    @Override
-                    public int compare(Comment comment, Comment t1) {
-                        return t1.getCreateDate().compareTo(comment.getCreateDate());
-                    }
-                });
+                Collections.sort(comments, (comment, t1) -> t1.getCreateDate().compareTo(comment.getCreateDate()));
                 mAdapter = new CommentAdapter(comments, getActivity(), (v1, position) -> {
                     Bundle bundle = new Bundle();
                     String email = comments.get(position).getEmailCreator();
