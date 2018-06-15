@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -23,7 +22,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -62,7 +60,7 @@ public class BoardFragment extends Fragment {
     private MenuItem itemOffer;
     private MenuItem itemDemand;
     private MenuItem itemAvailable;
-    private String[] tagsText;
+    private String tagsText;
 
     private ProgressDialog loadingDialog;
 
@@ -81,8 +79,7 @@ public class BoardFragment extends Fragment {
         allItems = new ArrayList<>();
         emailUser = SharedPreferencesManager.INSTANCE.read(getActivity(),"user_email");
         available = demand = other = offer = language = culture = workshops = sports = gastronomy = leisure = false;
-        tagsText = new String[1];
-        tagsText[0] = "";
+        tagsText = "";
         getAllEvents();
         return rootView;
     }
@@ -157,7 +154,7 @@ public class BoardFragment extends Fragment {
                 update();
                 break;
             case R.id.event_tagged:
-                set_tags();
+                setTags();
                 break;
             case R.id.delete_filters:
                 demand = other = offer = language = culture = workshops = sports = gastronomy = leisure = false;
@@ -197,19 +194,19 @@ public class BoardFragment extends Fragment {
         return tags;
     }
 
-    private void set_tags() {
+    private void setTags() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle(R.string.tag_search);
 
         View viewInflated = LayoutInflater.from(getContext()).inflate(R.layout.fragment_input_tags,
                 (ViewGroup) getView(), false);
 
-        final EditText inputTags = (EditText) viewInflated.findViewById(R.id.inputTags);
+        EditText inputTags = (EditText) viewInflated.findViewById(R.id.inputTags);
         builder.setView(viewInflated);
 
         builder.setPositiveButton(android.R.string.ok, (dialog, which) -> {
             dialog.dismiss();
-            tagsText[0] = inputTags.getText().toString();
+            tagsText = inputTags.getText().toString();
             loadingDialog = ProgressDialog.show(getActivity(), "", getString(R.string.loadingMessage), true);
             getAllEvents();
         });
@@ -223,7 +220,7 @@ public class BoardFragment extends Fragment {
     }
 
     private void check(Event event) {
-        if (offer || demand || available || (tagsText[0]!="")) {
+        if (offer || demand || available) {
             if (offer && !event.isDemand() && checkAvailability(event)) {
                 items.add(event);
             }
@@ -297,8 +294,8 @@ public class BoardFragment extends Fragment {
             errorTreatment(error.networkResponse.statusCode);
         };
 
-        if(!tagsText[0].equals("")) {
-            apiCommunicator.getRequest(getActivity().getApplicationContext(), "/events?tags=" + queryListParams(getTags(tagsText[0])), responseListener, errorListener, null);
+        if(!tagsText.equals("")) {
+            apiCommunicator.getRequest(getActivity().getApplicationContext(), "/events?tags=" + queryListParams(getTags(tagsText)), responseListener, errorListener, null);
         } else
             apiCommunicator.getRequest(getActivity().getApplicationContext(), URL , responseListener, errorListener, null);
 
