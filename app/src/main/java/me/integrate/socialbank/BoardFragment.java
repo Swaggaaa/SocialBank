@@ -43,8 +43,8 @@ public class BoardFragment extends Fragment {
     private boolean offer;
     private boolean demand;
     private boolean verified;
+    private boolean available;
     private String emailUser;
-
 
     private MenuItem itemLanguage;
     private MenuItem itemCulture;
@@ -55,6 +55,7 @@ public class BoardFragment extends Fragment {
     private MenuItem itemOther;
     private MenuItem itemOffer;
     private MenuItem itemDemand;
+    private MenuItem itemAvailable;
 
     private ProgressDialog loadingDialog;
 
@@ -72,7 +73,7 @@ public class BoardFragment extends Fragment {
         items = new ArrayList<>();
         allItems = new ArrayList<>();
         emailUser = SharedPreferencesManager.INSTANCE.read(getActivity(),"user_email");
-        demand = other = offer = language = culture = workshops = sports = gastronomy = leisure = false;
+        available = demand = other = offer = language = culture = workshops = sports = gastronomy = leisure = false;
         getAllEvents();
         return rootView;
     }
@@ -89,6 +90,7 @@ public class BoardFragment extends Fragment {
         itemOther = menu.findItem(R.id.category_other);
         itemOffer = menu.findItem(R.id.event_offer);
         itemDemand = menu.findItem(R.id.event_demand);
+        itemAvailable = menu.findItem(R.id.event_available);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -98,39 +100,52 @@ public class BoardFragment extends Fragment {
             case R.id.category_language:
                 language = !item.isChecked();
                 item.setChecked(!item.isChecked());
+                update();
                 break;
             case R.id.category_culture:
                 culture = !item.isChecked();
                 item.setChecked(!item.isChecked());
+                update();
                 break;
             case R.id.category_workshops:
                 workshops = !item.isChecked();
                 item.setChecked(!item.isChecked());
+                update();
                 break;
             case R.id.category_sports:
                 sports = !item.isChecked();
                 item.setChecked(!item.isChecked());
+                update();
                 break;
             case R.id.category_gastronomy:
                 gastronomy = !item.isChecked();
                 item.setChecked(!item.isChecked());
+                update();
                 break;
             case R.id.category_leisure:
                 leisure = !item.isChecked();
                 item.setChecked(!item.isChecked());
+                update();
                 break;
             case R.id.category_other:
                 other = !item.isChecked();
                 item.setChecked(!item.isChecked());
+                update();
                 break;
             case R.id.event_offer:
                 offer = !item.isChecked();
                 item.setChecked(!item.isChecked());
-
+                update();
                 break;
             case R.id.event_demand:
                 demand = !item.isChecked();
                 item.setChecked(!item.isChecked());
+                update();
+                break;
+            case R.id.event_available:
+                available = !item.isChecked();
+                item.setChecked(!item.isChecked());
+                update();
                 break;
             case R.id.delete_filters:
                 demand = other = offer = language = culture = workshops = sports = gastronomy = leisure = false;
@@ -143,37 +158,44 @@ public class BoardFragment extends Fragment {
                 itemOther.setChecked(false);
                 itemOffer.setChecked(false);
                 itemDemand.setChecked(false);
+                itemAvailable.setChecked(false);
+                update();
                 break;
         }
-        update();
         return true;
+    }
 
+    private boolean checkAvailability(Event event) {
+        return (!available || (available && event.isAvailable()));
     }
 
     private void check(Event event) {
-        if (offer || demand) {
-            if (offer && !event.isDemand()) items.add(event);
-            else if (demand && event.isDemand()) items.add(event);
+        if (offer || demand || available) {
+            if (offer && !event.isDemand() && checkAvailability(event)) {
+                items.add(event);
+            }
+            else if (demand && event.isDemand() && checkAvailability(event)) {
+                items.add(event);
+            }
+            else if (!offer && !demand && checkAvailability(event)) {
+                items.add(event);
+            }
         } else items.add(event);
     }
 
     private void update() {
         items.clear();
         boolean category = language || culture || workshops || sports || gastronomy || leisure || other;
-        if (category || offer || demand) {
+        if (category || offer || demand || available) {
             for (Event event: allItems) {
-                if (language &&  event.getCategory() == Event.Category.LANGUAGE) check(event);
+                if (language && event.getCategory() == Event.Category.LANGUAGE) check(event);
                 else if (culture && event.getCategory() == Event.Category.CULTURE ) check(event);
                 else if (workshops && event.getCategory() == Event.Category.WORKSHOPS ) check(event);
                 else if (sports && event.getCategory() == Event.Category.SPORTS ) check(event);
                 else if (gastronomy && event.getCategory() == Event.Category.GASTRONOMY ) check(event);
                 else if (leisure && event.getCategory() == Event.Category.LEISURE) check(event);
                 else if (other && event.getCategory() == Event.Category.OTHER ) check(event);
-                else if (!category && (offer || demand )) {
-                    if (offer && !event.isDemand()) items.add(event);
-                    else if (demand && event.isDemand()) items.add(event);
-                }
-
+                else if (!category && (offer || demand || available)) check(event);
             }
         } else {
             items.addAll(allItems);
@@ -181,7 +203,7 @@ public class BoardFragment extends Fragment {
         mAdapter.notifyDataSetChanged();
     }
 
-    //Call to the API
+    //Call to API
     public void getAllEvents() {
         APICommunicator apiCommunicator = new APICommunicator();
         Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response -> {

@@ -159,5 +159,9 @@
     <string name="update_event">Actualitzar la descripció de l\'esdeveniment</string>
     <string name="search_event">Cercar</string>
     <string name="item">Ítem</string>
+    <string name="available">Disponible</string>
+    <string name="event_tag">Tag</string>
+    <string name="input_tags">#escriuelteutag</string>
+    <string name="tag_search">Busca per tag</string>
 
 </resources>

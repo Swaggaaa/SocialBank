@@ -42,6 +42,7 @@ public class Event {
         this.latitude = object.getDouble("latitude");
         this.longitude = object.getDouble("longitude");
         this.category = Category.valueOf(object.getString("category"));
+
         getDates(object);
     }
 
