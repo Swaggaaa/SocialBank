@@ -79,7 +79,7 @@ public class BoardFragment extends Fragment {
         items = new ArrayList<>();
         allItems = new ArrayList<>();
         emailUser = SharedPreferencesManager.INSTANCE.read(getActivity(),"user_email");
-        available = demand = other = offer = language = culture = workshops = sports = gastronomy = leisure = false;
+        available = demand = other = offer = language = culture = workshops = sports = gastronomy = leisure = true;
         tagsText = "";
         tagged = false;
         getAllEvents();
@@ -168,7 +168,8 @@ public class BoardFragment extends Fragment {
     private void cleanFilters() {
         tagsText = "";
         tagged = demand = other = offer = language = culture = workshops = sports = gastronomy = leisure = false;
-        getAllEvents();
+        items.clear();
+        mAdapter.notifyDataSetChanged();
         itemLanguage.setChecked(false);
         itemCulture.setChecked(false);
         itemWorkshops.setChecked(false);
@@ -186,7 +187,7 @@ public class BoardFragment extends Fragment {
         int i_space = text.indexOf(" ");
         int i_next = text.indexOf("#");
         int i = (i_next != -1 && i_space > i_next) ? i_next : i_space;
-        if( i > 0 ) tag = tag.substring(0, i);
+        if (i > 0) tag = tag.substring(0, i);
         return tag;
     }
 
@@ -194,7 +195,7 @@ public class BoardFragment extends Fragment {
         Set<String> tags = new HashSet<String>();
         //Find every occurrence of '#'
         for (int i = -1; (i = text.indexOf("#", i + 1)) != -1; i++) {
-            String tag = getHashtag( text.substring(i+1) );
+            String tag = getHashtag(text.substring(i + 1));
             tags.add(tag);
         }
         return tags;
@@ -212,8 +213,14 @@ public class BoardFragment extends Fragment {
 
         builder.setPositiveButton(android.R.string.ok, (dialog, which) -> {
             dialog.dismiss();
+            String tmp = tagsText;
             tagsText = inputTags.getText().toString();
-            tagged = true;
+
+            if (tagsText.equals("")) {
+                if (tmp.equals(tagsText)) tagged = true;
+                else tagged = false;
+            } else tagged = true;
+
             loadingDialog = ProgressDialog.show(getActivity(), "", getString(R.string.loadingMessage), true);
             getAllEvents();
         });
@@ -230,11 +237,9 @@ public class BoardFragment extends Fragment {
         if (offer || demand || available) {
             if (offer && !event.isDemand() && checkAvailability(event)) {
                 items.add(event);
-            }
-            else if (demand && event.isDemand() && checkAvailability(event)) {
+            } else if (demand && event.isDemand() && checkAvailability(event)) {
                 items.add(event);
-            }
-            else if (!offer && !demand && checkAvailability(event)) {
+            } else if (!offer && !demand && checkAvailability(event)) {
                 items.add(event);
             }
         } else items.add(event);
@@ -244,14 +249,14 @@ public class BoardFragment extends Fragment {
         items.clear();
         boolean category = language || culture || workshops || sports || gastronomy || leisure || other;
         if (category || offer || demand || available) {
-            for (Event event: allItems) {
+            for (Event event : allItems) {
                 if (language && event.getCategory() == Event.Category.LANGUAGE) check(event);
-                else if (culture && event.getCategory() == Event.Category.CULTURE ) check(event);
-                else if (workshops && event.getCategory() == Event.Category.WORKSHOPS ) check(event);
-                else if (sports && event.getCategory() == Event.Category.SPORTS ) check(event);
-                else if (gastronomy && event.getCategory() == Event.Category.GASTRONOMY ) check(event);
+                else if (culture && event.getCategory() == Event.Category.CULTURE) check(event);
+                else if (workshops && event.getCategory() == Event.Category.WORKSHOPS) check(event);
+                else if (sports && event.getCategory() == Event.Category.SPORTS) check(event);
+                else if (gastronomy && event.getCategory() == Event.Category.GASTRONOMY) check(event);
                 else if (leisure && event.getCategory() == Event.Category.LEISURE) check(event);
-                else if (other && event.getCategory() == Event.Category.OTHER ) check(event);
+                else if (other && event.getCategory() == Event.Category.OTHER) check(event);
                 else if (!category && (offer || demand || available)) check(event);
             }
         } else {
@@ -267,7 +272,7 @@ public class BoardFragment extends Fragment {
             JSONArray jsonArray;
             try {
                 tagged = false;
-                if(!items.isEmpty()) {
+                if (!items.isEmpty()) {
                     items.clear();
                     allItems.clear();
                 }
@@ -283,9 +288,9 @@ public class BoardFragment extends Fragment {
                     bundle.putInt("id", event.getId());
                     Fragment eventFragment;
                     boolean eventCreator = event.getCreatorEmail().equals(emailUser);
-                    if( eventCreator && event.stillEditable() )
-                            eventFragment = MyEventFragment.newInstance(bundle);
-                    else if( !eventCreator && event.isAvailable() && !verified)
+                    if (eventCreator && event.stillEditable())
+                        eventFragment = MyEventFragment.newInstance(bundle);
+                    else if (!eventCreator && event.isAvailable() && !verified)
                         eventFragment = MyJoinEventFragment.newInstance(bundle);
                     else
                         eventFragment = EventFragment.newInstance(bundle);
@@ -306,10 +311,10 @@ public class BoardFragment extends Fragment {
         };
 
         Set<String> tags = getTags(tagsText);
-        if(tags.size() > 0)
-            apiCommunicator.getRequest(getActivity().getApplicationContext(), "/events?tags=" + queryListParams( tags ), responseListener, errorListener, null);
-        else if(!tagged)
-            apiCommunicator.getRequest(getActivity().getApplicationContext(), URL , responseListener, errorListener, null);
+        if (tags.size() > 0)
+            apiCommunicator.getRequest(getActivity().getApplicationContext(), "/events?tags=" + queryListParams(tags), responseListener, errorListener, null);
+        else if (!tagged)
+            apiCommunicator.getRequest(getActivity().getApplicationContext(), URL, responseListener, errorListener, null);
         else {
             loadingDialog.dismiss();
             Toast.makeText(getActivity(), R.string.noTags, Toast.LENGTH_SHORT).show();
@@ -324,8 +329,7 @@ public class BoardFragment extends Fragment {
             if (first) {
                 res = s;
                 first = false;
-            }
-            else
+            } else
                 res += "," + s;
         }
         return res;
@@ -335,7 +339,7 @@ public class BoardFragment extends Fragment {
         APICommunicator apiCommunicator = new APICommunicator();
         Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response -> {
             JSONObject jsonObject;
-            try{
+            try {
                 jsonObject = new JSONObject(response.response);
                 verified = jsonObject.getBoolean("verified");
                 SharedPreferencesManager.INSTANCE.store(getActivity(), "verified", (verified) ? "true" : "false");
@@ -344,18 +348,18 @@ public class BoardFragment extends Fragment {
                 e.printStackTrace();
             }
         };
-        Response.ErrorListener errorListener = error ->  errorTreatment(error.networkResponse.statusCode);
+        Response.ErrorListener errorListener = error -> errorTreatment(error.networkResponse.statusCode);
 
-        apiCommunicator.getRequest(getActivity().getApplicationContext(), URL_users +'/'+ emailUser, responseListener, errorListener, null);
+        apiCommunicator.getRequest(getActivity().getApplicationContext(), URL_users + '/' + emailUser, responseListener, errorListener, null);
     }
 
     private void errorTreatment(int errorCode) {
         String message;
         if (errorCode == 401)
             message = getString(R.string.unauthorized);
-        else if(errorCode == 403)
+        else if (errorCode == 403)
             message = getString(R.string.forbidden);
-        else if(errorCode == 404)
+        else if (errorCode == 404)
             message = getString(R.string.not_found);
         else
             message = getString(R.string.unexpectedError);
