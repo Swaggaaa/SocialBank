@@ -34,10 +34,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Set;
-import java.util.Vector;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 import static android.app.Activity.RESULT_OK;
 import static android.content.ContentValues.TAG;
