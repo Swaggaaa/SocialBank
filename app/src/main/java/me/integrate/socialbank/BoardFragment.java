@@ -166,10 +166,9 @@ public class BoardFragment extends Fragment {
     }
 
     private void cleanFilters() {
-        loadingDialog = ProgressDialog.show(getActivity(), "", getString(R.string.loadingMessage), true);
         tagsText = "";
-        getAllEvents();
         tagged = demand = other = offer = language = culture = workshops = sports = gastronomy = leisure = false;
+        getAllEvents();
         itemLanguage.setChecked(false);
         itemCulture.setChecked(false);
         itemWorkshops.setChecked(false);
@@ -309,9 +308,11 @@ public class BoardFragment extends Fragment {
         Set<String> tags = getTags(tagsText);
         if(tags.size() > 0)
             apiCommunicator.getRequest(getActivity().getApplicationContext(), "/events?tags=" + queryListParams( tags ), responseListener, errorListener, null);
-        else {
-            if (tagged) Toast.makeText(getActivity(), R.string.noTags, Toast.LENGTH_SHORT).show();
+        else if(!tagged)
             apiCommunicator.getRequest(getActivity().getApplicationContext(), URL , responseListener, errorListener, null);
+        else {
+            loadingDialog.dismiss();
+            Toast.makeText(getActivity(), R.string.noTags, Toast.LENGTH_SHORT).show();
         }
     }
 
