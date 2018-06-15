@@ -29,9 +29,14 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 
 import static android.app.Activity.RESULT_OK;
 import static android.content.ContentValues.TAG;
@@ -75,10 +80,22 @@ public class CreateEventFragment extends Fragment {
     private Integer startMin;
     private Integer endHour;
     private Integer endMin;
+    private List<String> categories;
 
     double userHours;
 
-    private void postEvent(HashMap<String, String> params) {
+    private void iniVector() {
+        categories = new ArrayList<>();
+        categories.add("Other");
+        categories.add("Gastronomy");
+        categories.add("Language");
+        categories.add("Workshops");
+        categories.add("Culture");
+        categories.add("Sports");
+        categories.add("Leisure");
+    }
+
+    private void postEvent(HashMap<String, Object> params) {
         APICommunicator apiCommunicator = new APICommunicator();
         Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response ->
         {
@@ -140,6 +157,7 @@ public class CreateEventFragment extends Fragment {
 
         capacity = "1";
 
+        iniVector();
         groupTable.setVisibility(View.GONE);
         getUserInfo();
 
@@ -299,7 +317,7 @@ public class CreateEventFragment extends Fragment {
     }
 
     private void jsonEvent() {
-        HashMap<String, String> params = new HashMap<>();
+        HashMap<String, Object> params = new HashMap<>();
         String dataIni = null;
         String dataEnd = null;
         if (eventFixed) {
@@ -308,7 +326,7 @@ public class CreateEventFragment extends Fragment {
         }
         EventLocation eventLocation = new EventLocation(address.getText().toString());
 
-        params.put("category", category.getSelectedItem().toString().toUpperCase());
+        params.put("category", categories.get(category.getSelectedItemPosition()).toUpperCase());
         params.put("creatorEmail", getUserEmail());
         params.put("demand", demand ? "true" : "false");
         params.put("description", description.getText().toString());
@@ -322,9 +340,12 @@ public class CreateEventFragment extends Fragment {
                 ((BitmapDrawable) imageView.getDrawable()).getBitmap())
                 : "");
         params.put("capacity", capacity);
+        params.put("tags", getTags());
+
 
         buttonCreate.setText(R.string.loading);
         buttonCreate.setEnabled(false);
+
         postEvent(params);
     }
 
@@ -333,12 +354,12 @@ public class CreateEventFragment extends Fragment {
     }
 
     private boolean areFilled() {
-        return (/*(thereIsPic) && */!(name.getText().toString().isEmpty()) && !(address.getText().toString().isEmpty()) &&
-                !(description.getText().toString().isEmpty()) && (eventFixed != null) && (demand != null)
-                && (!eventFixed || (eventFixed && !editTextEndDate.getText().toString().isEmpty()
-                && !editTextStartDate.getText().toString().isEmpty()
-                && !editTextEndHour.getText().toString().isEmpty()
-                && !editTextStartHour.getText().toString().isEmpty())));
+        return !name.getText().toString().isEmpty() && !address.getText().toString().isEmpty() &&
+                !description.getText().toString().isEmpty() && eventFixed != null &&
+                demand != null && (!eventFixed || !editTextEndDate.getText().toString().isEmpty() &&
+                !editTextStartDate.getText().toString().isEmpty() &&
+                !editTextEndHour.getText().toString().isEmpty() &&
+                !editTextStartHour.getText().toString().isEmpty());
     }
 
     private void enableButton() {
@@ -471,7 +492,8 @@ public class CreateEventFragment extends Fragment {
     }
 
     private boolean rightHour() {
-        return (((startHour == null && startMin == null) || (endHour == null && endMin == null)) || ((startHour < endHour) || (startHour == endHour && startMin < endMin)));
+        return (((startHour == null && startMin == null) || (endHour == null && endMin == null)) ||
+                ((startHour < endHour) || (Objects.equals(startHour, endHour) && startMin < endMin)));
     }
 
     private String getFullHour(int h, int m) {
@@ -505,13 +527,13 @@ public class CreateEventFragment extends Fragment {
             String message;
             int errorCode = error.networkResponse.statusCode;
             if (errorCode == 401)
-                message = "Unauthorized";
+                message = getString(R.string.unauthorized);
             else if (errorCode == 403)
-                message = "Forbidden";
+                message =  getString(R.string.forbidden);
             else if (errorCode == 404)
-                message = "Not Found";
+                message = getString(R.string.not_found);
             else
-                message = "Unexpected error";
+                message = getString(R.string.unexpectedError);
             Toast.makeText(getActivity().getApplicationContext(), message, Toast.LENGTH_LONG).show();
         };
         apiCommunicator.getRequest(getActivity().getApplicationContext(), "/users/" + getUserEmail(), responseListener, errorListener, null);
@@ -529,5 +551,25 @@ public class CreateEventFragment extends Fragment {
 
     private boolean enoughHours() {
         return userHours >= getEventHours();
+    }
+
+    private String getHashtag(String text) { //Returns a list with all Tags
+        String tag = text;
+        int i_space = text.indexOf(" ");
+        int i_next = text.indexOf("#");
+        int i = (i_next != -1 && i_space > i_next) ? i_next : i_space;
+        if( i > 0 ) tag = tag.substring(0, i);
+        return tag;
+    }
+
+    private Set<String> getTags() { //Returns a list with all Tags
+        Set<String> tags = new HashSet<String>();
+        String text = description.getText().toString();
+        //Find every occurrence of '#'
+        for (int i = -1; (i = text.indexOf("#", i + 1)) != -1; i++) {
+            String tag = getHashtag( text.substring(i+1) );
+            tags.add(tag);
+        }
+        return tags;
     }
 }

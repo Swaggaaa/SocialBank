@@ -24,8 +24,10 @@ import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 
 public class RegisterFragment extends Fragment {
     private static final int RC_SIGN_IN = 9001;
@@ -40,6 +42,7 @@ public class RegisterFragment extends Fragment {
     private Spinner gender;
     private EditText birthdate;
     private String strDate;
+    static List<String> genders;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -56,7 +59,10 @@ public class RegisterFragment extends Fragment {
         SignUpGoogle = (Button) rootView.findViewById(R.id.googleSignInButton);
         enableButton();
         initGoogleLogin();
-
+        genders = new ArrayList<>();
+        genders.add("MALE");
+        genders.add("FEMALE");
+        genders.add("OTHER");
         return rootView;
     }
 
@@ -68,11 +74,11 @@ public class RegisterFragment extends Fragment {
             startActivityForResult(signInIntent, RC_SIGN_IN);
         });
         SignUpButton.setOnClickListener(v -> {
-            HashMap<String, String> params = new HashMap<>();
+            HashMap<String, Object> params = new HashMap<>();
             params.put("name", name.getText().toString());
             params.put("surname", lastName.getText().toString());
             params.put("birthdate", strDate);
-            params.put("gender", gender.getSelectedItem().toString().toUpperCase());
+            params.put("gender", genders.get(gender.getSelectedItemPosition()));
             params.put("email", email.getText().toString());
             params.put("password", password.getText().toString());
 
@@ -187,7 +193,7 @@ public class RegisterFragment extends Fragment {
         }
     }
 
-    private void postCredentials(HashMap<String, String> params) {
+    private void postCredentials(HashMap<String, Object> params) {
         APICommunicator apiCommunicator = new APICommunicator();
         Response.Listener responseListener = response -> {
             Toast.makeText(getActivity().getApplicationContext(), "Account created!", Toast.LENGTH_LONG).show();

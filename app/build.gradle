@@ -10,20 +10,27 @@ android {
         applicationId "me.integrate.socialbank"
         minSdkVersion 21
         targetSdkVersion 23
-        versionCode 3
-        versionName "3.0.0"
+        versionCode 4
+        versionName "4.0.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }
     buildTypes {
+        debug {
+            buildConfigField "String", "API_ENDPOINT", '"http://sandshrew.fib.upc.edu:9000"'
+        }
+        production {
+            initWith debug
+            buildConfigField "String", "API_ENDPOINT", '"http://sandshrew.fib.upc.edu:9090"'
+        }
         release {
+            buildConfigField "String", "API_ENDPOINT", '"http://sandshrew.fib.upc.edu:9090"'
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
     productFlavors {
     }
-
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -42,4 +49,6 @@ dependencies {
     implementation 'com.google.android.gms:play-services-maps:15.0.1'
     implementation 'com.google.android.gms:play-services-places:15.0.1'
     implementation 'com.google.android.gms:play-services-location:15.0.1'
+    implementation 'com.braintreepayments.api:braintree:2.13.0'
+    implementation 'com.braintreepayments.api:braintree:2.13.0'
 }

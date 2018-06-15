@@ -3,9 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item android:id="@+id/item1"
-        android:title="Item"
+        android:title="@string/item"
         android:icon="@drawable/ic_filter"
-        app:showAsAction="always">
+        app:showAsAction="ifRoom">
 
         <menu>
             <item android:id="@+id/categories"
@@ -15,31 +15,38 @@
 
                     <item android:id="@+id/category_language"
                         android:title="@string/category_language"
-                        android:checkable="true"/>
+                        android:checkable="true"
+                        android:checked="true"/>
 
                     <item android:id="@+id/category_culture"
                         android:title="@string/category_culture"
-                        android:checkable="true"/>
+                        android:checkable="true"
+                        android:checked="true"/>
 
                     <item android:id="@+id/category_workshops"
                         android:title="@string/category_workshops"
-                        android:checkable="true"/>
+                        android:checkable="true"
+                        android:checked="true"/>
 
                     <item android:id="@+id/category_sports"
                         android:title="@string/category_sports"
-                        android:checkable="true"/>
+                        android:checkable="true"
+                        android:checked="true"/>
 
                     <item android:id="@+id/category_gastronomy"
                         android:title="@string/category_gastronomy"
-                        android:checkable="true"/>
+                        android:checkable="true"
+                        android:checked="true"/>
 
                     <item android:id="@+id/category_leisure"
                         android:title="@string/category_leisure"
-                        android:checkable="true"/>
+                        android:checkable="true"
+                        android:checked="true"/>
 
                     <item android:id="@+id/category_other"
                         android:title="@string/category_other"
-                        android:checkable="true"/>
+                        android:checkable="true"
+                        android:checked="true"/>
 
                 </menu>
             </item>
@@ -47,12 +54,26 @@
             <item android:id="@+id/event_offer"
                 android:title="@string/offered"
                 app:showAsAction="never"
-                android:checkable="true"/>
+                android:checkable="true"
+                android:checked="true"/>
 
             <item android:id="@+id/event_demand"
                 android:title="@string/demand"
                 app:showAsAction="never"
-                android:checkable="true"/>
+                android:checkable="true"
+                android:checked="true"/>
+
+            <item
+                android:id="@+id/event_available"
+                android:title="@string/available"
+                app:showAsAction="never"
+                android:checkable="true"
+                android:checked="true"/>
+
+            <item
+                android:id="@+id/event_tagged"
+                android:title="@string/event_tag"
+                app:showAsAction="never" />
 
             <item
                 android:id="@+id/delete_filters"

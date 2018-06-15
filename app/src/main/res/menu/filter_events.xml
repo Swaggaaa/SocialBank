@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item android:id="@+id/filter"
+        android:title="@string/filter"
+        android:icon="@drawable/ic_filter"
+        app:showAsAction="ifRoom">
+
+        <menu>
+
+            <item android:id="@+id/my_events"
+                android:title="@string/my_events"
+                app:showAsAction="never"
+                android:checkable="true"
+                android:checked="true"/>
+
+            <item android:id="@+id/my_events_join"
+                android:title="@string/join_events"
+                app:showAsAction="never"
+                android:checkable="true"
+                android:checked="true"/>
+
+            <item
+                android:id="@+id/delete_filters"
+                android:title="@string/clean_filters"
+                app:showAsAction="never" />
+
+        </menu>
+
+    </item>
+
+</menu>

@@ -18,8 +18,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 
 public class EditProfileFragment extends Fragment {
     private static final String URL = "/users";
@@ -32,6 +34,8 @@ public class EditProfileFragment extends Fragment {
     private String bornDate;
     private String emailUser;
     private String image;
+    static List<String> genders;
+    private String descriptionUser;
 
     private ProgressDialog loadingDialog;
 
@@ -48,6 +52,10 @@ public class EditProfileFragment extends Fragment {
         loadingDialog = ProgressDialog.show(getActivity(), "",
                 getString(R.string.loadingMessage), true);
         getUserInfo(emailUser);
+        genders = new ArrayList<>();
+        genders.add("MALE");
+        genders.add("FEMALE");
+        genders.add("OTHER");
         return rootView;
     }
 
@@ -55,13 +63,13 @@ public class EditProfileFragment extends Fragment {
         APICommunicator apiCommunicator = new APICommunicator();
         Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response -> {
             JSONObject jsonObject;
-            Float balance = null;
             try {
                 jsonObject = new JSONObject(response.response);
                 newName.setText(jsonObject.getString("name"));
                 newLastName.setText(jsonObject.getString("surname"));
                 getIndex(jsonObject.getString("gender"));
-                newDescription.setText(jsonObject.getString("description"));
+                descriptionUser = jsonObject.getString("description");
+                if(!descriptionUser.equals("null")) newDescription.setText(descriptionUser);
                 bornDate = jsonObject.getString("birthdate");
                 newBirthdate.setText(bornDate);
                 image = jsonObject.getString("image");
@@ -71,7 +79,6 @@ public class EditProfileFragment extends Fragment {
                 e.printStackTrace();
                 loadingDialog.dismiss();
             }
-
 
         };
         Response.ErrorListener errorListener = error -> {
@@ -89,11 +96,11 @@ public class EditProfileFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         newBirthdate.setOnClickListener(view1 -> chooseDate());
         update.setOnClickListener(v -> {
-            HashMap<String, String> params = new HashMap<>();
+            HashMap<String, Object> params = new HashMap<>();
             params.put("name", newName.getText().toString());
             params.put("surname", newLastName.getText().toString());
             params.put("birthdate", bornDate);
-            params.put("gender", newGender.getSelectedItem().toString().toUpperCase());
+            params.put("gender", genders.get(newGender.getSelectedItemPosition()));
             params.put("description", newDescription.getText().toString());
             params.put("email", emailUser);
             params.put("image", image);
@@ -105,11 +112,11 @@ public class EditProfileFragment extends Fragment {
 
     }
 
-    private void putCredentials(HashMap<String, String> params) {
+    private void putCredentials(HashMap<String, Object> params) {
         APICommunicator apiCommunicator = new APICommunicator();
         Response.Listener responseListener = response -> {
             Toast.makeText(getActivity().getApplicationContext(), R.string.updateAccount, Toast.LENGTH_LONG).show();
-            SharedPreferencesManager.INSTANCE.store(getActivity(), "user_name", params.get("name"));
+            SharedPreferencesManager.INSTANCE.store(getActivity(), "user_name", (String)params.get("name"));
             Fragment boardFragment = new MyProfileFragment();
             FragmentChangeListener fc = (FragmentChangeListener) getActivity();
             fc.replaceFragment(boardFragment);

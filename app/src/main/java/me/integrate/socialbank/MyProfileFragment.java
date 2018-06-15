@@ -12,10 +12,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageView;
+import android.view.animation.AnimationUtils;
 import android.widget.TextView;
-import android.widget.TextView;
+
 import android.widget.Toast;
 
 import com.android.volley.Response;
@@ -28,20 +27,29 @@ import static android.content.ContentValues.TAG;
 
 public class MyProfileFragment extends ProfileFragment {
     private static final String URL = "/users";
-    private TextView userBalance;
     private boolean thereisPic;
+    private boolean isFABOpen;
+    private TextView editProfileText;
+    private TextView changePictureText;
+    FloatingActionButton editProfile;
+    FloatingActionButton changeUserPhoto;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
-        FloatingActionButton editProfile = (FloatingActionButton) view.findViewById(R.id.editProfile);
-        ImageView changeUserPhoto = (ImageView) view.findViewById(R.id.loadPicture);
+        editProfile = (FloatingActionButton) view.findViewById(R.id.editProfile);
+        changeUserPhoto = (FloatingActionButton) view.findViewById(R.id.loadPicture);
+        TextView userBalanceText = (TextView) view.findViewById(R.id.userBalanceText);
         editProfile.setVisibility(View.VISIBLE);
         changeUserPhoto.setVisibility(View.VISIBLE);
-        userBalance = (TextView) view.findViewById(R.id.hoursBalance);
+        TextView userBalance = (TextView) view.findViewById(R.id.hoursBalance);
         userBalance.setVisibility(View.VISIBLE);
-        Button reportUser = (Button)view.findViewById(R.id.buttonReportUser);
-        reportUser.setVisibility(View.GONE);
+        userBalanceText.setVisibility(View.VISIBLE);
+        reportUserButton.setVisibility(View.GONE);
+        editProfileText = (TextView) view.findViewById(R.id.editProfileText);
+        changePictureText = (TextView) view.findViewById(R.id.changePasswordText);
+        isFABOpen = false;
         return view;
     }
 
@@ -50,19 +58,50 @@ public class MyProfileFragment extends ProfileFragment {
         super.onViewCreated(view, savedInstanceState);
         thereisPic = false;
         view.findViewById(R.id.loadPicture).setOnClickListener(v ->
-        {
-            readGallery();
-        });
+                readGallery());
         view.findViewById(R.id.editProfile).setOnClickListener(v ->
         {
             Fragment boardFragment = new EditProfileFragment();
             FragmentChangeListener fc = (FragmentChangeListener) getActivity();
             fc.replaceFragment(boardFragment);
         });
+        view.findViewById(R.id.openMenu).setOnClickListener(view1 -> {
+            if (!isFABOpen) {
+                showFABMenu();
+            } else {
+                closeFABMenu();
+            }
+        });
+    }
+
+    private void showFABMenu() {
+        isFABOpen = true;
+        editProfileText.bringToFront();
+        editProfileText.setVisibility(View.VISIBLE);
+        editProfileText.animate().translationY(-getResources().getDimension(R.dimen.standard_55));
+        editProfile.animate().translationY(-getResources().getDimension(R.dimen.standard_55));
+        changePictureText.bringToFront();
+        changePictureText.setVisibility(View.VISIBLE);
+        changePictureText.animate().translationY(-getResources().getDimension(R.dimen.standard_105));
+        changeUserPhoto.animate().translationY(-getResources().getDimension(R.dimen.standard_105));
+        openMenu.animate().rotation(45).setInterpolator(AnimationUtils.loadInterpolator(getContext(), android.R.interpolator.fast_out_slow_in)).start();
+
+    }
+
+    private void closeFABMenu() {
+        isFABOpen = false;
+        editProfile.animate().translationY(0);
+        changeUserPhoto.animate().translationY(0);
+        editProfileText.animate().translationY(0);
+        editProfileText.setVisibility(View.GONE);
+        changePictureText.animate().translationY(0);
+        changePictureText.setVisibility(View.GONE);
+        openMenu.animate().rotation(0).setInterpolator(AnimationUtils.loadInterpolator(getContext(), android.R.interpolator.fast_out_slow_in)).start();
+
     }
 
     private void updateProfile() {
-        HashMap<String, String> params = new HashMap<>();
+        HashMap<String, Object> params = new HashMap<>();
         params.put("name", nameUser);
         params.put("surname", lastNameUser);
         params.put("birthdate", dateUser);
@@ -70,19 +109,16 @@ public class MyProfileFragment extends ProfileFragment {
         params.put("description", descriptionUser);
         params.put("email", emailUser);
         params.put("image", thereisPic ? ImageCompressor.INSTANCE.compressAndEncodeAsBase64(
-                ((BitmapDrawable)userPicture.getDrawable()).getBitmap())
+                ((BitmapDrawable) userPicture.getDrawable()).getBitmap())
                 : "");
 
         putCredentials(params);
     }
 
-    private void putCredentials(HashMap<String, String> params) {
+    private void putCredentials(HashMap<String, Object> params) {
         APICommunicator apiCommunicator = new APICommunicator();
-        Response.Listener responseListener = response -> {
-            Toast.makeText(getActivity().getApplicationContext(), "Image changed!", Toast.LENGTH_LONG).show();
-
-        };
-        Response.ErrorListener errorListener = error -> Toast.makeText(getActivity().getApplicationContext(), "Something went wrong", Toast.LENGTH_LONG).show();
+        Response.Listener responseListener = response -> Toast.makeText(getActivity().getApplicationContext(), getString(R.string.image_update), Toast.LENGTH_LONG).show();
+        Response.ErrorListener errorListener = error -> Toast.makeText(getActivity().getApplicationContext(), getString(R.string.something_wrong), Toast.LENGTH_LONG).show();
 
 
         apiCommunicator.putRequest(getActivity().getApplicationContext(), URL + '/' + emailUser, responseListener, errorListener, params);
@@ -101,8 +137,8 @@ public class MyProfileFragment extends ProfileFragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(resultCode == RESULT_OK){
-            if(requestCode == 2 ) {
+        if (resultCode == RESULT_OK) {
+            if (requestCode == 2) {
                 thereisPic = true;
                 data.getData();
                 Uri selectedImage = data.getData();
@@ -111,15 +147,14 @@ public class MyProfileFragment extends ProfileFragment {
                 loadImageFromUri(selectedImage);
                 updateProfile();
             }
-        }
-        else{
-            Log.v("Result","Something happened when tried to get the image");
+        } else {
+            Log.v("Result", "Something happened when tried to get the image");
         }
     }
 
     private void loadImageFromUri(Uri imageUri) {
         try {
-            userPicture.setImageBitmap(MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), imageUri));
+            userPicture.setImageBitmap(getImageRounded(MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), imageUri)));
         } catch (IOException e) {
             e.printStackTrace();
         }

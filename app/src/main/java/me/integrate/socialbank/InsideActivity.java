@@ -43,12 +43,15 @@ public class InsideActivity extends AppCompatActivity implements FragmentChangeL
                     // Add code here to update the UI based on the item selected
                     // For example, swap UI fragments here
                     int itemId = menuItem.getItemId();
-                    switch (itemId){
+                    switch (itemId) {
                         case R.id.dashboard:
                             replaceFragment(new BoardFragment());
                             break;
                         case R.id.myProfile:
                             replaceFragment(new MyProfileFragment());
+                            break;
+                        case R.id.myEvents:
+                            replaceFragment(new AllMyEventsFragment());
                             break;
                         case R.id.nearbyEvents:
                             replaceFragment(new NearbyEventsFragment());
@@ -64,6 +67,9 @@ public class InsideActivity extends AppCompatActivity implements FragmentChangeL
                             break;
                         case R.id.searchUsers:
                             replaceFragment(new UserSearchFragment());
+                            break;
+                        case R.id.exchangeHours:
+                            replaceFragment(new ExchangeHoursFragment());
                             break;
                     }
 
@@ -96,6 +102,14 @@ public class InsideActivity extends AppCompatActivity implements FragmentChangeL
 
             // Add the fragment to the 'fragment_container' FrameLayout
             getSupportFragmentManager().beginTransaction().add(R.id.fragment_container_inside, firstFragment).commit();
+
+            String eventId = getIntent().getStringExtra("event");
+            if (eventId != null) {
+                Bundle bundle = new Bundle();
+                bundle.putInt("id", Integer.parseInt(eventId));
+                Fragment eventFragment = EventFragment.newInstance(bundle);
+                replaceFragment(eventFragment);
+            }
         }
     }
 

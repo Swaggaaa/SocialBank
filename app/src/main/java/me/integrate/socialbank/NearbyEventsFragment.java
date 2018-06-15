@@ -28,7 +28,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import org.json.JSONArray;
 import org.json.JSONException;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,6 +44,7 @@ public class NearbyEventsFragment extends Fragment {
     private EditText address;
     private Button searchButton;
     private Map<Marker, Event> eventsMap;
+    private boolean verified;
 
 
     @SuppressLint("MissingPermission")
@@ -54,6 +54,7 @@ public class NearbyEventsFragment extends Fragment {
         address = (EditText) rootView.findViewById(R.id.editText);
         searchButton = (Button)rootView.findViewById(R.id.search_button);
         enableButton();
+        verified = Boolean.parseBoolean(SharedPreferencesManager.INSTANCE.read(getActivity(),"verified"));
 
         mMapView = (MapView) rootView.findViewById(R.id.mapView);
         mMapView.onCreate(savedInstanceState);
@@ -65,7 +66,7 @@ public class NearbyEventsFragment extends Fragment {
         try {
             MapsInitializer.initialize(getActivity().getApplicationContext());
         } catch (Exception e) {
-            Toast.makeText(getActivity().getApplicationContext(), R.string.UnexpectedError, Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity().getApplicationContext(), R.string.unexpectedError, Toast.LENGTH_LONG).show();
         }
 
         mMapView.getMapAsync(mMap -> {
@@ -77,11 +78,13 @@ public class NearbyEventsFragment extends Fragment {
                 Bundle bundle = new Bundle();
                 bundle.putInt("id", event.getId());
                 Fragment eventFragment;
-                if (event.getCreatorEmail().equals(SharedPreferencesManager.INSTANCE.read(getActivity(),"user_email"))
-                        && correctDate(event.getIniDate())) {
+                boolean eventCreator = event.getCreatorEmail().equals(SharedPreferencesManager.INSTANCE.read(getActivity(),"user_email"));
+                if( eventCreator && event.stillEditable() )
                     eventFragment = MyEventFragment.newInstance(bundle);
-                }
-                else eventFragment = EventFragment.newInstance(bundle);
+                else if (!eventCreator && event.isAvailable() && !verified && (event.getCapacity() < event.getNumberEnrolled()))
+                    eventFragment = MyJoinEventFragment.newInstance(bundle);
+                else
+                    eventFragment = EventFragment.newInstance(bundle);
                 FragmentChangeListener fc = (FragmentChangeListener) getActivity();
                 fc.replaceFragment(eventFragment);
 
@@ -139,16 +142,6 @@ public class NearbyEventsFragment extends Fragment {
         });
     }
 
-    private boolean correctDate(Date iniDate) {
-        if (iniDate == null) return true;
-        else {
-            Date currentDate = new Date();
-            long hours = iniDate.getTime() - currentDate.getTime();
-            hours = hours/ 1000 / 60 / 60;
-            return hours >= 24;
-        }
-    }
-
     private void showNearbyEvents() {
         APICommunicator apiCommunicator = new APICommunicator();
         Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response -> {
@@ -165,23 +158,23 @@ public class NearbyEventsFragment extends Fragment {
                 Toast.makeText(getActivity().getApplicationContext(), R.string.JSONException, Toast.LENGTH_LONG).show();
             }
         };
-        Response.ErrorListener errorListener = error -> {
-            String message;
-            int errorCode = error.networkResponse.statusCode;
-            if (errorCode == 401)
-                message = getString(R.string.Unauthorized);
-            else if(errorCode == 403)
-                message = getString(R.string.Forbidden);
-            else if(errorCode == 404)
-                message = getString(R.string.NotFound);
-            else
-                message = getString(R.string.UnexpectedError);
-
-            Toast.makeText(getActivity().getApplicationContext(), message, Toast.LENGTH_LONG).show();
-        };
+        Response.ErrorListener errorListener = error -> errorTreatment(error.networkResponse.statusCode);
 
         apiCommunicator.getRequest(getActivity().getApplicationContext(), URL, responseListener, errorListener, null);
 
+    }
+
+    private void errorTreatment(int errorCode) {
+        String message;
+        if (errorCode == 401)
+            message = getString(R.string.unauthorized);
+        else if (errorCode == 403)
+            message = getString(R.string.forbidden);
+        else if (errorCode == 404)
+            message = getString(R.string.not_found);
+        else
+            message = getString(R.string.unexpectedError);
+        Toast.makeText(getActivity().getApplicationContext(), message, Toast.LENGTH_LONG).show();
     }
 
 
