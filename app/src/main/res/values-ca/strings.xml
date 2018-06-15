@@ -153,7 +153,6 @@
     <string name="individual">Individual</string>
     <string name="groupal">Grupal</string>
     <string name="event_full_msg">Aquest esdeveniment esta complet</string>
-
     <string name="information_event">Informació del esdeveniment</string>
     <string name="edit_event">Editar esdeveniment</string>
     <string name="update_event">Actualitzar la descripció de l\'esdeveniment</string>
@@ -164,5 +163,9 @@
     <string name="input_tags">#escriuelteutag</string>
     <string name="tag_search">Busca per tag</string>
     <string name="noTags">No hi ha cap tag per a buscar</string>
+    <string name="exchange_hours">Bescanviar hores</string>
+    <string name="example_exchange_token">123-user@email.com-XXXX</string>
+    <string name="insert_token_first">Ha d\'insertar un codi primer!</string>
+    <string name="exchanged_success">El codi ha sigut bescanviat exitosament!</string>
 
 </resources>

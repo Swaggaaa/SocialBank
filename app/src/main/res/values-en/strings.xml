@@ -163,5 +163,9 @@
     <string name="input_tags">#writeyourtag</string>
     <string name="tag_search">Search by tag</string>
     <string name="noTags">There is not any tag to search</string>
+    <string name="exchange_hours">Exchange hours</string>
+    <string name="example_exchange_token">123-user@email.com-XXXX</string>
+    <string name="insert_token_first">You must insert a token first!</string>
+    <string name="exchanged_success">Your token was exchanged successfully</string>
 
 </resources>

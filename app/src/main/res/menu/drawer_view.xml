@@ -31,6 +31,11 @@
             android:title="@string/search_users" />
 
         <item
+            android:id="@+id/exchangeHours"
+            android:icon="@drawable/exchange_hours"
+            android:title="@string/exchange_hours" />
+
+        <item
             android:icon="@drawable/ic_settings"
             android:id="@+id/myAccount"
             android:title="@string/EditAccount" />
