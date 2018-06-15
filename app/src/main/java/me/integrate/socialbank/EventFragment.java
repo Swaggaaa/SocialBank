@@ -1,14 +1,14 @@
 package me.integrate.socialbank;
 
 
-import android.content.Intent;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-
 import android.support.v4.app.FragmentManager;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
@@ -32,7 +32,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -60,6 +59,9 @@ public class EventFragment extends Fragment implements AddCommentFragment.OnComm
 
     private Integer capacity;
     private Integer numberEnrolled;
+
+    private CardView exchangeTokenCard;
+    private TextView exchangeToken;
 
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
@@ -99,6 +101,8 @@ public class EventFragment extends Fragment implements AddCommentFragment.OnComm
         textStartDate = (TextView) rootView.findViewById(R.id.start_date);
         textEndDate = (TextView) rootView.findViewById(R.id.end_date);
         addComment = (ImageView) rootView.findViewById(R.id.addComment);
+        exchangeTokenCard = (CardView) rootView.findViewById(R.id.card_exchangeToken);
+        exchangeToken = (TextView) rootView.findViewById(R.id.exchangeToken);
 
         join_button = (Button) rootView.findViewById(R.id.join_button);
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view_comment);
@@ -154,6 +158,12 @@ public class EventFragment extends Fragment implements AddCommentFragment.OnComm
                 textEventHours.setText(hours);
                 textStartDate.setText(dateToString(iniDate));
                 textEndDate.setText(dateToString(endDate));
+
+                if (event.getExchangeToken() != null) {
+                    exchangeToken.setText(event.getExchangeToken());
+                    exchangeTokenCard.setVisibility(View.VISIBLE);
+                }
+
                 loadingDialog.dismiss();
             } catch (JSONException e) {
                 Toast.makeText(EventFragment.this.getActivity().getApplicationContext(), R.string.JSONException, Toast.LENGTH_LONG).show();

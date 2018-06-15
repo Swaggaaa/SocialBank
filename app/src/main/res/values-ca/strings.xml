@@ -164,5 +164,6 @@
     <string name="input_tags">#escriuelteutag</string>
     <string name="tag_search">Busca per tag</string>
     <string name="noTags">No hi ha cap tag per a buscar</string>
+    <string name="about_exchangeToken">Token de bescanvi d'hores</string>
 
 </resources>

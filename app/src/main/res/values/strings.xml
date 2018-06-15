@@ -163,5 +163,6 @@
     <string name="input_tags">#escribetutag</string>
     <string name="tag_search">Buscar por tag</string>
     <string name="noTags">No hay ningún tag a buscar</string>
+    <string name="about_exchangeToken">Token de canjeo de horas</string>
 
 </resources>
