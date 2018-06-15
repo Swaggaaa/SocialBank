@@ -59,7 +59,6 @@ public class BoardFragment extends Fragment {
     private MenuItem itemOffer;
     private MenuItem itemDemand;
     private MenuItem itemAvailable;
-    private String[] tagsText;
 
     private ProgressDialog loadingDialog;
 
@@ -79,8 +78,6 @@ public class BoardFragment extends Fragment {
         emailUser = SharedPreferencesManager.INSTANCE.read(getActivity(),"user_email");
         available = demand = other = offer = language = culture = workshops = sports = gastronomy = leisure = false;
         getAllEvents();
-        tagsText = new String[1];
-        tagsText[0] = "";
         return rootView;
     }
 
@@ -169,26 +166,6 @@ public class BoardFragment extends Fragment {
                 break;
         }
         return true;
-    }
-
-    private void set_tags() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setTitle(R.string.tag_search);
-
-        View viewInflated = LayoutInflater.from(getContext()).inflate(R.layout.fragment_input_tags,
-                (ViewGroup) getView(), false);
-
-        final EditText inputTags = (EditText) viewInflated.findViewById(R.id.inputTags);
-        builder.setView(viewInflated);
-
-        builder.setPositiveButton(android.R.string.ok, (dialog, which) -> {
-            dialog.dismiss();
-            tagsText[0] = inputTags.getText().toString();
-            update();
-        });
-        builder.setNegativeButton(android.R.string.cancel, (dialog, which) -> dialog.cancel());
-
-        builder.show();
     }
 
     private boolean checkAvailability(Event event) {
