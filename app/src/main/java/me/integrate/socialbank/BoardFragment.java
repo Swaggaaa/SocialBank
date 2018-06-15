@@ -48,6 +48,7 @@ public class BoardFragment extends Fragment {
     private boolean demand;
     private boolean verified;
     private boolean available;
+    private boolean tagged;
     private String emailUser;
 
     private MenuItem itemLanguage;
@@ -80,6 +81,7 @@ public class BoardFragment extends Fragment {
         emailUser = SharedPreferencesManager.INSTANCE.read(getActivity(),"user_email");
         available = demand = other = offer = language = culture = workshops = sports = gastronomy = leisure = false;
         tagsText = "";
+        tagged = false;
         getAllEvents();
         return rootView;
     }
@@ -157,17 +159,17 @@ public class BoardFragment extends Fragment {
                 setTags();
                 break;
             case R.id.delete_filters:
-                clean_filters();
+                cleanFilters();
                 break;
         }
         return true;
     }
 
-    private void clean_filters() {
+    private void cleanFilters() {
         loadingDialog = ProgressDialog.show(getActivity(), "", getString(R.string.loadingMessage), true);
         tagsText = "";
         getAllEvents();
-        demand = other = offer = language = culture = workshops = sports = gastronomy = leisure = false;
+        tagged = demand = other = offer = language = culture = workshops = sports = gastronomy = leisure = false;
         itemLanguage.setChecked(false);
         itemCulture.setChecked(false);
         itemWorkshops.setChecked(false);
@@ -212,6 +214,7 @@ public class BoardFragment extends Fragment {
         builder.setPositiveButton(android.R.string.ok, (dialog, which) -> {
             dialog.dismiss();
             tagsText = inputTags.getText().toString();
+            tagged = true;
             loadingDialog = ProgressDialog.show(getActivity(), "", getString(R.string.loadingMessage), true);
             getAllEvents();
         });
@@ -264,6 +267,7 @@ public class BoardFragment extends Fragment {
         Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response -> {
             JSONArray jsonArray;
             try {
+                tagged = false;
                 if(!items.isEmpty()) {
                     items.clear();
                     allItems.clear();
@@ -303,12 +307,12 @@ public class BoardFragment extends Fragment {
         };
 
         Set<String> tags = getTags(tagsText);
-        if(tags.size() > 0) {
+        if(tags.size() > 0)
             apiCommunicator.getRequest(getActivity().getApplicationContext(), "/events?tags=" + queryListParams( tags ), responseListener, errorListener, null);
-
-        } else
+        else {
+            if (tagged) Toast.makeText(getActivity(), R.string.noTags, Toast.LENGTH_SHORT).show();
             apiCommunicator.getRequest(getActivity().getApplicationContext(), URL , responseListener, errorListener, null);
-
+        }
     }
 
     private String queryListParams(Set<String> params) {

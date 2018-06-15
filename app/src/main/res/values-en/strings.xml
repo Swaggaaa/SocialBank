@@ -162,5 +162,6 @@
     <string name="event_tag">Tag</string>
     <string name="input_tags">#writeyourtag</string>
     <string name="tag_search">Search by tag</string>
+    <string name="noTags">There is not any tag to search</string>
 
 </resources>

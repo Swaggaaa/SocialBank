@@ -163,5 +163,6 @@
     <string name="event_tag">Tag</string>
     <string name="input_tags">#escriuelteutag</string>
     <string name="tag_search">Busca per tag</string>
+    <string name="noTags">No hi ha cap tag per a buscar</string>
 
 </resources>
