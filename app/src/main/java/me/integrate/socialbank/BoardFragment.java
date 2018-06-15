@@ -214,7 +214,6 @@ public class BoardFragment extends Fragment {
         builder.show();
     }
 
-
     private boolean checkAvailability(Event event) {
         return (!available || (available && event.isAvailable()));
     }
