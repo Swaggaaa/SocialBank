@@ -68,6 +68,9 @@ public class InsideActivity extends AppCompatActivity implements FragmentChangeL
                         case R.id.searchUsers:
                             replaceFragment(new UserSearchFragment());
                             break;
+                        case R.id.exchangeHours:
+                            replaceFragment(new ExchangeHoursFragment());
+                            break;
                     }
 
                     return true;
