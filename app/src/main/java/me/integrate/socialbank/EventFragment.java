@@ -75,6 +75,8 @@ public class EventFragment extends Fragment implements AddCommentFragment.OnComm
     protected String descriptionEvent;
     protected Date iniDate;
     protected Date endDate;
+    CardView payHoursCard;
+    Button payButton;
 
 
     public static EventFragment newInstance(Bundle params) {
@@ -103,6 +105,8 @@ public class EventFragment extends Fragment implements AddCommentFragment.OnComm
         addComment = (ImageView) rootView.findViewById(R.id.addComment);
         exchangeTokenCard = (CardView) rootView.findViewById(R.id.card_exchangeToken);
         exchangeToken = (TextView) rootView.findViewById(R.id.exchangeToken);
+        payHoursCard = (CardView) rootView.findViewById(R.id.card_payHours);
+        payButton = (Button) rootView.findViewById(R.id.pay_button);
 
         join_button = (Button) rootView.findViewById(R.id.join_button);
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view_comment);

@@ -169,5 +169,8 @@
     <string name="example_exchange_token">123-user@email.com-XXXX</string>
     <string name="insert_token_first">¡Debes insertar un código primero!</string>
     <string name="exchanged_success">¡El código ha sido redimido exitosamente!</string>
+    <string name="about_payHours">Pagar horas</string>
+    <string name="pay">Pagar</string>
+    <string name="paid_hours">Horas pagadas</string>
 
 </resources>

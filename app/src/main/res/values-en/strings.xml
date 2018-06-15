@@ -169,5 +169,8 @@
     <string name="insert_token_first">You must insert a token first!</string>
     <string name="exchanged_success">Your token was exchanged successfully</string>
     <string name="about_exchangeToken">Exchange hours token</string>
+    <string name="about_payHours">Pay hours</string>
+    <string name="pay">Pay</string>
+    <string name="paid_hours">The hours have been paid</string>
 
 </resources>

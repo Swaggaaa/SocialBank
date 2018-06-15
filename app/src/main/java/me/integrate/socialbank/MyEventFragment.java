@@ -1,6 +1,7 @@
 package me.integrate.socialbank;
 
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -12,7 +13,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
-import android.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,6 +42,7 @@ public class MyEventFragment extends EventFragment implements UpdateEventDialog.
 
 
     private static final String URL = "/events";
+    private static final String USERS_URL = "/users";
 
     public void sendInput(String input) {
         descriptionEvent = input;
@@ -75,7 +76,20 @@ public class MyEventFragment extends EventFragment implements UpdateEventDialog.
 
         id = getArguments().getInt("id");
         isFABOpen = false;
+
+        payHoursCard.setVisibility(View.VISIBLE);
+        payButton.setOnClickListener(view1 -> payHours());
+
         return view;
+    }
+
+    private void payHours() {
+        APICommunicator apiCommunicator = new APICommunicator();
+        Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response -> {
+            Toast.makeText(getActivity().getApplicationContext(), R.string.paid_hours, Toast.LENGTH_LONG).show();
+        };
+        Response.ErrorListener errorListener = error -> errorTreatment(error.networkResponse.statusCode);
+        apiCommunicator.postRequest(getActivity().getApplicationContext(), URL + '/' + id + "/pay", responseListener, errorListener, "");
     }
 
     @Override
@@ -89,7 +103,7 @@ public class MyEventFragment extends EventFragment implements UpdateEventDialog.
         editEvent.setOnClickListener(v ->
         {
 
-            FragmentManager fm  = getFragmentManager();
+            FragmentManager fm = getFragmentManager();
             UpdateEventDialog dialog = new UpdateEventDialog();
             dialog.setTargetFragment(MyEventFragment.this, 1);
             dialog.show(fm, "prova");
