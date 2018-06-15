@@ -111,7 +111,7 @@
     <string name="Pick_hour_msg">Escoge una hora correcta</string>
     <string name="Wrong_date_msg">La fecha de inicio debe ser posterior a la actual y anterior a la fecha fin</string>
     <string name="Not_hours_msg">No tienes suficientes horas para crear este evento</string>
-    <string name="event_created_msg">!Evento creado con éxito!</string>
+    <string name="event_created_msg">¡Evento creado con éxito!</string>
     <string name="something_wrong">Algo no ha ido bien</string>
     <string name="image_update">¡Imagen cambiada!</string>
     <string name="account_created">¡Cuenta creada!</string>
