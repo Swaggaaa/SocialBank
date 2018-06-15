@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -261,6 +262,8 @@ public class BoardFragment extends Fragment {
         Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response -> {
             JSONArray jsonArray;
             try {
+                if(!items.isEmpty())
+                    items.clear();
                 jsonArray = new JSONArray(response.response);
                 System.out.println(String.valueOf(jsonArray.length()));
                 for (int i = 0; i < jsonArray.length(); i++) {
@@ -285,7 +288,6 @@ public class BoardFragment extends Fragment {
                 allItems.addAll(items);
                 mRecyclerView.setAdapter(mAdapter);
                 getUserInfo();
-
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -295,9 +297,9 @@ public class BoardFragment extends Fragment {
             errorTreatment(error.networkResponse.statusCode);
         };
 
-        if(!tagsText[0].equals(""))
-            apiCommunicator.getRequest(getActivity().getApplicationContext(), "/events?tags" + queryListParams( getTags(tagsText[0]) ), responseListener, errorListener, null);
-        else
+        if(!tagsText[0].equals("")) {
+            apiCommunicator.getRequest(getActivity().getApplicationContext(), "/events?tags=" + queryListParams(getTags(tagsText[0])), responseListener, errorListener, null);
+        } else
             apiCommunicator.getRequest(getActivity().getApplicationContext(), URL , responseListener, errorListener, null);
 
     }
