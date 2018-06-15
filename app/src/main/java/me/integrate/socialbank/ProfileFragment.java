@@ -310,7 +310,7 @@ public class ProfileFragment extends Fragment {
                     boolean eventCreator = event.getCreatorEmail().equals(SharedPreferencesManager.INSTANCE.read(getActivity(),"user_email"));
                     if( eventCreator && event.stillEditable() )
                         eventFragment = MyEventFragment.newInstance(bundle);
-                    else if( !eventCreator && event.isAvailable() && !verified)
+                    else if (!eventCreator && event.isAvailable() && !verified && (event.getCapacity() < event.getNumberEnrolled()))
                         eventFragment = MyJoinEventFragment.newInstance(bundle);
                     else
                         eventFragment = EventFragment.newInstance(bundle);
