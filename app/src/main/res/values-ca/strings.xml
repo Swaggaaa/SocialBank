@@ -64,7 +64,7 @@
     <string name="offered">Oferta</string>
     <string name="about_description">Sobre aquest esdeveniment</string>
     <string name="join">Assignar-se</string>
-    <string name="invite">Convidar</string>
+    <string name="invite">Compartir</string>
     <string name="hours">+- hores</string>
     <string name="about_me">Sobre mi</string>
     <string name="user_name">Nom d\'usuari</string>
@@ -149,11 +149,11 @@
     <string name="not_hours_msg">No tens hores suficients per apuntar-te a aquest esdeveniment</string>
     <string name="joined_msg">Estas apuntat a l\'esdeveniment </string>
     <string name="cancel_btn">CANCEL·LAR</string>
+    <string name="leave_btn">Marxar</string>
     <string name="canceljoin_msg">Ja no estas apuntat a aquest esdeveniment</string>
     <string name="individual">Individual</string>
     <string name="groupal">Grupal</string>
     <string name="event_full_msg">Aquest esdeveniment esta complet</string>
-
     <string name="information_event">Informació del esdeveniment</string>
     <string name="edit_event">Editar esdeveniment</string>
     <string name="update_event">Actualitzar la descripció de l\'esdeveniment</string>

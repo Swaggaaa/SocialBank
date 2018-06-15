@@ -64,7 +64,7 @@
     <string name="offered">Offer</string>
     <string name="about_description">About this event</string>
     <string name="join">Join</string>
-    <string name="invite">Invite</string>
+    <string name="invite">Share</string>
     <string name="hours">+- hours</string>
     <string name="about_me">About me</string>
     <string name="user_name">User name</string>
@@ -146,6 +146,7 @@
     <string name="not_hours_msg">You do not have enough hours to enroll this event</string>
     <string name="joined_msg">You have joined to the event</string>
     <string name="cancel_btn">CANCEL</string>
+    <string name="leave_btn">Leave</string>
     <string name="canceljoin_msg">You have canceled your enrollment to this event</string>
     <string name="individual">Individual</string>
     <string name="groupal">Groupal</string>

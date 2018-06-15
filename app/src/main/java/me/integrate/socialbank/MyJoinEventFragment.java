@@ -149,7 +149,7 @@ public class MyJoinEventFragment extends EventFragment {
     private void checkJoin() {
         joined = !joined;
         if (!joined) join_button.setText(R.string.join);
-        else  join_button.setText(R.string.cancel_btn);
+        else  join_button.setText(R.string.leave_btn);
         join_button.setVisibility(View.VISIBLE);
     }
 

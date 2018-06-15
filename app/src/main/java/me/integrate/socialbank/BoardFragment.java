@@ -78,8 +78,8 @@ public class BoardFragment extends Fragment {
         loadingDialog = ProgressDialog.show(getActivity(), "", getString(R.string.loadingMessage), true);
         items = new ArrayList<>();
         allItems = new ArrayList<>();
-        emailUser = SharedPreferencesManager.INSTANCE.read(getActivity(), "user_email");
-        available = demand = other = offer = language = culture = workshops = sports = gastronomy = leisure = false;
+        emailUser = SharedPreferencesManager.INSTANCE.read(getActivity(),"user_email");
+        available = demand = other = offer = language = culture = workshops = sports = gastronomy = leisure = true;
         tagsText = "";
         tagged = false;
         getAllEvents();
@@ -168,7 +168,8 @@ public class BoardFragment extends Fragment {
     private void cleanFilters() {
         tagsText = "";
         tagged = demand = other = offer = language = culture = workshops = sports = gastronomy = leisure = false;
-        getAllEvents();
+        items.clear();
+        mAdapter.notifyDataSetChanged();
         itemLanguage.setChecked(false);
         itemCulture.setChecked(false);
         itemWorkshops.setChecked(false);
@@ -253,8 +254,7 @@ public class BoardFragment extends Fragment {
                 else if (culture && event.getCategory() == Event.Category.CULTURE) check(event);
                 else if (workshops && event.getCategory() == Event.Category.WORKSHOPS) check(event);
                 else if (sports && event.getCategory() == Event.Category.SPORTS) check(event);
-                else if (gastronomy && event.getCategory() == Event.Category.GASTRONOMY)
-                    check(event);
+                else if (gastronomy && event.getCategory() == Event.Category.GASTRONOMY) check(event);
                 else if (leisure && event.getCategory() == Event.Category.LEISURE) check(event);
                 else if (other && event.getCategory() == Event.Category.OTHER) check(event);
                 else if (!category && (offer || demand || available)) check(event);
