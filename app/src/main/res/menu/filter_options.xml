@@ -61,6 +61,11 @@
                 android:checkable="true"/>
 
             <item
+                android:id="@+id/event_tagged"
+                android:title="@string/event_tag"
+                app:showAsAction="never" />
+
+            <item
                 android:id="@+id/delete_filters"
                 android:title="@string/clean_filters"
                 app:showAsAction="never" />

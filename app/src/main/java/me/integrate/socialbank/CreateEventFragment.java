@@ -84,7 +84,6 @@ public class CreateEventFragment extends Fragment {
 
     double userHours;
 
-
     private void iniVector() {
         categories = new ArrayList<>();
         categories.add("Other");
@@ -94,7 +93,6 @@ public class CreateEventFragment extends Fragment {
         categories.add("Culture");
         categories.add("Sports");
         categories.add("Leisure");
-
     }
 
     private void postEvent(HashMap<String, Object> params) {
@@ -567,13 +565,11 @@ public class CreateEventFragment extends Fragment {
     private Set<String> getTags() { //Returns a list with all Tags
         Set<String> tags = new HashSet<String>();
         String text = description.getText().toString();
-
         //Find every occurrence of '#'
         for (int i = -1; (i = text.indexOf("#", i + 1)) != -1; i++) {
             String tag = getHashtag( text.substring(i+1) );
             tags.add(tag);
         }
-
         return tags;
     }
 }

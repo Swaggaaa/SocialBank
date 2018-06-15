@@ -1,5 +1,6 @@
 package me.integrate.socialbank;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -11,6 +12,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.android.volley.Response;
@@ -20,7 +22,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class BoardFragment extends Fragment {
 
@@ -44,6 +48,7 @@ public class BoardFragment extends Fragment {
     private boolean demand;
     private boolean verified;
     private boolean available;
+    private boolean tagged;
     private String emailUser;
 
     private MenuItem itemLanguage;
@@ -56,6 +61,7 @@ public class BoardFragment extends Fragment {
     private MenuItem itemOffer;
     private MenuItem itemDemand;
     private MenuItem itemAvailable;
+    private String tagsText;
 
     private ProgressDialog loadingDialog;
 
@@ -74,6 +80,8 @@ public class BoardFragment extends Fragment {
         allItems = new ArrayList<>();
         emailUser = SharedPreferencesManager.INSTANCE.read(getActivity(),"user_email");
         available = demand = other = offer = language = culture = workshops = sports = gastronomy = leisure = false;
+        tagsText = "";
+        tagged = false;
         getAllEvents();
         return rootView;
     }
@@ -147,22 +155,71 @@ public class BoardFragment extends Fragment {
                 item.setChecked(!item.isChecked());
                 update();
                 break;
+            case R.id.event_tagged:
+                setTags();
+                break;
             case R.id.delete_filters:
-                demand = other = offer = language = culture = workshops = sports = gastronomy = leisure = false;
-                itemLanguage.setChecked(false);
-                itemCulture.setChecked(false);
-                itemWorkshops.setChecked(false);
-                itemSports.setChecked(false);
-                itemGastronomy.setChecked(false);
-                itemLeisure.setChecked(false);
-                itemOther.setChecked(false);
-                itemOffer.setChecked(false);
-                itemDemand.setChecked(false);
-                itemAvailable.setChecked(false);
-                update();
+                cleanFilters();
                 break;
         }
         return true;
+    }
+
+    private void cleanFilters() {
+        tagsText = "";
+        tagged = demand = other = offer = language = culture = workshops = sports = gastronomy = leisure = false;
+        getAllEvents();
+        itemLanguage.setChecked(false);
+        itemCulture.setChecked(false);
+        itemWorkshops.setChecked(false);
+        itemSports.setChecked(false);
+        itemGastronomy.setChecked(false);
+        itemLeisure.setChecked(false);
+        itemOther.setChecked(false);
+        itemOffer.setChecked(false);
+        itemDemand.setChecked(false);
+        itemAvailable.setChecked(false);
+    }
+
+    private String getHashtag(String text) { //Returns a list with all Tags
+        String tag = text;
+        int i_space = text.indexOf(" ");
+        int i_next = text.indexOf("#");
+        int i = (i_next != -1 && i_space > i_next) ? i_next : i_space;
+        if( i > 0 ) tag = tag.substring(0, i);
+        return tag;
+    }
+
+    private Set<String> getTags(String text) { //Returns a list with all Tags
+        Set<String> tags = new HashSet<String>();
+        //Find every occurrence of '#'
+        for (int i = -1; (i = text.indexOf("#", i + 1)) != -1; i++) {
+            String tag = getHashtag( text.substring(i+1) );
+            tags.add(tag);
+        }
+        return tags;
+    }
+
+    private void setTags() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle(R.string.tag_search);
+
+        View viewInflated = LayoutInflater.from(getContext()).inflate(R.layout.fragment_input_tags,
+                (ViewGroup) getView(), false);
+
+        EditText inputTags = (EditText) viewInflated.findViewById(R.id.inputTags);
+        builder.setView(viewInflated);
+
+        builder.setPositiveButton(android.R.string.ok, (dialog, which) -> {
+            dialog.dismiss();
+            tagsText = inputTags.getText().toString();
+            tagged = true;
+            loadingDialog = ProgressDialog.show(getActivity(), "", getString(R.string.loadingMessage), true);
+            getAllEvents();
+        });
+        builder.setNegativeButton(android.R.string.cancel, (dialog, which) -> dialog.cancel());
+
+        builder.show();
     }
 
     private boolean checkAvailability(Event event) {
@@ -209,6 +266,11 @@ public class BoardFragment extends Fragment {
         Response.Listener responseListener = (Response.Listener<CustomRequest.CustomResponse>) response -> {
             JSONArray jsonArray;
             try {
+                tagged = false;
+                if(!items.isEmpty()) {
+                    items.clear();
+                    allItems.clear();
+                }
                 jsonArray = new JSONArray(response.response);
                 System.out.println(String.valueOf(jsonArray.length()));
                 for (int i = 0; i < jsonArray.length(); i++) {
@@ -233,7 +295,7 @@ public class BoardFragment extends Fragment {
                 allItems.addAll(items);
                 mRecyclerView.setAdapter(mAdapter);
                 getUserInfo();
-
+                update();
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -242,7 +304,31 @@ public class BoardFragment extends Fragment {
             loadingDialog.dismiss();
             errorTreatment(error.networkResponse.statusCode);
         };
-        apiCommunicator.getRequest(getActivity().getApplicationContext(), URL, responseListener, errorListener, null);
+
+        Set<String> tags = getTags(tagsText);
+        if(tags.size() > 0)
+            apiCommunicator.getRequest(getActivity().getApplicationContext(), "/events?tags=" + queryListParams( tags ), responseListener, errorListener, null);
+        else if(!tagged)
+            apiCommunicator.getRequest(getActivity().getApplicationContext(), URL , responseListener, errorListener, null);
+        else {
+            loadingDialog.dismiss();
+            Toast.makeText(getActivity(), R.string.noTags, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private String queryListParams(Set<String> params) {
+        if (params.size() == 0) return "";
+        String res = "";
+        boolean first = true;
+        for (String s : params) {
+            if (first) {
+                res = s;
+                first = false;
+            }
+            else
+                res += "," + s;
+        }
+        return res;
     }
 
     private void getUserInfo() {

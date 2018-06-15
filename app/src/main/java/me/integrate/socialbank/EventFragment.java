@@ -229,7 +229,6 @@ public class EventFragment extends Fragment implements AddCommentFragment.OnComm
         return bitmap;
     }
 
-
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
